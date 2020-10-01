@@ -2,11 +2,12 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const grouppm = require('./models/grouppm');
 const {
   DB_USER, DB_PASSWORD, DB_HOST,
 } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/development`, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/henryapp`, {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
@@ -30,10 +31,23 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Product } = sequelize.models;
+const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo } = sequelize.models;
 
 // Aca vendrian las relaciones
-// Product.hasMany(Reviews);
+// Relaciones
+Feedback.belongsTo(User, { as: 'to' }); //deberia agregar columna to a Feedback 
+Feedback.belongsTo(User, { as: 'from' }); //deberia agregar columna from a Feedback 
+
+Cohorte.belongsTo(User, { as: 'instructor' }) //deberia agregar columna instructor a Cohorte 
+
+Grouppm.belongsTo(User, { as: 'PM1' }) // deberia agregar columna PM1 a Grouppm
+Grouppm.belongsTo(User, { as: 'PM2' }) // deberia agregar columna PM2 a Grouppm
+Grouppm.belongsTo(User, { as: 'student' })
+Grouppm.belongsTo(Cohorte) // deberia agregar columna cohorteId a group
+
+Checkpoint.belongsTo(User) // deberia agregar columna UserId a Checkpoint
+
+Modulo.belongsTo(Cohorte)  // deberia agregar columna cohorteId a Modulo
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
