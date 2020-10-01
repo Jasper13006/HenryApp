@@ -42,8 +42,10 @@ Cohorte.belongsTo(User, { as: 'instructor' }) //deberia agregar columna instruct
 
 Grouppm.belongsTo(User, { as: 'PM1' }) // deberia agregar columna PM1 a Grouppm
 Grouppm.belongsTo(User, { as: 'PM2' }) // deberia agregar columna PM2 a Grouppm
-Grouppm.belongsTo(User, { as: 'student' })
+Grouppm.belongsTo(User, { as: 'students' })
 Grouppm.belongsTo(Cohorte) // deberia agregar columna cohorteId a group
+
+// User.belongsTo(Grouppm, { as: 'students' })
 
 Checkpoint.belongsTo(User) // deberia agregar columna UserId a Checkpoint
 

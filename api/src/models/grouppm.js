@@ -7,8 +7,8 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,              
         },
-        groupPP: {
-            type: DataTypes.INTEGER, // numero grupo pair
-        },
+        // students: {
+        //     type: DataTypes.ARRAY(DataTypes.INTEGER), // array de usuarios (id's)
+        // },
     });
 };
