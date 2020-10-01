@@ -1,8 +1,26 @@
 const { User } = require("../db.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cloudinary = require ('cloudinary')
+
 const SECRET = process.env.SECRET;
 
+
+
+ const uploadImage = (file) => new Promise ((resolve,reject) => {
+
+  cloudinary.config({
+    cloud_name:'dxnd3uqlx',
+    api_key:'151315768991554',
+    api_secret:'wonkrqTdVInQ8yTjb_-yJpRYxjE'
+  })
+
+  cloudinary.uploader.upload(file.tempFilePath,function(result,err){
+    if(err) {return reject(err)} 
+    return resolve(result.url)
+  })
+
+}) 
 
 const hashPassword = (password) => new Promise((resolve, reject) => {
   bcrypt.genSalt(10, (err, salt) => {
@@ -49,22 +67,28 @@ module.exports = {
   },
 
   async registerUser(req, res) {
+    
+    let image = 'https://www.ibm.com/blogs/systems/mx-es/wp-content/themes/ibmDigitalDesign/assets/img/anonymous.jpg'
+    
     const { email, name, lastName, city, country, password, admin } = req.body;
     if (!name || !lastName || !email || !password) {
       return res.status(400).send({ message: "Faltan campos obligatorios", status: 400 });
     }
 
     try {
+      if(req.files){
+        const file = req.files.photo;
+        image = await uploadImage(file)
+      }
       const user = await User.findOne({ where: { email: email } })
       if (user) {
         return res.status(400).send({ message: "Ya existe un usuario con ese email", status: 400 });
       }
-
-      const userData = { email, name, lastName, password, city, country, admin };
+      const userData = { email, name, lastName, password, city, country, admin,image };
       const newUser = await User.create(userData)
       return res.status(201).send(newUser)
     } catch (err) {
-      console.log(err)
+      console.log('err',err)
       return res.status(500).send(err)
     }
 
@@ -73,6 +97,7 @@ module.exports = {
   async loginUser(req, res) {
     const { email, password } = req.body;
     try {
+      
       const user = await User.findOne({ where: { email: email } })
       if (!user) {
         return res.status(400).send({ message: "Cuenta inexistente, registrese", status: 400 })
@@ -104,9 +129,14 @@ module.exports = {
     }
   },
 
-  async userProfile(req, res) {
-    const { city, country, image, googleId, gitHubId } = req.body;
+  async userEditProfile(req, res) {
+    const { city, country, googleId, gitHubId } = req.body;
+    if(req.files){
+      const file = req.files.photo;
+      image = await uploadImage(file)
+    }
     const user = await User.findByPk(req.params.id)
+    
     if (!user) return res.status(404).send('Usuario inexistente para ese id')
     user.city = city || user.city;
     user.country = country || user.country;

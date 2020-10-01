@@ -1,6 +1,9 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth')
-const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userProfile, getInstructors, getPms } = require('../controllers/user')
+const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userEditProfile, getInstructors, getPms } = require('../controllers/user')
+const cloudinary = require ('cloudinary')
+
+
 
 //Rutar obtener todos los usuarios
 server.get("/", getUsers);
@@ -18,7 +21,7 @@ server.get('/:id', authenticate, getOneUser )
 server.put('/promote/:id', authenticate, promoteUser)
 
 //modificar datos usuario
-server.put('/profile/:id', authenticate, userProfile)
+server.put('/profile/:id', authenticate, userEditProfile)
 
 //Obtener users q sean instructores
 server.get("/instructor", getInstructors)
