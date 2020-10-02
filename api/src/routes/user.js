@@ -1,7 +1,9 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth')
+const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userEditProfile, getInstructors, getPms } = require('../controllers/user')
-const cloudinary = require ('cloudinary')
+const { calificarAlumno } = require('../controllers/checkpoints')
+
 
 
 
@@ -26,6 +28,10 @@ server.get("/instructor", getInstructors)
 
 //Obtener users q sean pm's
 server.get("/pms", getPms)
+
+
+// calificar checkpoint del alumno
+server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
 
 // busca usuario por id
 server.get('/:id', authenticate, getOneUser )
