@@ -1,18 +1,18 @@
 import React from 'react'
 import { BrowserRouter as Router, Route,Switch} from 'react-router-dom'
 import './AppRouter.css'
-import Panel from '../components/Panel/Panel.js'
-import Perfil from '../components/Perfil/Perfil'
-import Cohorte from '../components/Cohorte/Cohorte'
-import PM from '../components/PM/PM'
-import Pair_programming from '../components/Pair_programming/Pair_programming'
-import Notas from '../components/Notas/Notas'
+import Panel from '../components/panel/Panel.js'
+import Home from '../pages/Home'
 
 const AppRouter = () => {
 
     return (
         <Router>
-            <Panel/>
+            <Switch>
+                <Route exact path="/" component={Home}/>
+                <Route path="/panel" component={Panel}/>
+            </Switch>
+            
         </Router>
     )
 }

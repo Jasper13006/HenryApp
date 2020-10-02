@@ -96,9 +96,9 @@ function Navigator(props) {
                 
                 {studentOptions && studentOptions.map((opcion,i)=>
                 <ListItem key={i}>
-                    <Link to ={`/${opcion}`}>
+                    <Link to ={`/panel/${opcion}`}>
                         <ListItemText 
-                            className={clsx(classes.item, url === `/${opcion}`? classes.itemActiveItem:null)} >
+                            className={clsx(classes.item, url === `/panel/${opcion}`? classes.itemActiveItem:null)} >
                                 {formatString(`${opcion}`)}
                         </ListItemText>   
                     </Link>
