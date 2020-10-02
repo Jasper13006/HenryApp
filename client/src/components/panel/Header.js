@@ -54,11 +54,14 @@ function Header(props) {
   const [user, setUser] = useState(null)
   const [value,setValue]=useState(0)
 
-  const options=[
-    ["opcion 1","opcion 2","opcion 3"],
-    ["opcion a","opcion b","opcion c"],
-    ["opcion x","opcion y","opcion z"]
-  ]
+  //En este objeto colocar los nombres de las opciones para cada ruta del panel
+  const options={
+    "/panel/perfil":["Datos Personales","Cambiar contraseña","Actualizar Foto"],
+    "/panel/cohorte":["Mis clases","Compañeros","Lecturas recomendadas"],
+    "/panel/PM":["Anuncios","Chat"],
+    "/panel/pair_programming":["Feedback","Evaluar"],
+    "/panel/notas":["Resumen de Notas","Ranking"]
+  }
 
     useEffect(()=> {
         setUser(store.getState().usuario.user)
@@ -69,8 +72,8 @@ function Header(props) {
 
   const formatString =(string)=>{
     let noSpaces=string.replace("_"," ")
+    noSpaces=noSpaces.replace("/panel/","")
     let arr = noSpaces.split("")
-    arr.shift()
     arr[0]=arr[0].toUpperCase()
     noSpaces=arr.join("")
     return(noSpaces)
@@ -78,9 +81,9 @@ function Header(props) {
 
 
 
-const handleChange= (event, newValue)=>{
+const handleChange= (event,newValue)=>{
   setValue(newValue)
-  dispatch(setActiveOptionPanel(value))
+  dispatch(setActiveOptionPanel(newValue))
 }
 
 function tabValue(index) {
@@ -88,10 +91,6 @@ function tabValue(index) {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
-}
-
-if(value!==null){
-  console.log(value);
 }
 
   return (
@@ -137,11 +136,11 @@ if(value!==null){
         elevation={0}
       >
         <Tabs value={value} textColor="inherit" onChange={handleChange} aria-label="simple tabs example">
-
-          <Tab textColor="inherit" label="Información" {...tabValue(0)}/>
-          <Tab textColor="inherit" label="Sign-in method" {...tabValue(1)}/>
-          <Tab textColor="inherit" label="Templates" {...tabValue(2)}/>
-          <Tab textColor="inherit" label="Usage" {...tabValue(3)}/>
+          {options[url]?
+           options[url].map((option,index)=>
+            <Tab textColor="inherit" key={index} label={option} {...tabValue(index)}/>
+          )
+          :null}
         </Tabs>
       </AppBar>
     </React.Fragment>

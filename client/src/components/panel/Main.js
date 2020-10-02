@@ -6,23 +6,16 @@ import PM from '../PM/PM'
 import Pair_programming from '../Pair_programming/Pair_programming'
 import Notas from '../Notas/Notas'
 
-const Home =()=>{
-    return(
-        <div>
-            Home
-        </div>
-    )
-}
+
 const AppRouter = () => {
 
     return (
             <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route exact path="/perfil" component={Perfil}/>
-                <Route exact path="/cohorte" component={Cohorte}/>
-                <Route exact path="/PM" component={PM}/>
-                <Route exact path="/pair_programming" component={Pair_programming}/>
-                <Route exact path="/notas" component={Notas}/>
+                <Route exact path="/panel/perfil" component={Perfil}/>
+                <Route exact path="/panel/cohorte" component={Cohorte}/>
+                <Route exact path="/panel/PM" component={PM}/>
+                <Route exact path="/panel/pair_programming" component={Pair_programming}/>
+                <Route exact path="/panel/notas" component={Notas}/>
             </Switch>
     )
 }
