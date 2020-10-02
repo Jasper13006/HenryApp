@@ -1,4 +1,4 @@
-const { Cohorte, User, Grouppm, Student } = require("../db.js");
+const { Cohorte, User,  Student } = require("../db.js");
 const grouppm = require("../models/grouppm.js");
 
 module.exports = {

@@ -25,6 +25,8 @@ server.put('/addStudent/:id',editStudent)
 
 server.get('/group-pm/:id', authenticate, isAdmin, getGroupPm)
 
+// editar pms de un grupo de pms
+
 server.put('/group-pm/edit/:id',editGroupPm)
 
 module.exports = server;
