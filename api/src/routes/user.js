@@ -1,7 +1,7 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
-const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userEditProfile, getInstructors, getPms } = require('../controllers/user')
+const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userEditProfile, getInstructors, getPms, forgotPassword, mailResetPassword } = require('../controllers/user')
 const { calificarAlumno } = require('../controllers/checkpoints')
 
 
@@ -35,5 +35,11 @@ server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
 
 // busca usuario por id
 server.get('/:id', authenticate, getOneUser )
+
+//nodemailer reset contraseña, paso por body mail a resetear contraseña
+server.post('/reset_password', mailResetPassword);
+
+// cambia contraseña recibiendo por params token que fue enviado por mail, y por body la nueva contraseña 
+server.put('/password/:token', forgotPassword)
 
 module.exports = server;
