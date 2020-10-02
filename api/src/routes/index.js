@@ -9,6 +9,7 @@ const userRouter = require("./user");
 // const feedbackRouter = require("./feedback");
 // const checkpointRouter = require("./checkpoint");
 // const moduloRouter = require("./modulo");
+const inviteRouter = require ("./invite")
 const cohorteRouter = require("./cohorte");
 // const grouppmRouter = require ("./grouppm");
 const studentRouter = require("./student");
@@ -25,6 +26,7 @@ router.use("/student", studentRouter);
 // router.use("/modulo", moduloRouter);
 router.use("/cohorte", cohorteRouter);
 router.use("/groupPp", groupPpRouter);
+router.use("/invite", inviteRouter);
 // router.use("/grouppm", grouppmRouter);
 
 module.exports = router;
