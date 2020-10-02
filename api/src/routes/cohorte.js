@@ -1,6 +1,7 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth');
-const { createCohorte, getCohortes, createPmGroup, getGroupPm,editGroupPm,addStudent,editStudent} = require('../controllers/cohorte')
+const { createCohorte, getCohortes, addStudent} = require('../controllers/cohorte')
+const { getGroupPm, editGroupPm, editStudent, createPmGroup } = require('../controllers/pm')
 const isAdmin = require('../utils/isAdmin')
 
 //Ruta obtener todos los cohortes
