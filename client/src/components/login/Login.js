@@ -90,14 +90,17 @@ export default function Login() {
     const validate = (state) => {
         let errors = {};
         if (!state.email) {
+            console.log('first if', errors)
             errors.email = 'Por favor, introduzca un email';
         } else if (!state.email.includes("@")) {
+            console.log('second if', errors)
             errors.email = 'Por favor, introduzca un formato de email valido';
         }
         if (!state.password) {
+            console.log('third if', errors)
             errors.password = 'Por favor, introduzca una contraseña';
         }
-        console.log(errors)
+        // console.log(errors)
         return errors;
 
     };
@@ -108,6 +111,7 @@ export default function Login() {
             [e.target.name]: e.target.value
         }));
         // console.log(e)
+        console.log(errors)
         if (state.email && state.password) {
             // console.log(state)
             dispatch(postLogin(state))
@@ -145,6 +149,9 @@ export default function Login() {
                         autoComplete="email"
                         autoFocus
                     />
+                    {errors.email && (
+                        <p style={{ color: "red" }}>{errors.email}</p>
+                    )}
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -156,6 +163,9 @@ export default function Login() {
                         id="password"
                         autoComplete="current-password"
                     />
+                    {errors.password && (
+                        <p style={{ color: "red" }}>{errors.password}</p>
+                    )}
                     {/* <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
