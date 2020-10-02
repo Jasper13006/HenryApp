@@ -46,6 +46,21 @@ module.exports = {
     }
   },
 
+  async getCohortesId(req, res) {
+    const { id } = req.params
+    try {
+      const cohorteId = await Cohorte.findOne({
+        where: {
+          id: id
+        }
+      })
+      if (!cohorteId) {
+        return res.status(404).send({ message: 'Ningun cohorte ha sido encontrado con ese ID' })
+      }
+      return res.status(200).send(cohorteId)
+    } catch (err) { console.log(err) }
+  },
+
   ///////////////////////////////////
   //// Agregar estudiante al cohorte
   //////////////////////////////////
@@ -61,7 +76,7 @@ module.exports = {
         }
       })
       if (student) {
-        return res.status(400).send({ msg: 'este usuario ya existe en el cohorte' })
+        return res.status(400).send({ message: 'este usuario ya existe en el cohorte' })
       }
       const newStudent = await Student.create({ userId, cohorteId: id })
       return res.send(newStudent)
