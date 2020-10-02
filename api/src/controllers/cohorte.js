@@ -1,4 +1,4 @@
-const { Cohorte, User, Grouppm } = require("../db.js");
+const { Cohorte, User, Grouppm,Student } = require("../db.js");
 const grouppm = require("../models/grouppm.js");
 
 module.exports = {
@@ -43,14 +43,17 @@ module.exports = {
         }             
       },
 
+      /////////////////////////////////////////////////
+      //// crea el grupo PM
+      ///////////////////////////////////////////
+
       async createPmGroup (req, res) {
-        const { name, students, PM1Id, PM2Id, cohorteId } = req.body;
-        
+        const { name, PM1Id, PM2Id, cohorteId } = req.body;
         const usuario = req.user     
         const user = await User.findByPk(usuario.id)
         if (!user.admin) return res.status(400).send({ message: "Sin autorización", status: 400 })
 
-        if (!name || !students || !PM1Id || !PM2Id || !cohorteId) {
+        if (!name || !PM1Id || !PM2Id || !cohorteId) {
           return res.status(400).send({ message: "Faltan campos obligatorios", status: 400 });
         }
 
@@ -61,37 +64,129 @@ module.exports = {
         }
 
         try {
-          const PmGroup = { name, students, PM1Id, PM2Id, cohorteId };
           let newPmGroup;
-          students.map(async student => {
-            newPmGroup = await Grouppm.create({name, student, PM1Id, PM2Id, cohorteId})
-            newPmGroup.setStudents(student)
-          })
+      
+          newPmGroup = await Grouppm.create({name,  PM1Id, PM2Id, cohorteId}) 
           res.status(201).send(newPmGroup)
-          console.log(newPmGroup)
         } catch (err) {
           console.log(err)
           return res.status(500).send(err)
         }
       },
 
+      /////////////////////////////////////////////////
+      //// Agregar estudiante al cohorte
+      ///////////////////////////////////////////
+
+      async addStudent (req,res){
+        const {id} = req.params
+        const {userId} = req.body
+        try{   
+
+          const student = await Student.findOne({
+            where: {
+              userId:userId,
+            }
+          })
+          if(student){
+            return res.status(400).send({msg:'este usuario ya existe en el cohorte'})
+          }
+          const newStudent = await Student.create({userId,cohorteId:id})
+          return res.send(newStudent)                        
+        } catch(err){
+          console.log('err',err)
+        }
+      },
+
+      /////////////////////////////////////////////////
+      //// Agregar estudiante a los pms y pps
+      ///////////////////////////////////////////
+      async editStudent (req,res){
+        const {id} = req.params
+        const {userId,grouppmId,groupPPId} = req.body
+        try{   
+
+          const student = await Student.findOne({
+            where: {
+              userId:userId,
+              cohorteId:id
+            }
+          })
+          if(!student){
+            return res.status(400).send({msg:'este usuario no existe en el cohorte'})
+          }
+
+          student.grouppmId = grouppmId || student.grouppmId;
+          student.groupPP = groupPPId || student.groupPP;
+          student.save() 
+          return res.status(200).send(student)                        
+        } catch(err){
+          console.log('err',err)
+        }
+      },
+
+
+
+
+
       async getGroupPm (req, res) {
         const { id } = req.params
         try {
+          
           const gpm = await Grouppm.findOne({
             where: {
               id: id
             },
             include:[
-              {model: User, as: 'students'}
+              {model: User, as: 'PM1'},
+              {model:User, as:'PM2'},
+        
           ]
-          })
+          }) 
           if (!gpm) return res.status(404).send({msg: 'No se encontro ningun grupo con este ID', status: 404})
-          return res.status(200).send(gpm)
+          const students = await Student.findAll ({
+            where:{
+              grouppmId:id
+            },
+            include:[
+              {model: User},
+            ]
+          })
+          return res.status(200).send({gpm,students})
         } catch (err) {
           console.log(err)
           return res.status(500).send(err)
+        }
+      },
+
+      async editGroupPm (req,res)  {
+        const {id} = req.params
+        const {PM1Id,PM2Id,students} = req.body
+        if(PM1Id){
+          const PM1 = await User.findByPk(PM1Id)
+          if (!PM1.pm ) {
+            return res.status(400).send({ message: "PM1 no es un PM", status: 400 });
           }
+        }
+        if(PM2Id){
+          const PM2 = await User.findByPk(PM2Id)
+        if (!PM2.pm) {
+          return res.status(400).send({ message: "PM2 no es un PM", status: 400 });
+        }
+        }
+        
+
+        try  {
+          const group = await Grouppm.findByPk(id)
+          if(!group) return res.status(404).send({msg:'No se encontro ningun grupo con este id'})
+          group.PM1Id = PM1Id || group.PM1Id;
+          group.PM2Id = PM2Id || group.PM2Id;
+          group.students = students || group.students
+          group.save()
+          return res.status(200).send(group)
+        } catch (err){
+          return res.status(500).send(err)
+        }
       }
 
 
