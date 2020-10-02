@@ -1,11 +1,13 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth');
-const { createCohorte, getCohortes, addStudent} = require('../controllers/cohorte')
+const { createCohorte, getCohortes, addStudent, getCohortesId} = require('../controllers/cohorte')
 const { getGroupPm, editGroupPm, editStudent, createPmGroup } = require('../controllers/pm')
 const isAdmin = require('../utils/isAdmin')
 
 //Ruta obtener todos los cohortes
 server.get("/", getCohortes);
+
+server.get('/:id', getCohortesId)
 
 //Ruta crear cohorte
 server.post("/create", authenticate, createCohorte);
@@ -24,6 +26,8 @@ server.put('/addStudent/:id',editStudent)
 // "students" = informacion de todos los estudiantes
 
 server.get('/group-pm/:id', authenticate, isAdmin, getGroupPm)
+
+// editar pms de un grupo de pms
 
 server.put('/group-pm/edit/:id',editGroupPm)
 
