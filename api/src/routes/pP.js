@@ -1,5 +1,5 @@
 const server = require("express").Router();
-const {createPpGroup,getGroupPp } = require('../controllers/pp')
+const {createPpGroup,getGroupPp } = require('../controllers/pP')
 const authenticate = require('../utils/auth');
 
 //Ruta crear grupo pp

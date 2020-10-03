@@ -1,7 +1,8 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
-const { getUsers, getOneUser, registerUser, loginUser, promoteUser, userEditProfile, getInstructors, getPms } = require('../controllers/user')
+const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, 
+  promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback } = require('../controllers/user')
 const { calificarAlumno } = require('../controllers/checkpoints')
 
 
@@ -32,6 +33,12 @@ server.get("/pms", getPms)
 
 // calificar checkpoint del alumno
 server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
+
+// calificar companero de pair programing
+server.post('/nota-pp', calificarCompaneros)
+
+// traer el feedback de un usuario en particular
+server.get('/nota-pp/:id', getUserFeedback)
 
 // busca usuario por id
 server.get('/:id', authenticate, getOneUser )

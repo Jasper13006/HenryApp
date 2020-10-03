@@ -1,4 +1,4 @@
-const { User } = require("../db.js");
+const { User, Feedback } = require("../db.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require('cloudinary')
@@ -102,7 +102,7 @@ module.exports = {
       if (!user) {
         return res.status(400).send({ message: "Cuenta inexistente, registrese", status: 400 })
       }
-      const validate = await bcrypt.compare(password, user.password )
+      const validate = await bcrypt.compare(password, user.password)
       if (!validate) return res.status(400).json({ message: 'Credenciales inválidas' })
       const token = jwt.sign({ id: user.id }, SECRET)
       res.header('auth-token', token)
@@ -170,14 +170,64 @@ module.exports = {
     } catch (error) {
       console.log(error)
     }
+  },
+
+  async calificarCompaneros(req, res) {
+    const { body: { toId, fromId, qualification, description, position } } = req
+
+    if (!toId || !fromId) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
+
+    try {
+      const feedback = await Feedback.findOne({
+        where: {
+          toId: toId,
+          fromId: fromId
+        }
+      })
+      if (feedback) {
+        const feedDate = feedback.createdAt
+        const currentDate = new Date()
+        // checheamos si ha pasado una semana desde el ultimo feedback para esos usuarios 
+        if ((currentDate - feedDate) < 604800000) {
+          console.log('ya hiciste un review a este companero esta semana..!')
+          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!'})
+        } else {
+          console.log('puedes hacer un review a este companero..!')
+
+          const feedbackData = { toId, fromId, qualification, description, position }
+          const newFeedback = await Feedback.create(feedbackData)
+          res.status(201).send(newFeedback)
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      res.send(500).send(err)
+    }
+  },
+
+  async getUserFeedback(req, res) {
+    const { params: { id } } = req
+    try {
+      const user = await User.findOne({
+        where: {
+          id: id
+        }
+      })
+      if(!user) return res.status(404).send({ msg: 'el usuario no existe..!'})
+
+      const userfeedback = await Feedback.findAll({
+        where: {
+          toId: id
+        }
+      })
+      if(!userfeedback) return res.status(400).send({ msg: 'este usuario no tiene comentarios'})
+
+      res.status(200).send(userfeedback)
+    } catch (err) {
+      console.log(err)
+      res.status(500).send(err)
+    }
   }
-
-
-
-
-
-
-
 
 
 }
