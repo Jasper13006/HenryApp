@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from "@material-ui/core";
-import EmployeeForm from './EmployeeForm'
+import RegisterForm from './RegisterForm'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -21,7 +21,7 @@ const SignupForm = () => {
         <Container component="main" maxWidth='lg'>
             <CssBaseline />
             <div className={classes.paper}>
-                <EmployeeForm />
+                <RegisterForm />
             </div>
         </Container>
     );

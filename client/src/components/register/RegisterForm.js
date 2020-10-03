@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { Grid, TextField, } from '@material-ui/core';
 import Controls from "./controls/Controls";
 import { useForm, Form } from './useForm';
-import * as country from "./country";
-import * as provincias from './provincias'
+import * as country from "./listas/country";
+import * as provincias from './listas/provincias'
+import * as educacion from './listas/educacion'
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
 
 const genderItems = [
-    { id: 'male', title: 'Male' },
-    { id: 'female', title: 'Female' },
-    { id: 'other', title: 'Other' },
+    { id: 'masculino', title: 'Masculino' },
+    { id: 'femenino', title: 'Femenino' },
+    { id: 'otro', title: 'Otro' },
 ]
 
 const initialFValues = {
@@ -19,23 +20,24 @@ const initialFValues = {
     email: '',
     password: '',
     // city: '',
-    gender: 'male',
+    gender: 'masculino',
     country: '',
     provincia: '',
+    educacion: '',
     birthDate: new Date(),
     // isPermanent: false,
 }
 
-export default function EmployeeForm() {
+export default function RegisterForm() {
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('name' in fieldValues)
-            temp.name = fieldValues.name ? "" : "This field is required."
+            temp.name = fieldValues.name ? "" : "Este campo es requerido"
         if ('lastName' in fieldValues)
-            temp.lastName = fieldValues.lastName ? "" : "This field is required."
+            temp.lastName = fieldValues.lastName ? "" : "Este campo es requerido"
         if ('email' in fieldValues)
-            temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
+            temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "El Email no es valido"
         if ('password' in fieldValues)
             temp.password = (regex).test(fieldValues.password) ? "" : ` 
             Minimo 8 caracteres,
@@ -46,7 +48,11 @@ export default function EmployeeForm() {
             Al menos 1 caracter especial
         `
         if ('country' in fieldValues)
-            temp.country = fieldValues.country.length != 0 ? "" : "This field is required."
+            temp.country = fieldValues.country.length != 0 ? "" : "Este campo es requerido"
+        if ('provincia' in fieldValues)
+            temp.provincia = fieldValues.provincia.length != 0 ? "" : "Este campo es requerido"
+        if ('educacion' in fieldValues)
+            temp.educacion = fieldValues.educacion.length != 0 ? "" : "Este campo es requerido"
         setErrors({
             ...temp
         })
@@ -104,12 +110,6 @@ export default function EmployeeForm() {
                         onChange={handleInputChange}
                         error={errors.password}
                     />
-                    {/* <Controls.Input
-                        label="City"
-                        name="city"
-                        value={values.city}
-                        onChange={handleInputChange}
-                    /> */}
                     <Controls.DatePicker
                         name="birthDate"
                         label="Fecha de nacimiento"
@@ -141,17 +141,22 @@ export default function EmployeeForm() {
                         value={values.provincia}
                         onChange={handleInputChange}
                         options={!values.country ? [] : provincias[values.country]()}
-                        // options={provincias['Argentina']()}
-                        error={errors.country}
+                        error={errors.provincia}
                     />
-
-                    <Controls.Checkbox
+                    <Controls.Select
+                        name="educacion"
+                        label="Educación"
+                        value={values.educacion}
+                        onChange={handleInputChange}
+                        options={educacion.educacion()}
+                        error={errors.educacion}
+                    />
+                    {/* <Controls.Checkbox
                         name="isPermanent"
                         label="Permanent Employee"
                         value={values.isPermanent}
                         onChange={handleInputChange}
-                    />
-
+                    /> */}
                     <div>
                         <Controls.Button
                             type="submit"
