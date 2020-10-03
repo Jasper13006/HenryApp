@@ -2,10 +2,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const grouppm = require('./models/grouppm');
-const {
-  DB_USER, DB_PASSWORD, DB_HOST,
-} = process.env;
+const {  DB_USER, DB_PASSWORD, DB_HOST,} = process.env;
 
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/henryapp`, {
   logging: false, // set to console.log to see the raw SQL queries
@@ -31,7 +28,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo } = sequelize.models;
+const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Relaciones
@@ -42,8 +39,16 @@ Cohorte.belongsTo(User, { as: 'instructor' }) //deberia agregar columna instruct
 
 Grouppm.belongsTo(User, { as: 'PM1' }) // deberia agregar columna PM1 a Grouppm
 Grouppm.belongsTo(User, { as: 'PM2' }) // deberia agregar columna PM2 a Grouppm
-Grouppm.belongsTo(User, { as: 'student' })
 Grouppm.belongsTo(Cohorte) // deberia agregar columna cohorteId a group
+
+Student.belongsTo(User) //deberia agregar columna userId a Student OK
+Student.belongsTo(Cohorte) //deberia agregar columna cohorteId a Student OK
+Student.belongsTo(Grouppm) //deberia agregar columna groupId a Student OK+
+
+// Asociaciones Pair
+Student.belongsTo(Groupp)
+Groupp.belongsTo(Cohorte)
+Groupp.belongsTo(Grouppm)
 
 Checkpoint.belongsTo(User) // deberia agregar columna UserId a Checkpoint
 

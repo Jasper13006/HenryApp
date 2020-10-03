@@ -9,6 +9,11 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
 
+    nameClass: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -21,7 +26,7 @@ module.exports = (sequelize) => {
     },
 
     linkVideos: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
+      type: DataTypes.STRING,
       allowNull: true,
     },
   });
