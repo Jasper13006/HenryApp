@@ -8,9 +8,11 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: "#fff  ",
         marginTop: theme.spacing(8),
+        // padding: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        opacity: '0.6',
     },
 
 }));
