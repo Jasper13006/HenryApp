@@ -20,7 +20,7 @@ server.post('/addStudent/:id',authenticate,isAdmin,addStudent)
 server.post('/group-pm/create',authenticate, createPmGroup)
 
 // Ruta agregar a grupo pms y pps
-server.put('/addStudent/:id',editStudent)
+server.put('/addStudent/:id', authenticate, isAdmin, editStudent)
 
 //Ruta trae un grupo de pms en un objeto con una propiedad "gpm" = detalles de pms y grupo
 // "students" = informacion de todos los estudiantes
@@ -29,7 +29,7 @@ server.get('/group-pm/:id', authenticate, isAdmin, getGroupPm)
 
 // editar pms de un grupo de pms
 
-server.put('/group-pm/edit/:id',editGroupPm)
+server.put('/group-pm/edit/:id', authenticate, isAdmin, editGroupPm)
 
 
 module.exports = server;
