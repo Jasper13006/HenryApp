@@ -35,10 +35,10 @@ server.get("/pms", getPms)
 server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
 
 // calificar companero de pair programing
-server.post('/nota-pp', calificarCompaneros)
+server.post('/nota-pp', authenticate, calificarCompaneros)
 
 // traer el feedback de un usuario en particular
-server.get('/nota-pp/:id', getUserFeedback)
+server.get('/nota-pp/:id', authenticate, getUserFeedback)
 
 // busca usuario por id
 server.get('/:id', authenticate, getOneUser )
