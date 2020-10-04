@@ -153,7 +153,7 @@ module.exports = {
     if (!user) return res.status(404).send('Usuario inexistente para ese id')
     user.city = city || user.city;
     user.country = country || user.country;
-    user.image = image || user.image;
+    if (req.files) {user.image = image || user.image};
     user.googleId = googleId || user.googleId;
     user.gitHubId = gitHubId || user.gitHubId;
     await user.save()
@@ -221,8 +221,9 @@ module.exports = {
   async calificarCompaneros(req, res) {
     const { body: { toId, fromId, qualification, description, position } } = req
 
-    if (!toId || !fromId) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
+    if (!toId  || !fromId || !qualification) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
 
+    const feedbackData = { toId, fromId, qualification, description, position }
     try {
       const feedback = await Feedback.findOne({
         where: {
@@ -236,15 +237,17 @@ module.exports = {
         // checheamos si ha pasado una semana desde el ultimo feedback para esos usuarios 
         if ((currentDate - feedDate) < 604800000) {
           console.log('ya hiciste un review a este companero esta semana..!')
-          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!'})
+          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!' })
         } else {
           console.log('puedes hacer un review a este companero..!')
 
-          const feedbackData = { toId, fromId, qualification, description, position }
           const newFeedback = await Feedback.create(feedbackData)
           res.status(201).send(newFeedback)
         }
       }
+
+      const newFeedback = await Feedback.create(feedbackData)
+      res.status(201).send(newFeedback)
     } catch (err) {
       console.log(err)
       res.send(500).send(err)
