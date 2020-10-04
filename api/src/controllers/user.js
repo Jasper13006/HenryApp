@@ -153,7 +153,7 @@ module.exports = {
     if (!user) return res.status(404).send('Usuario inexistente para ese id')
     user.city = city || user.city;
     user.country = country || user.country;
-    user.image = image || user.image;
+    if (req.files) {user.image = image || user.image};
     user.googleId = googleId || user.googleId;
     user.gitHubId = gitHubId || user.gitHubId;
     await user.save()
@@ -219,7 +219,7 @@ module.exports = {
   },
 
   async calificarCompaneros(req, res) {
-    const { body: { toId, fromId, qualification, description, position } } = req
+    const { toId, fromId, qualification, description}  = req.body
 
     if (!toId || !fromId) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
 
@@ -240,7 +240,7 @@ module.exports = {
         } else {
           console.log('puedes hacer un review a este companero..!')
 
-          const feedbackData = { toId, fromId, qualification, description, position }
+          const feedbackData = { toId, fromId, qualification, description }
           const newFeedback = await Feedback.create(feedbackData)
           res.status(201).send(newFeedback)
         }
