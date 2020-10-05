@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
+        background: '#21252985',
         backgroundcolor: '#FFFFFF1A', // El mismo que antes, blanco con 50% de transparencia.
-        marginTop: theme.spacing(14),
+        marginTop: theme.spacing(8),
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         color: '#ffffff'
     },
     register: {
-        color: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)    '
+        color: '#ffffff'
     }
 
 }));

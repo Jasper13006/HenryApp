@@ -19,9 +19,9 @@ export function postRegister(data) {
                 })
                 Swal.fire({
                     icon: 'success',
-                    title: 'ha salido todo bien!',
+                    title: 'Te has registrado correctamente! Revisa tu correo!',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 3000
                 })
             }
             ).catch(e => {
