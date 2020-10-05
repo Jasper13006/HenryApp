@@ -1,11 +1,25 @@
-const { User } = require("../db.js");
+const { User, Feedback } = require("../db.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary');
+const nodemailer = require('nodemailer');
 
 const SECRET = process.env.SECRET;
 
-
+const transporter = nodemailer.createTransport({
+	service: 'gmail',
+	host: 'smtp.gmail.com',
+	port: 465,
+	secure: true,
+	auth: {
+	  type: 'OAuth2',
+	  user: process.env.user,
+	  clientId: process.env.clientId,
+	  clientSecret: process.env.clientSecret,
+	  refreshToken: process.env.refreshToken,
+	  accessToken: process.env.accessToken
+	}
+  })
 
 const uploadImage = (file) => new Promise((resolve, reject) => {
 
@@ -102,7 +116,7 @@ module.exports = {
       if (!user) {
         return res.status(400).send({ message: "Cuenta inexistente, registrese", status: 400 })
       }
-      const validate = await bcrypt.compare(password, user.password )
+      const validate = await bcrypt.compare(password, user.password)
       if (!validate) return res.status(400).json({ message: 'Credenciales inválidas' })
       const token = jwt.sign({ id: user.id }, SECRET)
       res.header('auth-token', token)
@@ -139,7 +153,7 @@ module.exports = {
     if (!user) return res.status(404).send('Usuario inexistente para ese id')
     user.city = city || user.city;
     user.country = country || user.country;
-    user.image = image || user.image;
+    if (req.files) {user.image = image || user.image};
     user.googleId = googleId || user.googleId;
     user.gitHubId = gitHubId || user.gitHubId;
     await user.save()
@@ -170,14 +184,125 @@ module.exports = {
     } catch (error) {
       console.log(error)
     }
+  },
+  
+  async mailResetPassword (req, res) {
+    const { email } = req.body	
+    const usuario = await User.findOne({
+      where: {
+        email: email
+      }
+    })   
+    if (usuario) {      
+      const emailToken = jwt.sign({ id: usuario.id }, SECRET, { expiresIn: '1d' })
+      usuario.passwordToken = emailToken || usuario.passwordToken
+      usuario.save()
+      const url = `http://localhost:3000/user/resetpassword/${emailToken}`
+      const mailOptions = {
+        from: process.env.user,
+        to: email,
+        subject: 'Restablece tu contraseña!',
+        html: `Clickea en el link para cambiar tu contraseña <a href='${url}'>${url}</a>. Este link expira en un dia y solo es válido una vez..!` 
+      }
+      transporter.sendMail(mailOptions, (err, response) => {
+        if (err) {
+          console.log(err)
+          res.status(400).send({msg: 'mail no enviado'})
+        } else {
+          console.log('email sent')
+          res.status(200).send('email enviado!')
+        }
+      })
+    } else {
+      res.status(400).send({ msg: 'usuario no existe', status: 400 })
+    }	
+  },
+
+  async calificarCompaneros(req, res) {
+    const { body: { toId, fromId, qualification, description, position } } = req
+
+    if (!toId  || !fromId || !qualification) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
+
+    const feedbackData = { toId, fromId, qualification, description, position }
+    try {
+      const feedback = await Feedback.findOne({
+        where: {
+          toId: toId,
+          fromId: fromId
+        }
+      })
+      if (feedback) {
+        const feedDate = feedback.createdAt
+        const currentDate = new Date()
+        // checheamos si ha pasado una semana desde el ultimo feedback para esos usuarios 
+        if ((currentDate - feedDate) < 604800000) {
+          console.log('ya hiciste un review a este companero esta semana..!')
+          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!' })
+        } else {
+          console.log('puedes hacer un review a este companero..!')
+
+          const newFeedback = await Feedback.create(feedbackData)
+          res.status(201).send(newFeedback)
+        }
+      }
+
+      const newFeedback = await Feedback.create(feedbackData)
+      res.status(201).send(newFeedback)
+    } catch (err) {
+      console.log(err)
+      res.send(500).send(err)
+    }
+  },
+
+  async getUserFeedback(req, res) {
+    const { params: { id } } = req
+    try {
+      const user = await User.findOne({
+        where: {
+          id: id
+        }
+      })
+      if(!user) return res.status(404).send({ msg: 'el usuario no existe..!'})
+
+      const userfeedback = await Feedback.findAll({
+        where: {
+          toId: id
+        }
+      })
+      if(!userfeedback) return res.status(400).send({ msg: 'este usuario no tiene comentarios'})
+
+      res.status(200).send(userfeedback)
+    } catch (err) {
+      console.log(err)
+      res.status(500).send(err)
+    }
+  },
+
+     
+  async forgotPassword(req, res){
+    try {
+      // get user id from the token..!
+      const { id } = jwt.verify(req.params.token, SECRET)
+      if(!id) {
+        return res.status(400).send({msg: 'Token expirado, recuerde contraseña nuevamente..!', status: 401})
+      }
+      // find the user with that id
+      let user = await User.findByPk(id)
+      if (!user.passwordToken){
+        return res.status(400).send({msg:'Token no válido'})
+      }
+      // hash the password 
+      let newPassword = await hashPassword(req.body.password)
+  
+      // update the user with the new password
+      await user.update({ password: newPassword, passwordToken: null}) // falta destruir el token
+  
+      // send the response
+      res.send({msg: 'contraseña cambiada exitosamente', user, status: 200})
+    } catch (error) {
+      console.log(error)
+      res.status(500).send(error)
+    }
   }
-
-
-
-
-
-
-
-
 
 }

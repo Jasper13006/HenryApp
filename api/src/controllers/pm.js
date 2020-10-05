@@ -19,7 +19,7 @@ module.exports = {
 
     const PM1 = await User.findByPk(PM1Id)
     const PM2 = await User.findByPk(PM2Id)
-    if (!PM1.pm && !PM2.pm) {
+    if (!PM1.pm || !PM2.pm) {
       return res.status(400).send({ message: "Los id's no son PM's", status: 400 });
     }
 
@@ -38,12 +38,8 @@ module.exports = {
   ///////////////////////////////////////////
   async editStudent(req, res) {
     const { id } = req.params
-    const { userId, grouppmId, groupPPId } = req.body
-    const usuario = req.user
-    const user = await User.findByPk(usuario.id)
-    if (!user.admin &&  !user.instructor && !user.pm) return res.status(403).send({ message: "Sin autorización", status: 400 })
+    const { userId, grouppmId, grouppId } = req.body
     try {
-
       const student = await Student.findOne({
         where: {
           userId: userId,
@@ -55,7 +51,7 @@ module.exports = {
       }
 
       student.grouppmId = grouppmId || student.grouppmId;
-      student.grouppId = groupPPId || student.grouppId;
+      student.grouppId = grouppId || student.grouppId;
       student.save()
       return res.status(200).send(student)
     } catch (err) {
@@ -104,10 +100,8 @@ module.exports = {
   ///////////////////////////////////////////
   async editGroupPm(req, res) {
     const { id } = req.params
-    const { PM1Id, PM2Id, students } = req.body
-    const usuario = req.user
-    const user = await User.findByPk(usuario.id)
-    if (!user.admin &&  !user.instructor) return res.status(403).send({ message: "Sin autorización", status: 400 })
+    const { PM1Id, PM2Id, name, cohorteId } = req.body
+
     if (PM1Id) {
       const PM1 = await User.findByPk(PM1Id)
       if (!PM1.pm) {
@@ -122,14 +116,17 @@ module.exports = {
     }
     try {
       const group = await Grouppm.findByPk(id)
+      console.log(id)
       if (!group) return res.status(404).send({ msg: 'No se encontro ningun grupo con este id' })
       group.PM1Id = PM1Id || group.PM1Id;
       group.PM2Id = PM2Id || group.PM2Id;
+      group.name = name || group.name;
+      group.cohorteId = cohorteId || group.cohorteId;
       group.save()
       return res.status(200).send(group)
     } catch (err) {
       return res.status(500).send(err)
     }
-  }
-
+  },
+  
 }

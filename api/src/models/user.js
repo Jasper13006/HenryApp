@@ -77,6 +77,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    
+    passwordToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
+    }    
   });
 };
