@@ -13,7 +13,7 @@ const NavBar = () => {
                         <li className="nav-item"><a className="nav-link js-scroll-trigger" href="#services">Servicios</a></li>
                         <li className="nav-item"><a className="nav-link js-scroll-trigger" href="#portfolio">Alumnos</a></li>
                         <li className="nav-item"><a className="nav-link js-scroll-trigger" href="#contact">Contáctenos</a></li>
-                        <li className="nav-item"><a className="nav-link js-scroll-trigger btn-ingresar" style={{paddingLeft: '15px'}} href="#">Ingresar</a></li>
+                        <li className="nav-item"><a className="nav-link js-scroll-trigger btn-ingresar" style={{paddingLeft: '15px'}} href="/login">Ingresar</a></li>
                     </ul>
                 </div>
             </div>

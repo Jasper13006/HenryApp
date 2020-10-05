@@ -16,7 +16,13 @@ export const USER_REGISTER = 'USER_REGISTER';
 
 
 /* ------------------------------------------------------------------------------- /
-/ Type para usuarios /
+/ USERS /
 / ------------------------------------------------------------------------------- */
 export const GET_USER = 'GET_USER'
 export const SET_ACTIVE_OPTION_PANEL = 'SET_ACTIVE_OPTION_PANEL'
+
+/* ------------------------------------------------------------------------------- /
+/ COHORTES /
+/ ------------------------------------------------------------------------------- */
+export const GET_MY_COHORTE = 'GET_MY_COHORTE'
+export const GET_STUDENTS_BY_COHORTE_ID = 'GET_STUDENTS_BY_COHORTE_ID'
