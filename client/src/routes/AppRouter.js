@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './AppRouter.css';
-import Panel from "../components/panel/Panel.js";
+import Panel from "../components/panel/panel.js";
 import Home from '../pages/Home';
 import Login from '../components/login/Login';
 import Register from '../components/register/RegisterMain';
@@ -15,7 +15,7 @@ const AppRouter = () => {
     return (
         <Router>
             <Switch>
-                <PublicRoute exact path="/register" isToken={token} component={Register} />
+                <PublicRoute exact path="/register/:token"  component={Register} />
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
                 <PrivateRoute path="/panel" isToken={token} component={Panel} />

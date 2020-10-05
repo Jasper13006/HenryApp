@@ -12,7 +12,7 @@ const { calificarAlumno } = require('../controllers/checkpoints')
 server.get("/", getUsers);
 
 //Ruta crear usuario
-server.post("/register", registerUser);
+server.post("/register/:token", registerUser);
 
 // ruta login
 server.post("/login", loginUser);

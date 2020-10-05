@@ -61,7 +61,8 @@ function Header(props) {
     "/panel/cohorte":["Mis clases","Compañeros"],
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
-    "/panel/notas":["Resumen de Notas","Ranking"]
+    "/panel/notas":["Resumen de Notas","Ranking"],
+    "/panel/invitacion":["Lista de ingreso"],
   }
 
     useEffect(()=> {
