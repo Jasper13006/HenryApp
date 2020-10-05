@@ -8,7 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+// import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -56,7 +56,7 @@ function Header(props) {
 
   //En este objeto colocar los nombres de las opciones para cada ruta del panel
   const options={
-    "/panel/perfil":["Datos Personales","Cambiar contraseña","Actualizar Foto"],
+    "/panel/perfil":["Datos Personales","Cambiar contraseña"],
     "/panel/cohorte":["Mis clases","Compañeros","Lecturas recomendadas"],
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
