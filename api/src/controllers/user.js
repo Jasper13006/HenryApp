@@ -237,17 +237,17 @@ module.exports = {
         // checheamos si ha pasado una semana desde el ultimo feedback para esos usuarios 
         if ((currentDate - feedDate) < 604800000) {
           console.log('ya hiciste un review a este companero esta semana..!')
-          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!' })
+          return res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!' })
         } else {
           console.log('puedes hacer un review a este companero..!')
 
           const newFeedback = await Feedback.create(feedbackData)
-          res.status(201).send(newFeedback)
+          return res.status(201).send(newFeedback)
         }
       }
 
       const newFeedback = await Feedback.create(feedbackData)
-      res.status(201).send(newFeedback)
+      return res.status(201).send(newFeedback)
     } catch (err) {
       console.log(err)
       res.send(500).send(err)
