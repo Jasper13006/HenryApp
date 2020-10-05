@@ -51,7 +51,7 @@ module.exports = {
           id: id
         },
       })
-      if (!gpp) return res.status(404).send({ msg: 'No se encontro ningun grupo con este ID', status: 404 })
+      if (!gpp) return res.status(404).send({ message: 'No se encontro ningun grupo con este ID', status: 404 })
       const students = await Student.findAll({
         where: {
           grouppId: id

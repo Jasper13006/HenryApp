@@ -59,6 +59,22 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+
+  async getVideosByCohorteId (req, res) {
+    const { id } = req.params
+
+    try {
+    const data = await Modulo.findAll({
+      where: {
+        cohorteId: id
+      }
+    })
+    if (data && data.length === 0) {
+      return res.status(404).send({message: 'No hay modulos con ese ID de cohorte', status: 404})
+    }
+    return res.send(data)
+  } catch (err) { console.log(err) }
   }
 
 }

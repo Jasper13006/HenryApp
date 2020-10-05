@@ -47,7 +47,7 @@ module.exports = {
         }
       })
       if (!student) {
-        return res.status(400).send({ msg: 'este usuario no existe en el cohorte' })
+        return res.status(400).send({ message: 'este usuario no existe en el cohorte' })
       }
 
       student.grouppmId = grouppmId || student.grouppmId;
@@ -79,7 +79,7 @@ module.exports = {
 
         ]
       })
-      if (!gpm) return res.status(404).send({ msg: 'No se encontro ningun grupo con este ID', status: 404 })
+      if (!gpm) return res.status(404).send({ message: 'No se encontro ningun grupo con este ID', status: 404 })
       const students = await Student.findAll({
         where: {
           grouppmId: id
@@ -117,7 +117,7 @@ module.exports = {
     try {
       const group = await Grouppm.findByPk(id)
       console.log(id)
-      if (!group) return res.status(404).send({ msg: 'No se encontro ningun grupo con este id' })
+      if (!group) return res.status(404).send({ message: 'No se encontro ningun grupo con este id' })
       group.PM1Id = PM1Id || group.PM1Id;
       group.PM2Id = PM2Id || group.PM2Id;
       group.name = name || group.name;

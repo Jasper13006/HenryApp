@@ -127,7 +127,7 @@ module.exports = {
   async promoteUser(req, res) {
     const admin = req.user;
     const user = await User.findByPk(admin.id)
-    if (user.admin) {
+    if (user && user.admin) {
       const { role, estado } = req.body; // por body "role":"admin" , "estado": true // por ejemplo 
       User.findByPk(req.params.id)
         .then((user) => {
@@ -207,21 +207,21 @@ module.exports = {
       transporter.sendMail(mailOptions, (err, response) => {
         if (err) {
           console.log(err)
-          res.status(400).send({msg: 'mail no enviado'})
+          res.status(400).send({message: 'mail no enviado'})
         } else {
           console.log('email sent')
           res.status(200).send('email enviado!')
         }
       })
     } else {
-      res.status(400).send({ msg: 'usuario no existe', status: 400 })
+      res.status(400).send({ message: 'usuario no existe', status: 400 })
     }	
   },
 
   async calificarCompaneros(req, res) {
     const { body: { toId, fromId, qualification, description, position } } = req
 
-    if (!toId  || !fromId || !qualification) return res.status(400).send({ msg: 'Este campo es necesario..!', status: 400 })
+    if (!toId  || !fromId || !qualification) return res.status(400).send({ message: 'Este campo es necesario..!', status: 400 })
 
     const feedbackData = { toId, fromId, qualification, description, position }
     try {
@@ -237,17 +237,17 @@ module.exports = {
         // checheamos si ha pasado una semana desde el ultimo feedback para esos usuarios 
         if ((currentDate - feedDate) < 604800000) {
           console.log('ya hiciste un review a este companero esta semana..!')
-          res.status(400).send({ msg: 'ya hiciste un review a este companero esta semana..!' })
+          return res.status(400).send({ message: 'ya hiciste un review a este companero esta semana..!' })
         } else {
           console.log('puedes hacer un review a este companero..!')
 
           const newFeedback = await Feedback.create(feedbackData)
-          res.status(201).send(newFeedback)
+          return res.status(201).send(newFeedback)
         }
       }
 
       const newFeedback = await Feedback.create(feedbackData)
-      res.status(201).send(newFeedback)
+      return res.status(201).send(newFeedback)
     } catch (err) {
       console.log(err)
       res.send(500).send(err)
@@ -262,14 +262,14 @@ module.exports = {
           id: id
         }
       })
-      if(!user) return res.status(404).send({ msg: 'el usuario no existe..!'})
+      if(!user) return res.status(404).send({ message: 'el usuario no existe..!'})
 
       const userfeedback = await Feedback.findAll({
         where: {
           toId: id
         }
       })
-      if(!userfeedback) return res.status(400).send({ msg: 'este usuario no tiene comentarios'})
+      if(!userfeedback) return res.status(400).send({ message: 'este usuario no tiene comentarios'})
 
       res.status(200).send(userfeedback)
     } catch (err) {
@@ -284,12 +284,12 @@ module.exports = {
       // get user id from the token..!
       const { id } = jwt.verify(req.params.token, SECRET)
       if(!id) {
-        return res.status(400).send({msg: 'Token expirado, recuerde contraseña nuevamente..!', status: 401})
+        return res.status(400).send({message: 'Token expirado, recuerde contraseña nuevamente..!', status: 401})
       }
       // find the user with that id
       let user = await User.findByPk(id)
       if (!user.passwordToken){
-        return res.status(400).send({msg:'Token no válido'})
+        return res.status(400).send({message:'Token no válido'})
       }
       // hash the password 
       let newPassword = await hashPassword(req.body.password)
@@ -298,7 +298,7 @@ module.exports = {
       await user.update({ password: newPassword, passwordToken: null}) // falta destruir el token
   
       // send the response
-      res.send({msg: 'contraseña cambiada exitosamente', user, status: 200})
+      res.send({message: 'contraseña cambiada exitosamente', user, status: 200})
     } catch (error) {
       console.log(error)
       res.status(500).send(error)
