@@ -52,7 +52,8 @@ module.exports = {
       const cohorteId = await Cohorte.findOne({
         where: {
           id: id
-        }
+        },
+        include: [{ model: User, as: "instructor" },]
       })
       if (!cohorteId) {
         return res.status(404).send({ message: 'Ningun cohorte ha sido encontrado con ese ID' })

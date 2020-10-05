@@ -7,11 +7,11 @@ export function postLogin(data) {
         return axios({
             method: 'POST',
             url: `http://localhost:3001/user/login`,
-            data: data
+            data: data,
 
         })
             .then(res => {
-                // console.log('ESTOY EN EL .THEN edit', res)
+                localStorage.setItem("idUser", res.data.user.id);
                 console.log(res.data.token);                
                 localStorage.setItem("token", res.data.token);                
                 localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -24,9 +24,8 @@ export function postLogin(data) {
                     title: 'Te has logueado correctamente',
                     showConfirmButton: false,
                     timer: 1500
-                }).then(function() {
-                    window.location = 'http://localhost:3000/panel';
-                });              
+                })
+                window.location.assign("http://localhost:3000/panel")
             }
             ).catch(e => {
                 Swal.fire({
