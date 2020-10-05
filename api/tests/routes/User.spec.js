@@ -108,19 +108,19 @@ const app = require('../../src/app');
         expect(res.body.message).to.be.equal('Credenciales inválidas')
       })
     })
-/* 
+
     describe('Promover', () => {
-      it('deberia promover de instructor el usuario', async () => {                   
+      it('deberia promover de instructor el usuario', async () => {   
+        console.log(token)                
         const res = await request(app)
-        .put('user/promote/2')   
-        .send({role:"instructor",estado:true})         
+        .put('/user/promote/2')  
+        .set({'auth-token':token}) 
+        .send({role:"instructor",estado:true})      
         expect(res.statusCode).to.be.equal(200)
-        expect(res.body.instructor).to.be.equal(true)
-        done() 
-        .catch(err => console.log(err))      
+        expect(res.body.instructor).to.be.equal(true)    
         
       })
-    }) */
+    })
 
     describe('Traer los instructores', () => {
       it('deberia traer un array con todos los instructores', async () => {  
