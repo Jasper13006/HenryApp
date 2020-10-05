@@ -9,9 +9,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#000000",
         // paddingLeft: '320px',
         width: '100%',
-        height: '100%',
-        backgroundImage: 'url(https://images5.alphacoders.com/308/308300.jpg)',
-        // opacity: '0.5',
+        height: '1000',
+        background: 'url(https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80)',
+        // background: 'url(https://visuallblogg.files.wordpress.com/2017/02/geometria-diseno-creatividad-arte-amarillo-fondos-de-pantalla-hd-professor-falken-com_.jpg)',
+        // backgroundImage: 'url(https://images5.alphacoders.com/308/308300.jpg)',
         display: 'flex',
     },
 

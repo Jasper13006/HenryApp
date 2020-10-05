@@ -5,7 +5,21 @@ import { useForm, Form } from './useForm';
 import * as country from "./listas/country";
 import * as provincias from './listas/provincias'
 import * as educacion from './listas/educacion'
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+    grid: {
+        width: '600px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    form: {
+        width: '500px',
+    }
+
+}));
 
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
 
@@ -31,6 +45,7 @@ const initialFValues = {
 }
 
 export default function RegisterForm() {
+    const classes = useStyles()
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -83,7 +98,7 @@ export default function RegisterForm() {
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={12} className={classes.grid}>
                     <Controls.Input
                         name="name"
                         label="Nombre"
@@ -112,22 +127,22 @@ export default function RegisterForm() {
                         onChange={handleInputChange}
                         error={errors.password}
                     />
-                    <Controls.DatePicker
+                    {/* <Controls.DatePicker
                         name="birthDate"
                         label="Fecha de nacimiento"
                         value={values.birthDate}
                         onChange={handleInputChange}
-                    />
+                    /> */}
 
-                </Grid>
-                <Grid item xs={6}>
-                    <Controls.RadioGroup
+                    {/* </Grid> */}
+                    {/* <Grid item xs={6}> */}
+                    {/* <Controls.RadioGroup
                         name="gender"
                         label="Genero"
                         value={values.gender}
                         onChange={handleInputChange}
                         items={genderItems}
-                    />
+                    /> */}
                     <Controls.Select
                         name="country"
                         label="Pais"
@@ -145,14 +160,14 @@ export default function RegisterForm() {
                         options={!values.country ? [] : provincias[values.country]()}
                         error={errors.provincia}
                     />
-                    <Controls.Select
+                    {/* <Controls.Select
                         name="educacion"
                         label="Educación"
                         value={values.educacion}
                         onChange={handleInputChange}
                         options={educacion.educacion()}
                         error={errors.educacion}
-                    />
+                    /> */}
                     {/* <Controls.Checkbox
                         name="isPermanent"
                         label="Permanent Employee"
