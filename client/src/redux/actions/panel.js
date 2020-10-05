@@ -1,5 +1,6 @@
 // import axios from 'axios'
 import { SET_ACTIVE_OPTION_PANEL } from '../consts/actionTypes'
+import axios from 'axios';
 
 
 

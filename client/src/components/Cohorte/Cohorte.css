@@ -1,0 +1,32 @@
+.pizarron {
+    background-image:  url("./pizarron.jpg");
+    height: 500px;
+    width: 1150px;
+    border-radius: 50px;
+    display: grid;
+    /* grid-template-columns: % 90%; */
+    grid-gap: 10px;
+    grid-auto-rows: 100px;
+    color: whitesmoke;
+    font-size: 15px;
+}
+.subtitulo{
+    display: grid;
+    grid-column: 1;
+    justify-self: center;
+    direction: ltr;
+    color: #8f8787;
+    font-size: 24px;
+}
+
+.links{
+    color: yellow;
+    border-radius: 1px solid black;
+}
+
+.linksGenerales{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 250px;
+}
