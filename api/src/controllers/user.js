@@ -127,7 +127,7 @@ module.exports = {
   async promoteUser(req, res) {
     const admin = req.user;
     const user = await User.findByPk(admin.id)
-    if (user.admin) {
+    if (user && user.admin) {
       const { role, estado } = req.body; // por body "role":"admin" , "estado": true // por ejemplo 
       User.findByPk(req.params.id)
         .then((user) => {
