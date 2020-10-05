@@ -8,10 +8,15 @@
 / ------------------------------------------------------------------------------- */
 
 export const USER_LOGIN = 'USER_LOGIN';
+/* ------------------------------------------------------------------------------- /
+/ REGISTER /
+/ ------------------------------------------------------------------------------- */
+
+export const USER_REGISTER = 'USER_REGISTER';
 
 
 /* ------------------------------------------------------------------------------- /
 / Type para usuarios /
 / ------------------------------------------------------------------------------- */
 export const GET_USER = 'GET_USER'
-export const SET_ACTIVE_OPTION_PANEL ='SET_ACTIVE_OPTION_PANEL'
+export const SET_ACTIVE_OPTION_PANEL = 'SET_ACTIVE_OPTION_PANEL'
