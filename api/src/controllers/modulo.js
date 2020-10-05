@@ -71,7 +71,7 @@ module.exports = {
       }
     })
     if (data && data.length === 0) {
-      return res.status(404).send({message: 'No hay modulos con ese ID de cohoerte', status: 404})
+      return res.status(404).send({message: 'No hay modulos con ese ID de cohorte', status: 404})
     }
     return res.send(data)
   } catch (err) { console.log(err) }
