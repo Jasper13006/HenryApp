@@ -12,10 +12,9 @@ export function postLogin(data) {
         })
             .then(res => {
                 // console.log('ESTOY EN EL .THEN edit', res)
-                console.log(res.data.token)
-                console.log(res.data.user.id)
-                localStorage.setItem("token", res.data.token);
-                localStorage.setItem("idUser", res.data.user.id);
+                console.log(res.data.token);                
+                localStorage.setItem("token", res.data.token);                
+                localStorage.setItem('user', JSON.stringify(res.data.user));
                 dispatch({
                     type: USER_LOGIN,
                     payload: res.data.token
@@ -25,7 +24,9 @@ export function postLogin(data) {
                     title: 'Te has logueado correctamente',
                     showConfirmButton: false,
                     timer: 1500
-                })
+                }).then(function() {
+                    window.location = 'http://localhost:3000/panel';
+                });              
             }
             ).catch(e => {
                 Swal.fire({
