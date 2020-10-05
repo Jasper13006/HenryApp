@@ -22,7 +22,9 @@ export function postRegister(data) {
                     title: 'Te has registrado correctamente! Revisa tu correo!',
                     showConfirmButton: false,
                     timer: 3000
-                })
+                }).then(function() {
+                    window.location = 'http://localhost:3000/login';
+                });
             }
             ).catch(e => {
                 Swal.fire({
