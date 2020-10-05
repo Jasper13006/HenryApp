@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid, TextField, } from '@material-ui/core';
 import Controls from "./controls/Controls";
 import { useForm, Form } from './useForm';
@@ -6,6 +7,7 @@ import * as country from "./listas/country";
 import * as provincias from './listas/provincias'
 import * as educacion from './listas/educacion'
 import { makeStyles } from '@material-ui/core/styles';
+import { postRegister } from '../../redux/actions/register'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -14,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+
     },
     form: {
         width: '500px',
@@ -23,30 +26,20 @@ const useStyles = makeStyles((theme) => ({
 
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
 
-const genderItems = [
-    { id: 'masculino', title: 'Masculino' },
-    { id: 'femenino', title: 'Femenino' },
-    { id: 'otro', title: 'Otro' },
-]
 
 const initialFValues = {
-    // id: 0,
     name: '',
     lastName: '',
     email: '',
     password: '',
-    // city: '',
-    gender: 'masculino',
     country: '',
-    provincia: '',
-    educacion: '',
-    birthDate: new Date(),
-    // isPermanent: false,
+    city: '',
+    admin: false,
 }
 
 export default function RegisterForm() {
-    const classes = useStyles()
-
+    const classes = useStyles();
+    const dispatch = useDispatch();
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('name' in fieldValues)
@@ -66,10 +59,8 @@ export default function RegisterForm() {
         `
         if ('country' in fieldValues)
             temp.country = fieldValues.country.length != 0 ? "" : "Este campo es requerido"
-        if ('provincia' in fieldValues)
-            temp.provincia = fieldValues.provincia.length != 0 ? "" : "Este campo es requerido"
-        if ('educacion' in fieldValues)
-            temp.educacion = fieldValues.educacion.length != 0 ? "" : "Este campo es requerido"
+        if ('city' in fieldValues)
+            temp.city = fieldValues.city.length != 0 ? "" : "Este campo es requerido"
         setErrors({
             ...temp
         })
@@ -90,6 +81,8 @@ export default function RegisterForm() {
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
+            console.log(values)
+            dispatch(postRegister(values))
             // country.insertEmployee(values)
             resetForm()
         }
@@ -127,22 +120,6 @@ export default function RegisterForm() {
                         onChange={handleInputChange}
                         error={errors.password}
                     />
-                    {/* <Controls.DatePicker
-                        name="birthDate"
-                        label="Fecha de nacimiento"
-                        value={values.birthDate}
-                        onChange={handleInputChange}
-                    /> */}
-
-                    {/* </Grid> */}
-                    {/* <Grid item xs={6}> */}
-                    {/* <Controls.RadioGroup
-                        name="gender"
-                        label="Genero"
-                        value={values.gender}
-                        onChange={handleInputChange}
-                        items={genderItems}
-                    /> */}
                     <Controls.Select
                         name="country"
                         label="Pais"
@@ -153,27 +130,13 @@ export default function RegisterForm() {
                     />
                     {console.log(!values.country)}
                     <Controls.Select
-                        name="provincia"
+                        name="city"
                         label="Provincia"
-                        value={values.provincia}
+                        value={values.city}
                         onChange={handleInputChange}
                         options={!values.country ? [] : provincias[values.country]()}
-                        error={errors.provincia}
+                        error={errors.city}
                     />
-                    {/* <Controls.Select
-                        name="educacion"
-                        label="Educación"
-                        value={values.educacion}
-                        onChange={handleInputChange}
-                        options={educacion.educacion()}
-                        error={errors.educacion}
-                    /> */}
-                    {/* <Controls.Checkbox
-                        name="isPermanent"
-                        label="Permanent Employee"
-                        value={values.isPermanent}
-                        onChange={handleInputChange}
-                    /> */}
                     <div>
                         <Controls.Button
                             type="submit"
