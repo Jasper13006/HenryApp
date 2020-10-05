@@ -11,10 +11,10 @@ export function postLogin(data) {
 
         })
             .then(res => {
-
-                localStorage.setItem("token", res.data.token);
                 localStorage.setItem("idUser", res.data.user.id);
-
+                console.log(res.data.token);                
+                localStorage.setItem("token", res.data.token);                
+                localStorage.setItem('user', JSON.stringify(res.data.user));
                 dispatch({
                     type: USER_LOGIN,
                     payload: res.data.token
