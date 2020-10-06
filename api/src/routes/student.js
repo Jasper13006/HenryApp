@@ -18,4 +18,6 @@ server.get("/group-pm/:id", authenticate, getStudentsByGrouppmId)
 //consultar info de student por userId 
 server.get("/info/:id", authenticate, getStudentByUserId)
 
+
+
 module.exports = server;
