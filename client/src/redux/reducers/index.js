@@ -5,6 +5,8 @@ import panel from './panel'
 import login from './login'
 import getCohorteUser from './cohorte'
 import getAlumnosCohorte from './studentsOfACohort' 
+import modulos from './modulos'
+import pm from './pm'
 
 
 const rootReducer = combineReducers({
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     login,
     getCohorteUser,
     getAlumnosCohorte,
+    modulos,
+    pm,
 });
 
 export default rootReducer;
