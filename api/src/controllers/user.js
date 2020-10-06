@@ -83,10 +83,11 @@ module.exports = {
   async registerUser(req, res) {
 
     let image = 'https://www.ibm.com/blogs/systems/mx-es/wp-content/themes/ibmDigitalDesign/assets/img/anonymous.jpg'
-
-    const { email, name, lastName, city, country, password, admin } = req.body;
+    const {token} = req.params
+    const {email} = await jwt.verify(token,SECRET)
+    const {  name, lastName, city, country, password, admin } = req.body;
     if (!name || !lastName || !email || !password) {
-      return res.status(400).send({ message: "Faltan campos obligatorios", status: 400 });
+      return res.status(400).send({ message: "Faltan campos obligatorios"});
     }
 
     try {
@@ -96,7 +97,7 @@ module.exports = {
       }
       const user = await User.findOne({ where: { email: email } })
       if (user) {
-        return res.status(400).send({ message: "Ya existe un usuario con ese email", status: 400 });
+        return res.send({ message: "Ya existe un usuario con ese email", status: 400 });
       }
       const userData = { email, name, lastName, password, city, country, admin, image };
       const newUser = await User.create(userData)

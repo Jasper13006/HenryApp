@@ -8,6 +8,7 @@ import * as provincias from './listas/provincias'
 import * as educacion from './listas/educacion'
 import { makeStyles } from '@material-ui/core/styles';
 import { postRegister } from '../../redux/actions/register'
+import {useParams} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -38,6 +39,7 @@ const initialFValues = {
 }
 
 export default function RegisterForm() {
+    const {token} = useParams()
     const classes = useStyles();
     const dispatch = useDispatch();
     const validate = (fieldValues = values) => {
@@ -46,9 +48,7 @@ export default function RegisterForm() {
             temp.name = fieldValues.name ? "" : "Este campo es requerido"
         if ('lastName' in fieldValues)
             temp.lastName = fieldValues.lastName ? "" : "Este campo es requerido"
-        if ('email' in fieldValues)
-            temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "El Email no es valido"
-        if ('password' in fieldValues)
+        /* if ('password' in fieldValues)
             temp.password = (regex).test(fieldValues.password) ? "" : ` 
             Minimo 8 caracteres,
             Maximo 15,
@@ -56,7 +56,7 @@ export default function RegisterForm() {
             Al menos una letra minucula,
             Al menos un dígito,
             Al menos 1 caracter especial
-        `
+        ` */
         if ('country' in fieldValues)
             temp.country = fieldValues.country.length != 0 ? "" : "Este campo es requerido"
         if ('city' in fieldValues)
@@ -82,12 +82,12 @@ export default function RegisterForm() {
         e.preventDefault()
         if (validate()) {
             console.log(values)
-            dispatch(postRegister(values))
+            dispatch(postRegister(values,token))
             // country.insertEmployee(values)
             resetForm()
         }
     }
-
+    
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
@@ -105,14 +105,15 @@ export default function RegisterForm() {
                         value={values.lastName}
                         onChange={handleInputChange}
                         error={errors.lastName}
+                        type='text'
                     />
-                    <Controls.Input
+                    {/* <Controls.Input
                         label="Email"
                         name="email"
                         value={values.email}
                         onChange={handleInputChange}
                         error={errors.email}
-                    />
+                    /> */}
                     <Controls.InputPassword
                         label="Contraseña"
                         name="password"

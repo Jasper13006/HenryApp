@@ -1,6 +1,9 @@
 const {User} = require('../db.js');
 const nodemailer = require('nodemailer');
 const ejs = require("ejs");
+const jwt = require("jsonwebtoken");
+const Secret = process.env.SECRET
+
 
 
 
@@ -17,6 +20,8 @@ module.exports = {
                 email
             }
         })
+        const token = await jwt.sign({email:email},Secret)
+        const url = `http://localhost:3000/register/${token}`
         if(user){
             return res.status(400).send({ message: "Usuario ya es un alumno" });
         }
@@ -36,7 +41,7 @@ module.exports = {
                 }                     
                 console.log('Server is ready to take messages');
             });
-            ejs.renderFile(__dirname + "../template/NewUser.ejs", { name: name }, function (err, data) {
+            ejs.renderFile(__dirname + '/NewUser.ejs', { name: name,url:url}, function (err, data) {
                 if (err) {
                     return res.status(400).send({ message: "No se renderizo el msj" });
                 } 

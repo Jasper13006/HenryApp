@@ -5,7 +5,7 @@ import Cohorte from '../Cohorte/Cohorte'
 import PM from '../PM/PM'
 import Pair_programming from '../Pair_programming/Pair_programming'
 import Notas from '../Notas/Notas'
-
+import Invitacion from '../invitacion/Invitacion'
 
 const AppRouter = () => {
 
@@ -16,6 +16,7 @@ const AppRouter = () => {
                 <Route exact path="/panel/PM" component={PM}/>
                 <Route exact path="/panel/pair_programming" component={Pair_programming}/>
                 <Route exact path="/panel/notas" component={Notas}/>
+                <Route exact path="/panel/invitacion" component={Invitacion}/>
             </Switch>
     )
 }

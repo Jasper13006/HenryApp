@@ -11,7 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Link, useLocation } from 'react-router-dom';
 
-const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
+const studentOptions= ["perfil","cohorte","PM","pair_programming","notas","invitacion"]
 const modules=["Módulo 1","Módulo 2","Módulo 3","Módulo 4"]
 const adminOptions=[]
 
