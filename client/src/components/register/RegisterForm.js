@@ -48,7 +48,7 @@ export default function RegisterForm() {
             temp.name = fieldValues.name ? "" : "Este campo es requerido"
         if ('lastName' in fieldValues)
             temp.lastName = fieldValues.lastName ? "" : "Este campo es requerido"
-        /* if ('password' in fieldValues)
+        if ('password' in fieldValues)
             temp.password = (regex).test(fieldValues.password) ? "" : ` 
             Minimo 8 caracteres,
             Maximo 15,
@@ -56,7 +56,7 @@ export default function RegisterForm() {
             Al menos una letra minucula,
             Al menos un dígito,
             Al menos 1 caracter especial
-        ` */
+        `
         if ('country' in fieldValues)
             temp.country = fieldValues.country.length != 0 ? "" : "Este campo es requerido"
         if ('city' in fieldValues)

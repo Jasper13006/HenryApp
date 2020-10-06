@@ -98,6 +98,10 @@ module.exports = {
           {
             model: Grouppm,
           },
+          {
+            model: User,
+            attributes: ["name", "lastName", "email"],
+          },
         ],
       })
       .then((students) => {
@@ -112,8 +116,10 @@ module.exports = {
   },
 
  /////////////////////////////////////////////////
-  //// trae estudiante por su userId
+  //// trae grupopms por cohorte
   ///////////////////////////////////////////
+  
+
   async getStudentByUserId(req, res) {  
     try {
       Student.findAll({
@@ -140,5 +146,7 @@ module.exports = {
     }catch(error) {
        console.log(error)      
     }      
-  }
+  },
+
+
 }

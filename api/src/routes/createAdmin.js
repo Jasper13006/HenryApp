@@ -1,10 +1,11 @@
 const server = require('express').Router()
 const { User } = require('../db.js')
 
-server.get("/", async (req, res) => {
+server.post("/", async (req, res) => {
+  const { name, lastName, email, password, admin } = req.body
   const userAdmin = await User.findOne({
     where: {
-      email: "admin1@admin1.com"
+      email: email
     }
   })
 
@@ -13,18 +14,18 @@ server.get("/", async (req, res) => {
   }
   try {
     const newAdmin = await User.create({
-      name: "Admin",
-      lastName: "Admin",
-      email: "admin@admin.com",
-      password: "Henry1234",
-      admin: true
+      name: name,
+      lastName: lastName,
+      email: email,
+      password: password,
+      admin: admin || false
     })
     res.status(201).send(newAdmin)
   } catch (err) {
     console.log(err)
     res.status(500).send('algo salio mal')
   }
-    
+
 })
 
 module.exports = server

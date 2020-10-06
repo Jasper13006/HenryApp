@@ -1,5 +1,6 @@
-const { Cohorte, User,  Student } = require("../db.js");
+const { Cohorte, User,  Student,Grouppm } = require("../db.js");
 const grouppm = require("../models/grouppm.js");
+const student = require("./student.js");
 
 module.exports = {
 
@@ -84,5 +85,39 @@ module.exports = {
     } catch (err) {
       console.log('err', err)
     }
-  }
+  },
+
+  async getGourpmbyCohorte(req, res) {  
+    try {
+      let result = []
+      const grouppms = await Grouppm.findAll({
+        where: {
+          cohorteId: req.params.id,
+        },
+        include: [         
+          { model: User, attributes: ["name", "lastName", "id"],as: 'PM1' },
+          { model: User, as: 'PM2', attributes: ["name", "lastName", "id"]},          
+        ],
+        attributes: ["name", "id"]
+      })
+      if(!grouppms) return  res.send({ message: 'no hay grupos de pms en este cohorte',status:400 })
+      for (let index = 0; index < grouppms.length; index++) {
+        const student = await Student.findAll({
+          where:{
+            grouppmId:grouppms[index].id,
+            cohorteId:req.params.id,
+          },          
+          include:[{
+            model:User,
+            attributes: ["name", "lastName", "id"]
+          }],
+          attributes: ["cohorteId", "id","grouppmId"]
+        })
+        result.push({groupPm:grouppms[index],students:student})
+      }
+      return res.send(result)
+    }catch(error) {
+       console.log(error)      
+    }      
+  },
 }
