@@ -15,13 +15,14 @@ const cohorteRouter = require("./cohorte");
 // const grouppmRouter = require ("./grouppm");
 const studentRouter = require("./student");
 const groupPpRouter = require ('./pP')
-
+const adminRoute = require('./createAdmin')
 // load each router on a route
 // i.e: router.use('/auth', authRouter);
 
 
 router.use("/user", userRouter);
 router.use("/student", studentRouter);
+router.use('/create-admin', adminRoute)
 // router.use("/feedback", feedbackRouter);
 // router.use("/checkpoint", checkpointRouter);
 router.use("/modulo", moduloRouter);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './AppRouter.css';
 import Panel from "../components/panel/panel.js";
@@ -7,10 +7,19 @@ import Login from '../components/login/Login';
 import Register from '../components/register/RegisterMain';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
+import Axios from 'axios';
 
 const AppRouter = () => {
 
     const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        const fectData = async () => {
+            const { data } = await Axios.get('http://localhost:3001/create-admin')
+            console.log(data)
+        }
+        fectData()
+    }, [])
 
     return (
         <Router>
