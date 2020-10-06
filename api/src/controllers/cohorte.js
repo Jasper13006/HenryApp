@@ -95,24 +95,27 @@ module.exports = {
           cohorteId: req.params.id,
         },
         include: [         
-          { model: User, as: 'PM1' },
-          { model: User, as: 'PM2' },          
+          { model: User, attributes: ["name", "lastName", "id"],as: 'PM1' },
+          { model: User, as: 'PM2', attributes: ["name", "lastName", "id"]},          
         ],
+        attributes: ["name", "id"]
       })
       if(!grouppms) return  res.send({ message: 'no hay grupos de pms en este cohorte',status:400 })
       for (let index = 0; index < grouppms.length; index++) {
         const student = await Student.findAll({
           where:{
             grouppmId:grouppms[index].id,
-            cohorteId:req.params.id
-          },
+            cohorteId:req.params.id,
+          },          
           include:[{
             model:User,
-          }]
+            attributes: ["name", "lastName", "id"]
+          }],
+          attributes: ["cohorteId", "id","grouppmId"]
         })
         result.push({groupPm:grouppms[index],students:student})
       }
-      return res.send({result})
+      return res.send(result)
     }catch(error) {
        console.log(error)      
     }      
