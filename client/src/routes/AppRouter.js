@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {useSelector} from 'react-redux'
 import './AppRouter.css';
 import Panel from "../components/panel/Panel.js";
 import Home from '../pages/Home';
@@ -11,7 +12,7 @@ import Axios from 'axios';
 
 const AppRouter = () => {
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token")
 
     useEffect(() => {
         const fectData = async () => {
@@ -27,7 +28,7 @@ const AppRouter = () => {
                 <PublicRoute exact path="/register/:token" component={Register} />
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
-                <PrivateRoute path="/panel" isToken={token} component={Panel} />
+                <Route path="/panel" isToken={token} component={Panel} />
             </Switch>
 
         </Router>

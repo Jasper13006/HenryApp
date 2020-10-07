@@ -144,19 +144,28 @@ module.exports = {
   },
 
   async userEditProfile(req, res) {
-    const { city, country, googleId, gitHubId } = req.body;
+    const { city, country, googleId, gitHubId, password, newPassword } = req.body;
     if (req.files) {
       const file = req.files.photo;
       image = await uploadImage(file)
     }
-    const user = await User.findByPk(req.params.id)
 
+    const user = await User.findByPk(req.params.id)
     if (!user) return res.status(404).send('Usuario inexistente para ese id')
+    let changedPassword=""
+    if(password && newPassword){
+      const validate = await bcrypt.compare(password, user.password)
+      if(!validate){
+        return res.send({status:401,msg:'Contraseña incorrecta'})
+      }
+      changedPassword = await hashPassword(newPassword)
+    }
     user.city = city || user.city;
     user.country = country || user.country;
     if (req.files) {user.image = image || user.image};
     user.googleId = googleId || user.googleId;
     user.gitHubId = gitHubId || user.gitHubId;
+    user.password = changedPassword || user.password
     await user.save()
     res.status(200).send(user)
   },
