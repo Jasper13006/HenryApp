@@ -1,23 +1,25 @@
 import axios from 'axios';
 import { USER_LOGIN } from '../consts/actionTypes'
+import {SET_USER} from '../consts/actionTypes'
 import Swal from 'sweetalert2'
 
-export function postLogin(data) {
+export function postLogin(data,history) {
     return function (dispatch) {
         return axios({
             method: 'POST',
             url: `http://localhost:3001/user/login`,
             data: data,
-
-        })
-            .then(res => {
-                localStorage.setItem("idUser", res.data.user.id);
-                console.log(res.data.token);                
+        }).then(res => {
+                localStorage.setItem("idUser", res.data.user.id);              
                 localStorage.setItem("token", res.data.token);                
                 localStorage.setItem('user', JSON.stringify(res.data.user));
                 dispatch({
                     type: USER_LOGIN,
                     payload: res.data.token
+                })
+                dispatch({
+                    type: SET_USER,
+                    payload: res.data.user
                 })
                 Swal.fire({
                     icon: 'success',
@@ -25,9 +27,8 @@ export function postLogin(data) {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                window.location.assign("http://localhost:3000/panel")
-            }
-            ).catch(e => {
+                history.push('/panel')
+                }).catch(e => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

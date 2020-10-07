@@ -18,7 +18,7 @@ export const USER_REGISTER = 'USER_REGISTER';
 /* ------------------------------------------------------------------------------- /
 / USERS /
 / ------------------------------------------------------------------------------- */
-export const GET_USER = 'GET_USER';
+export const SET_USER = 'SET_USER';
 export const SET_ACTIVE_OPTION_PANEL = 'SET_ACTIVE_OPTION_PANEL';
 
 /* ------------------------------------------------------------------------------- /
