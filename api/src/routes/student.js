@@ -18,7 +18,6 @@ server.get("/group-pm/:id", authenticate, getStudentsByGrouppmId)
 //consultar info de student por userId 
 server.get("/info/:id", authenticate, getStudentByUserId)
 
-//consultar grupopms por cohorte 
-server.get("/cohorte/group-pm/:id", authenticate, getGroupPmbyCohorte)
+
 
 module.exports = server;

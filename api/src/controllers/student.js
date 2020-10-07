@@ -98,6 +98,10 @@ module.exports = {
           {
             model: Grouppm,
           },
+          {
+            model: User,
+            attributes: ["name", "lastName", "email"],
+          },
         ],
       })
         .then((students) => {
@@ -111,10 +115,14 @@ module.exports = {
     }
   },
 
+
   /////////////////////////////////////////////////
-  //// trae estudiante por su userId
+  //// trae grupopms por cohorte
   ///////////////////////////////////////////
+
+
   async getStudentByUserId(req, res) {
+
     try {
       Student.findAll({
         where: {
@@ -131,6 +139,7 @@ module.exports = {
           },
         ],
       })
+
         .then((student) => {
           if (student && student.length === 0) {
             return res.status(404).send({ message: "No hay estudiante con ese UserId" });
@@ -170,4 +179,6 @@ module.exports = {
   },
 
 }
+
+
 
