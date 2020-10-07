@@ -140,6 +140,7 @@ module.exports = {
         ],
       })
 
+
         .then((student) => {
           if (student && student.length === 0) {
             return res.status(404).send({ message: "No hay estudiante con ese UserId" });
@@ -179,6 +180,5 @@ module.exports = {
   },
 
 }
-
 
 
