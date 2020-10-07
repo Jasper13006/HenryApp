@@ -4,10 +4,11 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list';
+import Swal from 'sweetalert2'
 import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
 
-export default class DemoApp extends React.Component {
+export default class Calendar extends React.Component {
 
   state = {
     weekendsVisible: true,
@@ -25,7 +26,7 @@ export default class DemoApp extends React.Component {
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay, list'
+              right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
             }}
             initialView='dayGridMonth'
             editable={true}
@@ -87,20 +88,31 @@ export default class DemoApp extends React.Component {
   }
 
   handleDateSelect = (selectInfo) => {
-    let title = prompt('Inserta el titulo para tu nuevo evento')
     let calendarApi = selectInfo.view.calendar
-
     calendarApi.unselect() // clear date selection
 
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      })
-    }
+    Swal.fire({
+      title: 'Titulo del evento',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Aceptar',
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed && result.value.length > 0) {
+        console.log(result.value)
+        calendarApi.addEvent({
+          id: createEventId(),
+          title: result.value,
+          start: selectInfo.startStr,
+          end: selectInfo.endStr,
+          allDay: true
+        })
+      }
+    })
   }
 
   handleEventClick = (clickInfo) => {

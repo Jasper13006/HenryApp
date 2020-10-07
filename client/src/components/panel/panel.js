@@ -188,15 +188,6 @@ function Paperbase(props) {
                     <Header onDrawerToggle={handleDrawerToggle} />
                     <main className={classes.main}>
                         <Main />
-                        {/* <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin]}
-                            headerToolbar={{
-                                left: 'prev,next today',
-                                center: 'title',
-                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                              }}
-                            initialView="dayGridMonth"
-                        /> */}
                         <Calendario />
                     </main>
                     <footer className={classes.footer}>
