@@ -19,6 +19,30 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import { CgGoogle } from 'react-icons/cg';
 import { postLogin } from "../../redux/actions/login";
 
+import { withStyles, } from '@material-ui/core/styles';
+
+const InputTextField = withStyles({
+    root: {
+        // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        '& .MuiOutlinedInput-root': {
+            color: '#ffffff',
+            '& fieldset': {
+                color: 'ffffff',
+                borderColor: 'white',
+            },
+            '&:hover fieldset': {
+                borderColor: '#ffffff',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#ffffff',
+            },
+        },
+        '& .MuiFormLabel-root': {
+            color: '#ffffff'
+        }
+    },
+})(TextField);
+
 const useStyles = makeStyles((theme) => ({
     main: {
         // backgroundColor: "#455a64",
@@ -27,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         // background: radial-gradient(circle, rgba(255,255,1,1) 43%, rgba(0,0,0,1) 100%);
         // backgroundImage:,
         // backgroundImage: './308300.jpg',
-        backgroundColor: "#fff  ",
+        background: "#21252985",
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
@@ -35,7 +59,8 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: '#000000',
+        backgroundColor: '#FFFF00',
+        color: '#000000',
         width: theme.spacing(7),
         height: theme.spacing(7),
 
@@ -49,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
     socialIcon: {
         fontSize: 40,
-        color: '#24292E',
+        color: '#ffffff',
         '&:hover': {
             color: '#1F4D80 '
         },
@@ -68,7 +93,16 @@ const useStyles = makeStyles((theme) => ({
         },
         // margin: theme.spacing(3, 0, 2),
     },
-
+    link: {
+        color: '#ffffff',
+        display: 'flex',
+    },
+    accede: {
+        color: '#ffffff'
+    },
+    copyright: {
+        color: '#ffffff'
+    }
 }));
 
 export default function Login() {
@@ -126,7 +160,7 @@ export default function Login() {
                 <Avatar src='./henry.jpg' className={classes.avatar} >
 
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h5" className={classes.accede}>
                     Accede a tu cuenta
         </Typography>
                 <div className='containerSocial'>
@@ -138,7 +172,7 @@ export default function Login() {
                     </IconButton>
                 </div>
                 <form className={classes.form} noValidate onChange={handleInputChange} onSubmit={handleSubmit}>
-                    <TextField
+                    <InputTextField
                         variant="outlined"
                         margin="normal"
                         required
@@ -152,7 +186,7 @@ export default function Login() {
                     {errors.email && (
                         <p style={{ color: "red" }}>{errors.email}</p>
                     )}
-                    <TextField
+                    <InputTextField
                         variant="outlined"
                         margin="normal"
                         required
@@ -179,15 +213,10 @@ export default function Login() {
                     >
                         Entrar
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="http://localhost:3000/olvidemicontraseña" variant="body2">
+                    <Grid container display={'flex'}>
+                        <Grid>
+                            <Link href="http://localhost:3000/olvidemicontraseña" variant="body2" className={classes.link}>
                                 Olvido Su contraseña?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="http://localhost:3000/register" variant="body2">
-                                {"No tiene cuenta? Registrese"}
                             </Link>
                         </Grid>
                     </Grid>
