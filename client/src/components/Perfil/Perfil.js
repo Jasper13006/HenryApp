@@ -1,14 +1,15 @@
 import React,{useEffect,useState} from 'react'
 import './Perfil.css'
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import { Button, CardActions, CardContent, FormLabel, IconButton, TextField, Tooltip, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import store from '../../redux/store/index'
 import ImageDialog from './ImageDialog'
 import FormControl from '@material-ui/core/FormControl';
+import {changeUserData} from '../../redux/actions/user'
+import Swal from 'sweetalert2'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,8 +27,11 @@ const useStyles = makeStyles((theme) => ({
     },
     card:{
         width:'300px',
-        height:'400px',
+        height:'450px',
         margin:'auto',
+    },
+    cardActionArea:{
+        height:'350px',
     },
     content:{
         width:'80%',
@@ -50,20 +54,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Perfil(){
     const classes = useStyles();
-    const [option,setOption] =useState(0)
-    const [user,setUser] = useState(null)
-    const menuOption=useSelector(state=>state.panel.data)
-
-    useEffect(()=> {
-        setUser(store.getState().usuario.user)
-    }, [])
-
-    useEffect(()=>{
-        setOption(menuOption)
+    const [errors,setErrors] = useState({})
+    const [input,setInput] = useState({
+        oldPassword:'',
+        newPassword:'',
+        repeatNewPassword:'',
     })
-
+    const option=useSelector(state=>state.panel.data)
     const usuario=JSON.parse(localStorage.getItem("user"))
-    console.log("usuario :",usuario)
+    const token=localStorage.getItem("token")
+    const dispatch=useDispatch()
+
+    // const token=useSelector(state=>state.login.data)
+    // const usuario = useSelector(state=>state.usuario.data)
 
     const formatString =(string)=>{
         if(string){
@@ -76,20 +79,67 @@ export default function Perfil(){
         
     }
 
-    const editPhoto=()=>{
-        console.log("listo")
+    const validate = (state) => {
+        let errors = {};
+        if (state.oldPassword==='') {
+            errors.oldPassword = 'Debe introducir su contraseña actual';
+        }
+        if (state.newPassword==='') {
+            errors.password = 'Se requiere una nueva contraseña'
+        }
+        if (state.repeatNewPassword!==state.newPassword){
+            errors.repeatNewPassword = 'Las contraseñas no coinciden'
+        }
+        if(Object.keys(errors).length===0){
+            return(null)
+        }
+        return errors;
+    }
+
+    const handleInputChange = (e) => {
+        setInput({
+            ...input,
+            [e.target.name]: e.target.value,
+        })
+        setErrors(validate({
+            ...input,
+            [e.target.name]: e.target.value
+        }));
+    }
+
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        console.log("handlesubmit")
+        if (input.oldPassword && input.newPassword) {
+            console.log("en el if")
+            const data={}
+            data.password=input.oldPassword
+            data.newPassword=input.newPassword
+            dispatch(changeUserData(data,usuario.id,token))
+            Swal.fire({
+                icon: 'success',
+                title: 'Se han actualizado tus datos',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            setInput({
+                oldPassword:'',
+                newPassword:'',
+                repeatNewPassword:'',
+            })
+        }
     }
 
     return (
         <div>
-        {(!option)?
+        {!option?
             <div className={classes.root}>
             {usuario &&
                 <Card className={classes.card}>
-                    <CardActionArea>
+                    <CardActionArea className={classes.cardActionArea}>
                     <img src={usuario.image} alt="user Image" className={classes.profileImage}/>
                     <CardContent className={classes.content}>
-                        <Typography variant="h5" component="h2">
+                        <Typography component="h2" variant="h6">
                             {formatString(usuario.name)+" "+formatString(usuario.lastName)}
                         </Typography>
                         <Typography variant="body2">
@@ -97,14 +147,14 @@ export default function Perfil(){
                         </Typography>
                         {(usuario.city && usuario.country)?
                         <Typography variant="body2">
-                            formatString(usuario.city)+", "+formatString(usuario.country)}
+                            {formatString(usuario.city)+", "+formatString(usuario.country)}
                         </Typography>
                         :null}
                     </CardContent>
                     </CardActionArea>
                     <CardActions>
                         <Tooltip title="editar">
-                            <IconButton onClick={editPhoto} >
+                            <IconButton>
                                 <ImageDialog user={usuario} formatString={formatString}/>
                             </IconButton>
                         </Tooltip>
@@ -114,17 +164,40 @@ export default function Perfil(){
     :null}
     {option===1 && usuario &&
     <Paper className={classes.paper}>
-    <FormControl className={classes.passwordForm}>
-        <Typography variant="h5">Cambiar contraseña</Typography>
-        <br/>
-        <TextField label="contraseña actual" variant="outlined"/>
-        <br/>
-        <TextField label="nueva contraseña" variant="outlined"/>
-        <br/>
-        <TextField label="repita nueva contraseña" variant="outlined"/>
-        <br/>
-        <Button variant="outlined">Enviar</Button>
-    </FormControl>
+        <FormControl 
+            className={classes.passwordForm} 
+            onChange={handleInputChange}>
+            <Typography component="h2" variant="h5">Cambiar contraseña</Typography><br/>
+            {errors?(<p style={{ color: "red" }}>{errors.oldPassword}</p>):<br/>}
+            <TextField 
+                name="oldPassword"
+                type="password"
+                label="contraseña actual" 
+                variant="outlined"
+                margin="normal"
+                autoFocus
+                value={input.oldPassword}/>
+            {errors?(<p style={{ color: "red" }}>{errors.newPassword}</p>):<br/>}
+            <TextField 
+                name="newPassword"
+                type="password"
+                label="nueva contraseña" 
+                variant="outlined"
+                value={input.newPassword}/>
+            {errors?(<p style={{ color: "red" }}>{errors.repeatNewPassword}</p>):<br/>}   
+            <TextField 
+                name="repeatNewPassword"
+                type="password"
+                label="repita nueva contraseña" 
+                variant="outlined"
+                value={input.repeatNewPassword}/><br/>
+            <Button 
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={errors?true:false}
+                >Enviar</Button><br/>
+        </FormControl>
     </Paper>
     }
     </div>

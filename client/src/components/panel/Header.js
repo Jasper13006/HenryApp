@@ -8,7 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
+// import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +18,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {setActiveOptionPanel} from '../../redux/actions/panel'
-import Swal from 'sweetalert2'
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -75,34 +74,29 @@ function Header(props) {
 
   const formatString =(string)=>{
     let noSpaces=string.replace("_"," ")
-    noSpaces=noSpaces.replace("/panel/","")
+    noSpaces=noSpaces.replace("/panel","")
+    noSpaces=noSpaces.replace("/","")
     let arr = noSpaces.split("")
-    arr[0]=arr[0].toUpperCase()
+    if(arr.length>0){
+      arr[0]=arr[0].toUpperCase()
     noSpaces=arr.join("")
+    }
     return(noSpaces)
-  }
+}
 
 
 
-  const handleChange= (event,newValue)=>{
-    setValue(newValue)
-    dispatch(setActiveOptionPanel(newValue))
-  }
-  const handleLogOut = () => {
-          localStorage.clear()
-          window.location.assign("http://localhost:3000")
-          Swal.fire({
-              icon: 'success',
-              title: 'Vuelva pronto!',
-          })
-  }
+const handleChange= (event,newValue)=>{
+  setValue(newValue)
+  dispatch(setActiveOptionPanel(newValue))
+}
 
-  function tabValue(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
+function tabValue(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
   return (
     <React.Fragment >
@@ -135,7 +129,6 @@ function Header(props) {
             <Grid item>
               <IconButton color="inherit" className={classes.iconButtonAvatar}>
                 <Avatar src={user && user.image} alt="My Avatar" />
-                <ExitToAppOutlinedIcon onClick={() => handleLogOut()}/>
               </IconButton>
             </Grid>
           </Grid>

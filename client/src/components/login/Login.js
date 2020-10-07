@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {useHistory} from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { CgGoogle } from 'react-icons/cg';
 import { postLogin } from "../../redux/actions/login";
+import {history} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     main: {
@@ -79,6 +81,7 @@ export default function Login() {
         password: '',
     })
     const [errors, setErrors] = useState({});
+    const history = useHistory()
 
     const handleInputChange = (e) => {
         setState({
@@ -114,7 +117,7 @@ export default function Login() {
         console.log(errors)
         if (state.email && state.password) {
             // console.log(state)
-            dispatch(postLogin(state))
+            dispatch(postLogin(state,history))
         }
     }
 
