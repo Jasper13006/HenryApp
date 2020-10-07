@@ -20,6 +20,7 @@ export const USER_REGISTER = 'USER_REGISTER';
 / ------------------------------------------------------------------------------- */
 export const GET_USER = 'GET_USER';
 export const GET_USERS = 'GET_USERS';
+export const SET_USER = 'SET_USER';
 export const SET_ACTIVE_OPTION_PANEL = 'SET_ACTIVE_OPTION_PANEL';
 export const GET_INSTRUCTORS = 'GET_INSTRUCTORS';
 
