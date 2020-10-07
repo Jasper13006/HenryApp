@@ -1,7 +1,7 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth');
 const isAdmin = require('../utils/isAdmin');
-const { getStudents, getStudentById, getStudentsByCohorteId, getStudentsByGrouppmId, getStudentByUserId } = require('../controllers/student')
+const { getStudents, getStudentById, getStudentsByCohorteId, getStudentsByGrouppmId, getStudentByUserId, getGroupPmbyCohorte } = require('../controllers/student')
 
 //consultar por todos los alumnos
 server.get("/", authenticate, getStudents)

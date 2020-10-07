@@ -30,7 +30,8 @@ export const GET_INSTRUCTORS = 'GET_INSTRUCTORS';
 export const GET_MY_COHORTE = 'GET_MY_COHORTE';
 export const GET_STUDENTS_BY_COHORTE_ID = 'GET_STUDENTS_BY_COHORTE_ID';
 export const GET_MODULOS = "GET_MODULOS";
-export const GET_COHORTES = 'GET_COHORTES'
+export const GET_COHORTES = "GET_COHORTES";
+
 
 /* ------------------------------------------------------------------------------- /
 / PM /
@@ -38,3 +39,4 @@ export const GET_COHORTES = 'GET_COHORTES'
 
 export const GET_PM = "GET_PM";
 export const GET_GROUP_PM = "GET_GROUP_PM";
+export const GET_GROUP_PM_COHORTE = "GET_GROUP_PM_COHORTE";

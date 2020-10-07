@@ -1,32 +1,32 @@
-const { Student, Cohorte, User, Grouppm } = require("../db.js");
+const { Student, Cohorte, User, Grouppm, } = require("../db.js");
 
 
 module.exports = {
-   //////////////////////
+  //////////////////////
   //// consulta todos los estudiantes
   /////////////////////
 
-  async getStudents(req, res) {  
-    try {   
+  async getStudents(req, res) {
+    try {
       await Student.findAll({
-      include: [
-        {
-          model: User,
-        },
-      ],
+        include: [
+          {
+            model: User,
+          },
+        ],
       })
-      .then((students) => {
+        .then((students) => {
           if (students && students.length === 0) {
             return res.status(404).send({ message: "No hay estudiantes" });
           }
-        res.status(200).send(students);
-      })      
-    }catch(error) {
-       console.log(error);      
-    }        
+          res.status(200).send(students);
+        })
+    } catch (error) {
+      console.log(error);
+    }
   },
 
-  
+
   /////////////////////////////////////////////////
   ////consultar por la información de un alumno(id estudiante)
   ///////////////////////////////////////////
@@ -42,15 +42,15 @@ module.exports = {
           },
         ],
       })
-      .then((student) => {
-        if (student && student.length === 0) {
-          return res.status(404).send({ message: "No hay estudiante con ese Id" });
-        }
+        .then((student) => {
+          if (student && student.length === 0) {
+            return res.status(404).send({ message: "No hay estudiante con ese Id" });
+          }
           res.status(200).send(student);
-      })      
-    }catch(error) {
-       console.log(error)      
-    }      
+        })
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   /////////////////////////////////////////////////
@@ -73,22 +73,22 @@ module.exports = {
           },
         ],
       })
-      .then((students) => {
-        if (students && students.length === 0) {
-          return res.status(404).send({ message: "No hay estudiantes para ese cohorte" });
-        }
+        .then((students) => {
+          if (students && students.length === 0) {
+            return res.status(404).send({ message: "No hay estudiantes para ese cohorte" });
+          }
           res.status(200).send(students);
-      })      
-    }catch(error) {
-       console.log(error)      
-    }    
+        })
+    } catch (error) {
+      console.log(error)
+    }
   },
 
-   /////////////////////////////////////////////////
+  /////////////////////////////////////////////////
   //// Trae a los estudiante de un grupo pm
   ///////////////////////////////////////////
-  
-  async getStudentsByGrouppmId(req, res) {  
+
+  async getStudentsByGrouppmId(req, res) {
     try {
       await Student.findAll({
         where: {
@@ -104,23 +104,25 @@ module.exports = {
           },
         ],
       })
-      .then((students) => {
-        if (students && students.length === 0) {
-          return res.status(404).send({ message: "No hay estudiantes para ese grupo pm" });
-        }
-        res.status(200).send(students);
-      })      
-    }catch(error) {
-       console.log(error)      
-    }      
+        .then((students) => {
+          if (students && students.length === 0) {
+            return res.status(404).send({ message: "No hay estudiantes para ese grupo pm" });
+          }
+          res.status(200).send(students);
+        })
+    } catch (error) {
+      console.log(error)
+    }
   },
 
- /////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////
   //// trae grupopms por cohorte
   ///////////////////////////////////////////
-  
 
-  async getStudentByUserId(req, res) {  
+
+  async getStudentByUserId(req, res) {
+
     try {
       Student.findAll({
         where: {
@@ -137,16 +139,46 @@ module.exports = {
           },
         ],
       })
-      .then((student) => {
-        if (student && student.length === 0) {
-          return res.status(404).send({ message: "No hay estudiante con ese UserId" });
-        }
-        res.status(200).send(student);
-      })      
-    }catch(error) {
-       console.log(error)      
-    }      
+
+
+        .then((student) => {
+          if (student && student.length === 0) {
+            return res.status(404).send({ message: "No hay estudiante con ese UserId" });
+          }
+          res.status(200).send(student);
+        })
+    } catch (error) {
+      console.log(error)
+    }
   },
 
+  /////////////////////////////////////////////////
+  //// trae grupopms por cohorte
+  ///////////////////////////////////////////
+  async getGroupPmbyCohorte(req, res) {
+    try {
+      Student.findAll({
+        where: {
+          cohorteId: req.params.id,
+        },
+        include: [
+          {
+            model: Grouppm,
+            attributes: ["name"],
+          },
+        ],
+      })
+        .then((student) => {
+          if (student && student.length === 0) {
+            return res.status(404).send({ message: "No hay estudiante con ese UserId" });
+          }
+          res.status(200).send(student);
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 
 }
+
+
