@@ -15,7 +15,8 @@ const AppRouter = () => {
 
     useEffect(() => {
         const fectData = async () => {
-            const { data } = await Axios.get('http://localhost:3001/create-admin')
+            const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }
+            const { data } = await Axios.post('http://localhost:3001/create-admin', admin)
             console.log(data)
         }
         fectData()
@@ -24,7 +25,7 @@ const AppRouter = () => {
     return (
         <Router>
             <Switch>
-                <PublicRoute exact path="/register/:token"  component={Register} />
+                <PublicRoute exact path="/register/:token" component={Register} />
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
                 <PrivateRoute path="/panel" isToken={token} component={Panel} />

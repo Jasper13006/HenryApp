@@ -28,7 +28,9 @@ export function traerGrupoPm(id, data) {
         return axios({
             method: 'GET',
             url: `http://localhost:3001/cohorte/group-pm/${id}`,
-            data: data
+            data: data,
+            credentials: "include",
+            headers: { "auth-token": token },
         })
 
             .then(res => {
@@ -38,6 +40,7 @@ export function traerGrupoPm(id, data) {
                 })
             })
             .catch(e => {
+
                 Swal.fire({
                     icon: 'error',
                     title: 'No perteneces a un grupo de PM',

@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleAccordion() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const pmGroup = useSelector(state => state.pm.data)
+    const pmGroup = useSelector(state => state.getPm.data && state.getPm.data.gpm)
     const option = useSelector(state => state.panel.data)
 
     useEffect(() => {
@@ -59,7 +59,7 @@ export default function SimpleAccordion() {
     }, [])
 
 
-    console.log(pmGroup)
+    console.log(pmGroup && pmGroup)
 
 
     return (

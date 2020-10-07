@@ -41,7 +41,7 @@ server.post('/nota-pp', authenticate, calificarCompaneros)
 server.get('/nota-pp/:id', authenticate, getUserFeedback)
 
 // busca usuario por id
-server.get('/:id', authenticate, getOneUser )
+server.get('/:id', authenticate, getOneUser)
 
 //nodemailer reset contraseña, paso por body mail a resetear contraseña
 server.post('/reset_password', mailResetPassword);
