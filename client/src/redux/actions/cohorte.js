@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Header from '../../components/panel/Header'
-import { GET_MY_COHORTE, GET_STUDENTS_BY_COHORTE_ID, GET_MODULOS } from '../consts/actionTypes'
+import { GET_MY_COHORTE, GET_STUDENTS_BY_COHORTE_ID, GET_MODULOS, GET_COHORTES } from '../consts/actionTypes'
 import Swal from 'sweetalert2'
 
 export function getCohorteUser(id){
@@ -22,7 +22,7 @@ export function getCohorteUser(id){
                 text: "No eres parte de ningun cohorte",
             })
             setTimeout(()=> {
-                window.location.assign("/panel")
+                window.location.assign("http://localhost:3000/panel")
             }, 800)
         })
     }
@@ -68,3 +68,23 @@ export function getLinkVideos(){
     }
 } 
 
+export function getCohortes(){
+    return function(dispatch){
+        const token = localStorage.getItem("token")
+        return axios({
+            method: "GET",
+            url: "http://localhost:3001/cohorte",
+            credentials: "include",
+            headers: {"auth-token": token}
+        })
+        .then(response => {
+            dispatch({
+                type: GET_COHORTES,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+            alert("no te pudo traer los cohortes")
+        })
+    }
+}

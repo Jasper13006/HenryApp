@@ -59,7 +59,7 @@ function Header(props) {
   const options={
 
     "/panel/perfil":["Datos Personales","Cambiar contraseña"],
-    "/panel/cohorte":["Mis clases","Compañeros"],
+    "/panel/cohorte":["Cohorte","Alumnos"],
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
     "/panel/notas":["Resumen de Notas","Ranking"],
