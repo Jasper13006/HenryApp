@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import store from '../../redux/store/index'
 import { getCohorteUser, getLinkVideos } from '../../redux/actions/cohorte'
 import { useSelector, useDispatch } from 'react-redux'
+import CohorteAdmin from './Admin'
 import './Cohorte.css'
 import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper';
@@ -46,13 +47,28 @@ export default function Cohorte(){
     const option = useSelector(state=>state.panel.data)
     const cohorte = useSelector(state => state.getCohorteUser.data)
     const modulos = useSelector(state => state.modulos.data)
+    const user = JSON.parse(localStorage.getItem("user"))
+    const id = localStorage.getItem("idUser")
 
     useEffect(()=> {
-        const id = localStorage.getItem("idUser")
-        dispatch(getCohorteUser(id))
-        dispatch(getLinkVideos(id))
+        if(!user.admin){
+            dispatch(getCohorteUser(id))
+            dispatch(getLinkVideos(id))
+        }    
     }, [])
-    console.log(modulos)
+    const perteneceAUnCohorte= () =>{
+        if(cohorte) return true
+        return (
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "No eres parte de ningun cohorte",
+            }),
+            setTimeout(() => {
+                window.location.assign("http://localhost:3000/panel")
+            }, 800)
+        )
+    }
 
     const handleClickLink = (e) => {
         e.preventDefault();
@@ -60,8 +76,13 @@ export default function Cohorte(){
     }
     return (
         <div className={classes.root}>
-        { 
-        !option?
+        {
+        user.admin?
+        <div>
+            <CohorteAdmin/>
+        </div>
+        :
+        perteneceAUnCohorte() && !option?
             <div className={classes.root}>
                 <Hidden only="sm">
                     <Paper className={classes.paper}>¤ {cohorte && cohorte.name} ¤</Paper>
@@ -72,34 +93,13 @@ export default function Cohorte(){
                     <ul className="linksGenerales">
                         {
                             modulos && modulos.map(modulo => {
-                                return <li><Link name={modulo.linkVideos} component="button" variant="body2" onClick={handleClickLink}>{modulo.nameClass}</Link></li>
+                                return <li><a target="_blank" href={modulo.linkVideos} ><Link name={modulo.linkVideos} variant="body2" >{modulo.nameClass}</Link></a></li>
                             })
                         }
-                            {/* <li><a href="#">Clase1</a></li>
-                            <li><a href="#">Clase2</a></li>
-                            <li><a href="#">Clase3</a></li>
-                            <li><a href="#">Clase4</a></li>
-                            <li><a href="#">Clase5</a></li>
-                            <li><a href="#">Clase6</a></li>
-                            <li><a href="#">Clase7</a></li>
-                            <li><a href="#">Clase8</a></li>
-                            <li><a href="#">Clase9</a></li>
-                            <li><a href="#">Clase10</a></li>
-                            <li><a href="#">Clase1</a></li>
-                            <li><a href="#">Clase2</a></li>
-                            <li><a href="#">Clase3</a></li>
-                            <li><a href="#">Clase4</a></li>
-                            <li><a href="#">Clase5</a></li>
-                            <li><a href="#">Clase6</a></li>
-                            <li><a href="#">Clase7</a></li>
-                            <li><a href="#">Clase8</a></li>
-                            <li><a href="#">Clase9</a></li>
-                            <li><a href="#">Clase10</a></li> */}
-                                
                     </ul>
                 </div>
             </div> :
-        option === 1 && 
+        perteneceAUnCohorte() && option === 1 && 
             <Compañeros cohorte={cohorte? cohorte : null}/>
         }
         </div>

@@ -85,4 +85,24 @@ export function getCohortes() {
             })
     }
 
+
+export function getCohortes(){
+    return function(dispatch){
+        const token = localStorage.getItem("token")
+        return axios({
+            method: "GET",
+            url: "http://localhost:3001/cohorte",
+            credentials: "include",
+            headers: {"auth-token": token}
+        })
+        .then(response => {
+            dispatch({
+                type: GET_COHORTES,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+            alert("no te pudo traer los cohortes")
+        })
+    }
 }

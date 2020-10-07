@@ -76,7 +76,7 @@ export function traerGrupoPmPorCohorte(id, data) {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                // window.location.assign("http://localhost:3000/panel/perfil")
+                window.location.assign("http://localhost:3000/panel")
             })
     }
 }

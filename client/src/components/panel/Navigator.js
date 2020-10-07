@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux'
 import store from '../../redux/store/index'
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -11,9 +12,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Link, useLocation } from 'react-router-dom';
 
-const studentOptions= ["perfil","cohorte","PM","pair_programming","notas","invitacion"]
+
+const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
 const modules=["Módulo 1","Módulo 2","Módulo 3","Módulo 4"]
-const adminOptions=[]
+const adminOptions=["perfil","cohorte","PM","invitacion"]
 
 
 const styles = (theme) => ({
@@ -56,7 +58,9 @@ const styles = (theme) => ({
 
 function Navigator(props) {
     const { classes, ...other } = props;
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
+    const user = useSelector(state => state.usuario.user)
+    const admin = useSelector(state => state.usuario.user.admin)
     const location=useLocation();
     const url=location.pathname;
 
@@ -69,7 +73,7 @@ function Navigator(props) {
     }
 
     useEffect(()=> {
-        setUser(store.getState().usuario.user)
+        console.log(admin)
     }, [])
     
     return (
@@ -94,7 +98,7 @@ function Navigator(props) {
                 </ListItemText>
                 </ListItem>
                 
-                {studentOptions && studentOptions.map((opcion,i)=>
+                {admin === false? studentOptions.map((opcion,i)=>
                 <ListItem key={i}>
                     <Link to ={`/panel/${opcion}`}>
                         <ListItemText 
@@ -102,7 +106,18 @@ function Navigator(props) {
                                 {formatString(`${opcion}`)}
                         </ListItemText>   
                     </Link>
-                </ListItem>)}
+                </ListItem>)
+                :
+                admin === true && adminOptions.map((opcion,i)=>
+                <ListItem key={i}>
+                    <Link to ={`/panel/${opcion}`}>
+                        <ListItemText 
+                            className={clsx(classes.item, url === `/panel/${opcion}`? classes.itemActiveItem:null)} >
+                                {formatString(`${opcion}`)}
+                        </ListItemText>   
+                    </Link>
+                </ListItem>)
+                }
         </List>
         </Drawer>
     );

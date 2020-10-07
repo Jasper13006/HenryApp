@@ -58,14 +58,14 @@ function Header(props) {
   const [value, setValue] = useState(0)
 
   //En este objeto colocar los nombres de las opciones para cada ruta del panel
-  const options = {
+  const options={
 
-    "/panel/perfil": ["Datos Personales", "Cambiar contraseña"],
-    "/panel/cohorte": ["Mis clases", "Compañeros"],
-    "/panel/PM": ["Mis PM's", "Mis compañeros"],
-    "/panel/pair_programming": ["Feedback", "Evaluar"],
-    "/panel/notas": ["Resumen de Notas", "Ranking"],
-    "/panel/invitacion": ["Lista de ingreso"],
+    "/panel/perfil":["Datos Personales","Cambiar contraseña"],
+    "/panel/cohorte":["Cohorte","Alumnos"],
+    "/panel/PM":["Anuncios","Chat"],
+    "/panel/pair_programming":["Feedback","Evaluar"],
+    "/panel/notas":["Resumen de Notas","Ranking"],
+    "/panel/invitacion":["Lista de ingreso"],
   }
 
   useEffect(() => {
