@@ -20,6 +20,7 @@ import { postLogin } from "../../redux/actions/login";
 import {yellow} from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Axios from 'axios';
+import Excel from './excelInv'
 
 const theme = createMuiTheme({
     
@@ -184,6 +185,7 @@ export default function Login() {
                     </Button>
                 </form>
             </div>
+            <Excel/>
             
         </Container>
     );
