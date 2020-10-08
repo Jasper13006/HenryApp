@@ -15,16 +15,16 @@ export function getCohorteUser(id) {
                     payload: response.data
                 })
             })
-            .catch(err => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "No eres parte de ningun cohorte",
-                })
-                setTimeout(() => {
-                    window.location.assign("/panel")
-                }, 800)
-            })
+            // .catch(err => {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Oops...',
+            //         text: "No eres parte de ningun cohorte",
+            //     })
+            //     setTimeout(() => {
+            //         window.location.assign("/panel")
+            //     }, 800)
+            // })
     }
 }
 
@@ -83,26 +83,16 @@ export function getCohortes() {
                     payload: res.data
                 })
             })
-    }
-
-
-export function getCohortes(){
-    return function(dispatch){
-        const token = localStorage.getItem("token")
-        return axios({
-            method: "GET",
-            url: "http://localhost:3001/cohorte",
-            credentials: "include",
-            headers: {"auth-token": token}
-        })
-        .then(response => {
-            dispatch({
-                type: GET_COHORTES,
-                payload: response.data
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "No eres parte de ningun cohorte",
+                })
+                setTimeout(() => {
+                    window.location.assign("/panel")
+                }, 800)
             })
-        })
-        .catch(error => {
-            alert("no te pudo traer los cohortes")
-        })
     }
 }
+

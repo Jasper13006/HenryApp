@@ -7,11 +7,13 @@ import Pair_programming from '../Pair_programming/Pair_programming'
 import Notas from '../Notas/Notas'
 import Invitacion from '../invitacion/Invitacion'
 import cohorteAdmin from '../Cohorte/CohorteAdmin'
+import Calendar from '../Calendar/Calendar'
 
 const AppRouter = () => {
 
     return (
         <Switch>
+            <Route exact path= "/panel" component={Calendar}/>
             <Route exact path="/panel/perfil" component={Perfil} />
             <Route exact path="/panel/cohorte" component={Cohorte} />
             <Route exact path="/panel/PM" component={PM} />

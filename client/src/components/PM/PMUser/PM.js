@@ -7,8 +7,9 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { traerGrupoPm } from '../../../redux/actions/pm';
-import StudentsList from '../StudentsList'
+import StudentsList from './StudentsList'
 import PMAdmin from '../PMAdmin/PMAdmin'
+
 
 
 
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleAccordion() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const pmGroup = useSelector(state => state.getPm.data && state.getPm.data.gpm)
+    const pmGroup = useSelector(state => state.pm.data && state.pm.data.gpm)
     const option = useSelector(state => state.panel.data)
     const user = JSON.parse(localStorage.getItem("user"))
 

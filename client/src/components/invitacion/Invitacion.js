@@ -20,6 +20,7 @@ import { postLogin } from "../../redux/actions/login";
 import {yellow} from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Axios from 'axios';
+import Swal from 'sweetalert2'
 
 const theme = createMuiTheme({
     
@@ -79,7 +80,19 @@ async function sendEmail (data){
     try {
         const send = await Axios.post('http://localhost:3001/invite/send',data)
         console.log(send)
-    }catch(err){console.log(err)} 
+        Swal.fire({
+            icon: 'success',
+            title: 'Se ha enviado una invitacion',
+            
+        })
+    }catch(err){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "no se ha podido enviar la invitacion"
+            
+        })
+    } 
     
 }
 
