@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import MessageIcon from '@material-ui/icons/Message';
 
-import { traerGrupoPm } from '../../redux/actions/pm';
+import { traerGrupoPm } from '../../../redux/actions/pm';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
