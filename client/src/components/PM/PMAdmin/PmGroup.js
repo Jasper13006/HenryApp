@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AlertDialogSlide({ cohorteId }) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
-    const grupos = useSelector(state => state.getPm.data)
+    const grupos = useSelector(state => state.pm.data)
     const classes = useStyles();
 
     useEffect(() => {

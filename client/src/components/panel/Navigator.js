@@ -11,6 +11,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Link, useLocation } from 'react-router-dom';
+import { useFormControl } from '@material-ui/core';
+import users from '../../redux/reducers/getUsers';
 
 
 const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
@@ -58,11 +60,9 @@ const styles = (theme) => ({
 
 function Navigator(props) {
     const { classes, ...other } = props;
-    // const [user, setUser] = useState(null)
-    const user = useSelector(state => state.usuario.user)
-    const admin = useSelector(state => state.usuario.user.admin)
     const location=useLocation();
     const url=location.pathname;
+    const user = JSON.parse(localStorage.getItem('user'))
 
     const formatString =(string)=>{
         let noSpaces=string.replace("_"," ")
@@ -73,7 +73,7 @@ function Navigator(props) {
     }
 
     useEffect(()=> {
-        console.log(admin)
+        console.log(user)
     }, [])
     
     return (
@@ -82,13 +82,13 @@ function Navigator(props) {
             <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
             Henry App
             </ListItem>
-            <Link to="/">
+            <Link to="/panel">
                 <ListItem className={clsx(classes.item, classes.itemCategory)}>
                     <ListItemIcon className={classes.itemIcon}>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText classes={{primary: classes.itemPrimary,}}>
-                        Home
+                        Calendario
                     </ListItemText>
                 </ListItem>
             </Link>
@@ -98,7 +98,7 @@ function Navigator(props) {
                 </ListItemText>
                 </ListItem>
                 
-                {admin === false? studentOptions.map((opcion,i)=>
+                {user && !user.admin? studentOptions.map((opcion,i)=>
                 <ListItem key={i}>
                     <Link to ={`/panel/${opcion}`}>
                         <ListItemText 
@@ -108,7 +108,7 @@ function Navigator(props) {
                     </Link>
                 </ListItem>)
                 :
-                admin === true && adminOptions.map((opcion,i)=>
+                user && user.admin === true && adminOptions.map((opcion,i)=>
                 <ListItem key={i}>
                     <Link to ={`/panel/${opcion}`}>
                         <ListItemText 

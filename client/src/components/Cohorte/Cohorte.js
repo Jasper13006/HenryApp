@@ -56,19 +56,19 @@ export default function Cohorte(){
             dispatch(getLinkVideos(id))
         }    
     }, [])
-    const perteneceAUnCohorte= () =>{
-        if(cohorte) return true
-        return (
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "No eres parte de ningun cohorte",
-            }),
-            setTimeout(() => {
-                window.location.assign("http://localhost:3000/panel")
-            }, 800)
-        )
-    }
+    // const perteneceAUnCohorte= () =>{
+    //     if(cohorte) return true
+    //     return (
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             text: "No eres parte de ningun cohorte",
+    //         }),
+    //         setTimeout(() => {
+    //             window.location.assign("http://localhost:3000/panel")
+    //         }, 800)
+    //     )
+    // }
 
     const handleClickLink = (e) => {
         e.preventDefault();
@@ -82,7 +82,7 @@ export default function Cohorte(){
             <CohorteAdmin/>
         </div>
         :
-        perteneceAUnCohorte() && !option?
+        !option?
             <div className={classes.root}>
                 <Hidden only="sm">
                     <Paper className={classes.paper}>¤ {cohorte && cohorte.name} ¤</Paper>
@@ -99,7 +99,7 @@ export default function Cohorte(){
                     </ul>
                 </div>
             </div> :
-        perteneceAUnCohorte() && option === 1 && 
+        option === 1 && 
             <Compañeros cohorte={cohorte? cohorte : null}/>
         }
         </div>

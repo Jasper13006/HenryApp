@@ -8,6 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 // import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -76,14 +77,17 @@ function Header(props) {
   const url = location.pathname;
 
 
-  const formatString = (string) => {
-    let noSpaces = string.replace("_", " ")
-    noSpaces = noSpaces.replace("/panel/", "")
+  const formatString =(string)=>{
+    let noSpaces=string.replace("_"," ")
+    noSpaces=noSpaces.replace("/panel","")
+    noSpaces=noSpaces.replace("/","")
     let arr = noSpaces.split("")
-    arr[0] = arr[0].toUpperCase()
-    noSpaces = arr.join("")
-    return (noSpaces)
-  }
+    if(arr.length>0){
+      arr[0]=arr[0].toUpperCase()
+    noSpaces=arr.join("")
+    }
+    return(noSpaces)
+}
 
 
 

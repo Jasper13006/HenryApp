@@ -81,7 +81,7 @@ export default function CohorteAdmin(){
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography style={{ fontWeight: "bold" }}>
-                        instructor: {encontrarInstructor(cohorte.instructorId, instructores)}
+                        instructor: {cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}
                     </Typography>
                 </AccordionDetails>
             </Accordion>))
