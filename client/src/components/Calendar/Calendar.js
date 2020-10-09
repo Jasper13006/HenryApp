@@ -1,5 +1,5 @@
 import React from 'react'
-import FullCalendar, { formatDate } from '@fullcalendar/react'
+import FullCalendar, { formatDate, renderMicroColGroup } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -12,67 +12,32 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-  // const Transition = React.forwardRef(function Transition(props, ref) {
-  //   return <Slide direction="up" ref={ref} {...props} />;
-  // });
+import esLocale from '@fullcalendar/core/locales/es';
 
   export default function Calendar () {
-    const [open, setOpen] = React.useState(false);
     const [weekendsVisible, setWeekendsVisible] = React.useState(true)
     const [currentEvents, setCurrentEvents] = React.useState([])
-
-    // const handleClickOpen = () => {
-    //   console.log('clickeaste')
-    //   setOpen(true);
-    // };
-  
-    // const handleClose = () => {
-    //   setOpen(false);
-    // };
   
     const handleWeekendsToggle = () => {
       setWeekendsVisible(!weekendsVisible)
     }
   
-    const handleDateSelect = (selectInfo) => {
+    const handleDateSelect = async (selectInfo) => {
       let calendarApi = selectInfo.view.calendar
       calendarApi.unselect() // clear date selection
       let date = new Date().toISOString().replace(/T.*$/, '') + 'T12:00:00'
       console.log(date)
-      let time = 'notime'
+      let timestart = ''
+      let timeend = ''
       let arrResult =  []
-
-      const inputOptions = new Promise((resolve) => {
-          resolve({
-            'Todo el dia': 'Todo el dia',
-            'Horario': 'Horario',
-            // '#0000ff': 'Blue'
-          })
-      })
+      console.log(selectInfo)
       
-      // const { value: color } = Swal.fire({
-      //   title: 'Select color',
-      //   input: 'radio',
-      //   inputOptions: inputOptions,
-      //   inputValidator: (value) => {
-      //     if (!value) {
-      //       return 'You need to choose something!'
-      //     }
-      //   }
-      // })
-      
-      // if (color) {
-      //   Swal.fire({ html: `You selected: ${color}` })
-      // }
-      
-      const { result: allDayOrHour } = Swal.mixin({
+      await Swal.mixin({
         confirmButtonText: 'Sigueinte &rarr;',
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
-        progressSteps: ['1', '2', '3']
+        progressSteps: ['1', '2']
       }).queue([
         {
           title: 'Titulo del evento',
@@ -81,107 +46,77 @@ import DialogTitle from '@material-ui/core/DialogTitle';
         {
           title: 'Tipo de evento',
           input: 'radio',
-          inputOptions: inputOptions,
+          inputOptions: {
+            'Todo el dia': 'Todo el dia',
+            'Horario': 'Horario',
+          },
           inputValidator: (result) => {
             return !result && 'Debes seleccionar al menos una opcion'
           }
         },
       ]).then((result) => {
-        console.log(result)
-        if (result.value && result.value.length !== 0) {
-          if (result.value[1] === 'Horario'){
-            // const inputValue = 345.67
-            // const inputStep = 1
-            // let time = 'notime'
-            Swal.fire({
+        arrResult = result
+      })
+
+        if (arrResult.value && arrResult.value.length !== 0) {
+          if (arrResult.value[1] === 'Horario'){
+
+            await Swal.fire({
               title: 'Selecciona el horario de tu nuevo evento',
               html: `
+              <h5>Comienzo: </h5>
                 <input
                   type="time"
                   
                   class="swal2-input"
-                  id="range-value">`,
+                  id="startTime">
+                  <h5>Fin: </h5>
+                  <input
+                  type="time"
+                  id="endTime"
+                  class="swal2-input"
+                  >`,
               confirmButtonText: 'Crear evento',
-              // input: 'range',
-              // inputValue,
-              // inputAttributes: {
-              //   min: 0,
-              //   max: 1000,
-              //   step: inputStep
-              // },
               didOpen: () => {
-                // const inputRange = Swal.getInput()
-                const inputNumber = Swal.getContent().querySelector('#range-value')
-                // console.log('inputRange', inputRange)
-                console.log('inputNumber', inputNumber)
-                // <input 
-              // type="time" 
-              // id="time-value"
-              // value="${inputValue}"
-              // name="time-value" 
-              // required>
-                // remove default output
-                // inputRange.nextElementSibling.style.display = 'none'
-                // inputRange.style.width = '100%'
-            
-                // sync input[type=number] with input[type=range]
-                // inputRange.addEventListener('input', () => {
-                //   inputNumber.value = inputRange.value
-                // })
-            
-                // sync input[type=range] with input[type=number]
-                inputNumber.addEventListener('change', () => {
-                  time = inputNumber.value
-                  console.log(time)
+                
+                const startTime = Swal.getContent().querySelector('#startTime')
+                const endTime = Swal.getContent().querySelector('#endTime')
+              
+                startTime.addEventListener('change', () => {
+                  timestart = startTime.value
+                })
+
+                endTime.addEventListener('change', () => {
+                  timeend = endTime.value
                 })
               }
             })
-          } else {
-            Swal.fire({
-              title: 'Selecciona el dia del evento',
-              html: `
-                Your answers:
-                
-              `,
-              confirmButtonText: 'Crear evento'
-            })
           }
-          // if (result.isConfirmed && result.value.length > 0) {
-          //   console.log(result.value)
-          //   calendarApi.addEvent({
-          //     id: createEventId(),
-          //     title: result.value,
-          //     start: selectInfo.startStr,
-          //     end: selectInfo.endStr,
-          //     allDay: true
-          //   })
-          // }
         }
-        return promise;
-      })
-      
-      // Swal.fire({
-      //   title: 'Titulo del evento',
-      //   input: 'text',
-      //   inputAttributes: {
-      //     autocapitalize: 'off'
-      //   },
-      //   showCancelButton: true,
-      //   cancelButtonText: 'Cancelar',
-      //   confirmButtonText: 'Aceptar',
-      //   showLoaderOnConfirm: true,
-      // }).then((result) => {
-        // if (result.isConfirmed && result.value.length > 0) {
-        //   console.log(result.value)
-        //   calendarApi.addEvent({
-        //     id: createEventId(),
-        //     title: result.value,
-        //     start: selectInfo.startStr,
-        //     end: selectInfo.endStr,
-        //     allDay: true
-        //   })
-        // }
-      // })
+
+      if (arrResult.value && arrResult.value.length > 0) {
+        if (arrResult.value[1] === 'Todo el dia') {
+          console.log('Entro al if')
+          calendarApi.addEvent({
+            id: createEventId(),
+            title: arrResult.value[0],
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
+            allDay: true
+          })
+        } else {
+          console.log('entro al else')
+          calendarApi.addEvent({
+            id: createEventId(),
+            title: arrResult.value[0],
+            startRecur: selectInfo.startStr,
+            endRecur: selectInfo.endStr,
+            startTime: timestart,
+            endTime: timeend,
+            allDay: false
+          })
+        }
+      }
     }
   
     const handleEventClick = (clickInfo) => {
@@ -230,12 +165,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
         {renderSidebar()}
         <div className='demo-app-main'>
           <FullCalendar
-            locale= 'es'
+            locale={esLocale}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+              right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             }}
             initialView='dayGridMonth'
             editable={true}
