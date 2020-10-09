@@ -1,5 +1,5 @@
 const express = require('express');
-const fileUpload = require ('express-fileupload');
+const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -11,7 +11,7 @@ const server = express();
 
 server.name = 'API';
 
-server.use(fileUpload({useTempFiles:true}));
+server.use(fileUpload({ useTempFiles: true }));
 server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 server.use(bodyParser.json({ limit: '50mb' }));
 server.use(cookieParser());
@@ -19,7 +19,7 @@ server.use(morgan('dev'));
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // update to match the domain you will make the request from
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header("Access-Control-Allow-Headers", "*");   
+  res.header("Access-Control-Allow-Headers", "*");
   res.header('Access-Control-Allow-Methods', '*');
   next();
 });

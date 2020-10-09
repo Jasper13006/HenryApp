@@ -2,12 +2,12 @@ const server = require("express").Router();
 const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, forgotPassword, mailResetPassword,
-  promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback } = require('../controllers/user')
+  promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback, generateUsers } = require('../controllers/user')
 const { calificarAlumno } = require('../controllers/checkpoints')
 
 
 
-
+server.get("/generateUsers", generateUsers)
 //Rutar obtener todos los usuarios
 server.get("/", getUsers);
 
