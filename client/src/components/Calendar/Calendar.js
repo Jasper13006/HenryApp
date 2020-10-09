@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import FullCalendar, { formatDate, renderMicroColGroup } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -7,18 +7,26 @@ import listPlugin from '@fullcalendar/list';
 import Swal from 'sweetalert2'
 import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
-import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import esLocale from '@fullcalendar/core/locales/es';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
 
   export default function Calendar () {
-    const [weekendsVisible, setWeekendsVisible] = React.useState(true)
-    const [currentEvents, setCurrentEvents] = React.useState([])
-  
+    const [weekendsVisible, setWeekendsVisible] = useState(true)
+    const [currentEvents, setCurrentEvents] = useState([]) //VARIABLE PARA GUARDAR TODOS LOS EVENTOS
+    const [getEvents, setGetEvents] = useState()
+    console.log(INITIAL_EVENTS)
+
+
+    useEffect(() => {
+      fetch(`http://localhost:3001/calendar/1`)
+      .then(res => res.json())
+      .then(data => {
+        setGetEvents(data)
+        INITIAL_EVENTS.push(data)
+        console.log(data)
+      })
+  }, [])
+
     const handleWeekendsToggle = () => {
       setWeekendsVisible(!weekendsVisible)
     }
@@ -26,12 +34,9 @@ import esLocale from '@fullcalendar/core/locales/es';
     const handleDateSelect = async (selectInfo) => {
       let calendarApi = selectInfo.view.calendar
       calendarApi.unselect() // clear date selection
-      let date = new Date().toISOString().replace(/T.*$/, '') + 'T12:00:00'
-      console.log(date)
       let timestart = ''
       let timeend = ''
       let arrResult =  []
-      console.log(selectInfo)
       
       await Swal.mixin({
         confirmButtonText: 'Sigueinte &rarr;',
@@ -67,7 +72,6 @@ import esLocale from '@fullcalendar/core/locales/es';
               <h5>Comienzo: </h5>
                 <input
                   type="time"
-                  
                   class="swal2-input"
                   id="startTime">
                   <h5>Fin: </h5>
@@ -96,7 +100,6 @@ import esLocale from '@fullcalendar/core/locales/es';
 
       if (arrResult.value && arrResult.value.length > 0) {
         if (arrResult.value[1] === 'Todo el dia') {
-          console.log('Entro al if')
           calendarApi.addEvent({
             id: createEventId(),
             title: arrResult.value[0],
@@ -105,7 +108,6 @@ import esLocale from '@fullcalendar/core/locales/es';
             allDay: true
           })
         } else {
-          console.log('entro al else')
           calendarApi.addEvent({
             id: createEventId(),
             title: arrResult.value[0],
@@ -118,21 +120,45 @@ import esLocale from '@fullcalendar/core/locales/es';
         }
       }
     }
-  
-    const handleEventClick = (clickInfo) => {
-      if (window.confirm(`¿Estas seguro que queres eliminar el evento: '${clickInfo.event.title}'?`)) {
-        clickInfo.event.remove()
-      }
+
+    const handleEditEvent = async (data) => {
+
     }
   
+    const handleEventClick = async (clickInfo) => {
+     await Swal.fire({
+        title: 'Que deseas hacer con este evento?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Editar`,
+        denyButtonText: `Eliminar`,
+        customClass: {
+          cancelButton: 'order-1 right-gap',
+          confirmButton: 'order-2',
+          denyButton: 'order-3',
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log(clickInfo)
+          handleDateSelect(clickInfo)
+        } else if (result.isDenied) {
+          Swal.fire('Evento eliminado', '', 'error')
+          clickInfo.event.remove()
+        }
+      })
+    }
+  
+    //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
     const handleEvents = (events) => {
       setCurrentEvents(events)
+      console.log('entro al handleEvents')
     }
 
     const renderSidebar= () => {
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
+            <label>Cohorte ID: </label><input type='text'/>
             <h2>Instrucciones de uso</h2>
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
@@ -166,17 +192,19 @@ import esLocale from '@fullcalendar/core/locales/es';
         <div className='demo-app-main'>
           <FullCalendar
             locale={esLocale}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, bootstrapPlugin]}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
               right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             }}
             initialView='dayGridMonth'
+            
             editable={true}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
+            events={getEvents && getEvents}
             weekends={weekendsVisible}
             initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
@@ -203,40 +231,11 @@ function renderEventContent(eventInfo) {
   )
 }
 function renderSidebarEvent(event) {
+  console.log(event)
   return (
     <li key={event.id}>
-      <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}:</b>
+      <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}{!event.allDay ? ' -' + ' ' + formatDate(event.start, {hour: '2-digit', minute: '2-digit'}) : null}:</b>
       <i>{event.title}</i>
     </li>
-  )
-}
-function CreateEventDialog() {
-  return (
-    <div>
-          <Dialog
-            open={true}
-            // TransitionComponent={Transition}
-            keepMounted
-            // onClose={handleClose}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
-          >
-            <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                Let Google help apps determine location. This means sending anonymous location data to
-                Google, even when no apps are running.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button color="primary">
-                Disagree
-              </Button>
-              <Button onClick={() => alert('puto')}color="primary">
-                Agree
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
   )
 }
