@@ -44,16 +44,16 @@ export default function MaterialTableDemo({data,submit,reset}) {
             if(send.data.status === 400){
                 new Promise((resolve) => {
                     setTimeout(() => {
-                    resolve();  
-                    setProgress((prevProgress)=> {
-                        const acum = prevProgress + (100/state.data.length)
-                        return acum
-                    })                  
+                    resolve();                  
                     setState((prevState) => {
                     const data = [...prevState.data];
                     data[data.indexOf(dato)]['err'] = send.data.msg;
                     return { ...prevState, data };
-                    });                   
+                    }); 
+                    setProgress((prevProgress)=> {
+                        const acum = prevProgress + (100/state.data.length)
+                        return acum
+                    })                   
                     }, 600);
                 })
             }
@@ -61,15 +61,15 @@ export default function MaterialTableDemo({data,submit,reset}) {
                 new Promise((resolve) => {
                     setTimeout(() => {
                     resolve();
-                    setProgress((prevProgress)=> {
-                        const acum = prevProgress + (100/state.data.length)
-                        return acum
-                    })
                     setState((prevState) => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(dato), 1);
                         return { ...prevState, data };
                     });
+                    setProgress((prevProgress)=> {
+                        const acum = prevProgress + (100/state.data.length)
+                        return acum
+                    })
                     }, 600);
                 })
 
@@ -96,14 +96,16 @@ export default function MaterialTableDemo({data,submit,reset}) {
         
         if(!state.data.length && !control){
             let datos = []
-            data.map((user)=>{                
-                if(!/\S+@\S+\.\S+/.test(user[1])){
-                    console.log('entro')
-                    datos.push({name:user[0],email:user[1],err:'email invalido'})
-                }else{
-                    datos.push({name:user[0],email:user[1]})
-                }
-                
+            data.shift()
+            data.map((user)=>{   
+                if(user[0] || user[1]) {
+                    if(!/\S+@\S+\.\S+/.test(user[1])){
+                        console.log('entro')
+                        datos.push({name:user[0],email:user[1],err:'email invalido'})
+                    }else{
+                        datos.push({name:user[0],email:user[1]})
+                    }
+                }               
             })
             setControl(true)
             setState({
@@ -137,6 +139,21 @@ export default function MaterialTableDemo({data,submit,reset}) {
     const handleClose = () => {
         setOpen(false);
         setProgress(0)
+        if(!state.data.length){
+            Swal.fire({
+                icon: 'success',
+                title: 'Se han enviado tus invitaciones',
+                
+            })
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "algunos emails no pudieron ser enviados, revisa los errores en la tabla"
+                
+            })
+        }
+        
     };
     return (
         <div className={classes.table}>
@@ -195,7 +212,7 @@ export default function MaterialTableDemo({data,submit,reset}) {
             >
                 Enviar
             </Button>
-            {open && <Process open={open} handleClose={ handleClose} data={state.data} progress={progress}/>}
+            {open && <Process open={open} handleClose={ handleClose} progress={progress}/>}
             
         </div>
         

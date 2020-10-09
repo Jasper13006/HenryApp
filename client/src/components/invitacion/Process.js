@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlertDialogSlide({open,handleClose,progress}) {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       
@@ -49,28 +48,29 @@ export default function AlertDialogSlide({open,handleClose,progress}) {
         >
         <DialogTitle id="alert-dialog-slide-title">{"Estamos enviando tus correos..."}</DialogTitle>
         <DialogContent style={{margin:'auto'}}>    
-          {progress < 100 ? <Box position="relative" display="inline-flex" >
-              <CircularProgress variant="static" value={progress} />
-              <Box
-                  top={0}
-                  left={0}
-                  bottom={0}
-                  right={0}
-                  position="absolute"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  
-              >
-                  <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-                  progress,
-                  )}%`}</Typography>
-              </Box>
-          </Box> : <Button onClick={handleClose} className={classes.submit}>
-            Completado
-          </Button>}                  
+          <Box position="relative" display="inline-flex" >
+            <CircularProgress variant="static" value={progress} />
+            <Box
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                position="absolute"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                
+            >
+                <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+                progress,
+                )}%`}</Typography>
+            </Box>
+          </Box>            
         </DialogContent>
         <DialogActions>
+          {progress >= 100 && <Button onClick={handleClose} className={classes.submit}>
+            Completado
+          </Button>}   
         </DialogActions>
       </Dialog>
     </div>

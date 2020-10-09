@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Button,Input} from '@material-ui/core/';
+import {Button,FormHelperText,Input} from '@material-ui/core/';
 import { ExcelRenderer} from 'react-excel-renderer';
 import Table from "./Table";
+import template from './template.xlsx'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,12 +14,28 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     backgroundColor:'yellow',
+    paddingRight:'20px',
     color:'black',
     '&:hover': {
         backgroundColor: 'black',
         color: 'yellow'
     }
     
+  },
+  submit1: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor:'black',
+    paddingRight:'20px',
+    color:'yellow',
+    '&:hover': {
+        backgroundColor: 'yellow',
+        color: 'black'
+    }
+    
+  },
+  botones:{
+    display:'flex',
+    justifyContent:'space-between'
   },
   
   input: {
@@ -96,12 +113,21 @@ export default function UploadButtons() {
         ref={fileInput} 
         onClick={(event)=> { event.target.value = null }}
       />
-      <label htmlFor="contained-button-file">
-        <Button variant="contained"  onClick={openFileBrowser} className={classes.submit}>
-          Upload
-        </Button>
-        <Input id="component-disabled" disabled value={state.uploadedFileName} />
-      </label>
+      <div className={classes.botones}>
+        <label htmlFor="contained-button-file">
+          <Button variant="contained"  onClick={openFileBrowser} className={classes.submit}>
+            Subir Archivo
+          </Button>
+          <Input id="component-disabled" disabled value={state.uploadedFileName} />
+        </label>
+        <a href={template} download="Template">
+          <Button  className={classes.submit1}>
+            Descargar Template
+          </Button>
+        </a>
+      </div>
+      
+      
       {state.dataLoaded && <Table data={state.rows}/>} 
     </div>
   );

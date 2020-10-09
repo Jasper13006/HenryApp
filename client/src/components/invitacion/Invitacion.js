@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Typography from '@material-ui/core/Typography';
+import{ Typography, Backdrop, CircularProgress}from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {yellow} from '@material-ui/core/colors';
@@ -57,30 +57,13 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },    
     
 
 }));
-
-async function sendEmail (data){
-    try {
-        const send = await Axios.post('http://localhost:3001/invite/send',data)
-        console.log(send)
-        Swal.fire({
-            icon: 'success',
-            title: 'Se ha enviado una invitacion',
-            
-        })
-    }catch(err){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: "no se ha podido enviar la invitacion"
-            
-        })
-    } 
-    
-}
 
 export default function Login() {
     const classes = useStyles();
@@ -89,6 +72,7 @@ export default function Login() {
         name: '',
     })
     const [errors, setErrors] = useState({});
+    const [open, setOpen] = useState(false);
 
     const handleInputChange = (e) => {
         setState({
@@ -132,6 +116,38 @@ export default function Login() {
         }
     }
    
+    async function sendEmail (data){
+        setOpen(true)
+        try {
+            const send = await Axios.post('http://localhost:3001/invite/send',data)
+            console.log(send)
+            setOpen(false)
+            if(send.data.status === 400){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: send.data.msg
+                    
+                })
+            }else{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Se ha enviado una invitacion',
+                    
+                })
+            }   
+        }catch(err){
+            setOpen(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "no se ha podido enviar la invitacion"
+                
+            })
+            
+        } 
+        
+    }
 
     return (
         <div>
@@ -183,6 +199,9 @@ export default function Login() {
                     >
                         Enviar
                     </Button>
+                    <Backdrop className={classes.backdrop} open={open}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </form>
             </div>}          
             </Container>
