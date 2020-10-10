@@ -2,22 +2,43 @@ const { Calendar } = require("../db.js");
 
 module.exports = {
     async createCalendar(req, res) {
-        const { title, start, end, allDay, cohorteId } = req.body
-        if (!title || !start || !end || !allDay || !cohorteId) {
-            res.status(400).send({message: 'Faltan campos obligatorios', status: 400})
-        }
+        const { title, start, startRecur, end, endRecur, startTime, endTime, allDay, cohorteId } = req.body
+        if (allDay){
+          if (!title || !start || !end || !allDay || !cohorteId) {
+              res.status(400).send({message: 'Faltan campos obligatorios', status: 400})
+          }
+          try {
+            const createEvent = await Calendar.create({
+              title: title,
+              start:  start,
+              end: end,
+              allDay: allDay,
+              cohorteId: cohorteId,
+            })
+            res.status(201).send(createEvent)
+          } catch (err) {
+            console.log(err)
+            res.status(500).send('Algo salio mal')
+          }
+        } else {
+        //   if (!title || !startRecur || !endRecur || !startTime || !endTime || !allDay || !cohorteId) {
+        //     res.status(400).send({message: 'Faltan campos obligatorios', status: 400})
+        // }
         try {
           const createEvent = await Calendar.create({
             title: title,
-            start:  start,
-            end: end,
-            allDay: allDay,
-            cohorteId: cohorteId,
+            startRecur: startRecur,
+            endRecur: endRecur,
+            startTime: startTime,
+            endTime: endTime,
+            allDay: false,
+            cohorteId: cohorteId
           })
           res.status(201).send(createEvent)
         } catch (err) {
           console.log(err)
           res.status(500).send('Algo salio mal')
+        }
         }
       },
 

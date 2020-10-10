@@ -9,12 +9,14 @@ import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
+import {createEventAllDay} from '../../redux/actions/calendar'
+import { useDispatch } from "react-redux";
 
   export default function Calendar () {
     const [weekendsVisible, setWeekendsVisible] = useState(true)
     const [currentEvents, setCurrentEvents] = useState([]) //VARIABLE PARA GUARDAR TODOS LOS EVENTOS
     const [getEvents, setGetEvents] = useState()
-    console.log(INITIAL_EVENTS)
+    const dispatch = useDispatch()
 
 
     useEffect(() => {
@@ -22,8 +24,7 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
       .then(res => res.json())
       .then(data => {
         setGetEvents(data)
-        INITIAL_EVENTS.push(data)
-        console.log(data)
+        // console.log(data)
       })
   }, [])
 
@@ -100,23 +101,27 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 
       if (arrResult.value && arrResult.value.length > 0) {
         if (arrResult.value[1] === 'Todo el dia') {
-          calendarApi.addEvent({
-            id: createEventId(),
+          const evento = {
             title: arrResult.value[0],
             start: selectInfo.startStr,
             end: selectInfo.endStr,
-            allDay: true
-          })
+            allDay: true,
+            cohorteId: 1 //HARCODEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            //TRAER ESTE DATO DE ALGUN INPUT
+          }
+          calendarApi.addEvent(evento)
+          dispatch(createEventAllDay(evento))
         } else {
-          calendarApi.addEvent({
-            id: createEventId(),
+          const evento = {
             title: arrResult.value[0],
             startRecur: selectInfo.startStr,
             endRecur: selectInfo.endStr,
             startTime: timestart,
             endTime: timeend,
-            allDay: false
-          })
+            allDay: false,
+            cohorteId: 1
+          }
+          calendarApi.addEvent(evento)
         }
       }
     }
@@ -151,7 +156,6 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
     //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
     const handleEvents = (events) => {
       setCurrentEvents(events)
-      console.log('entro al handleEvents')
     }
 
     const renderSidebar= () => {
