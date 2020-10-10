@@ -18,6 +18,22 @@ module.exports = (sequelize) => {
         allDay: {
             type: DataTypes.BOOLEAN,
             allowNull: true,
-        }
+        },
+        startRecur: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        endRecur: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        startTime: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        endTime: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
 };

@@ -103,8 +103,8 @@ import { useDispatch } from "react-redux";
         if (arrResult.value[1] === 'Todo el dia') {
           const evento = {
             title: arrResult.value[0],
-            start: selectInfo.startStr,
-            end: selectInfo.endStr,
+            startDate: selectInfo.startStr,
+            endDate: selectInfo.endStr,
             allDay: true,
             cohorteId: 1 //HARCODEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
             //TRAER ESTE DATO DE ALGUN INPUT
@@ -122,6 +122,7 @@ import { useDispatch } from "react-redux";
             cohorteId: 1
           }
           calendarApi.addEvent(evento)
+          dispatch(createEventAllDay(evento))
         }
       }
     }

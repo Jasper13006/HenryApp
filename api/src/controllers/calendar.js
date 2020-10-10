@@ -21,9 +21,9 @@ module.exports = {
             res.status(500).send('Algo salio mal')
           }
         } else {
-        //   if (!title || !startRecur || !endRecur || !startTime || !endTime || !allDay || !cohorteId) {
-        //     res.status(400).send({message: 'Faltan campos obligatorios', status: 400})
-        // }
+          if (!title || !startRecur || !endRecur || !startTime || !endTime || !cohorteId) {
+            res.status(400).send({message: 'Faltan campos obligatorios', status: 400})
+        }
         try {
           const createEvent = await Calendar.create({
             title: title,
