@@ -15,6 +15,9 @@ module.exports = {
   
     async sendInvite(req, res)  {
         const {name,email} = req.body
+        if(!/\S+@\S+\.\S+/.test(email)){
+            return res.send({msg:'email invalido',status:400})
+        }
         const user = await User.findOne({
             where:{
                 email
@@ -23,7 +26,7 @@ module.exports = {
         const token = await jwt.sign({email:email},Secret)
         const url = `http://localhost:3000/register/${token}`
         if(user){
-            return res.status(400).send({ message: "Usuario ya es un alumno" });
+            return res.send({ msg: "Usuario ya es un alumno",status:400});
         }
         try{
             var smtpTransport = nodemailer.createTransport({
