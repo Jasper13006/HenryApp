@@ -1,21 +1,45 @@
-.profileHeader{
-    display:flex;
-    flex-direction:row;
-    width:80%;
+.infoTable{
     margin:auto;
-    border:1px solid rgba(0,0,0,0.5);
+    margin-top:20px;
+    width:80%;
+    height:200px;
+}
+
+.infoTable td{
+    background-color:rgba(0,0,0,0.1);
+    height:40px;
+    border-radius:3px;
     text-align:center;
 }
-
-.profileImage{
-    border:1px solid rgba(0,0,0,0.5);
-    width:100px;
-    height:100px;
-    margin-left:auto;
+.editIcon{
+    margin-left:20px;
+    transition:2s;
+    border-radius:50%;
+    border:3px solid transparent;
+}
+.editIcon:hover{
+    background-color:rgb(150,150,150);
+    cursor:pointer;
+    border:3px solid rgb(200,200,200);
+}
+.display-flex{
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-.userData{
-    width:80%;
-    margin:auto;
+.editPhotoIcon{
+    width:32px;
+    position:relative;
+    bottom:90%;
+    left:85%;
+    transition:0.5s;
+    border-radius:50%;
+    border:3px solid transparent;
+    padding:0px;
 }
-
+.editPhotoIcon:hover{
+    background-color:rgb(150,150,150);
+    cursor:pointer;
+    border:3px solid rgb(200,200,200);
+}
