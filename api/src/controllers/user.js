@@ -288,6 +288,25 @@ module.exports = {
     }
   },
 
+   
+  async getUserByMail (req, res) {
+
+    try {
+      const usuario = await User.findOne({
+        where: {
+          email: req.body.email
+        }
+      })
+      if (usuario) {
+        res.status(200).send({ msg: 'este es tu usuario', status: 200, usuario })
+      } else {
+        res.status(400).send({ msg: 'usuario no existe', status: 400 })
+      }
+    } catch (err) {
+      res.status(500).send(err)
+    }
+  },
+
      
   async forgotPassword(req, res){
     try {

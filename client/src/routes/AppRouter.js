@@ -9,6 +9,8 @@ import Register from '../components/register/RegisterMain';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 import Axios from 'axios';
+import ForgetPass from '../components/login/ForgetPass';
+import FormResetPass from '../components/login/FormResetPass'
 
 const AppRouter = () => {
 
@@ -29,6 +31,8 @@ const AppRouter = () => {
                 <PublicRoute exact path="/register/:token" component={Register} />
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
+                <Route exact path="/olvidemicontraseña" component={ForgetPass} />
+                <Route exact path="/user/resetpassword/:token" component={FormResetPass} />
                 <Route path="/panel" isToken={token} component={Panel} />
             </Switch>
 
