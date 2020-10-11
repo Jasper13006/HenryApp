@@ -220,7 +220,9 @@ module.exports = {
         from: process.env.user,
         to: email,
         subject: 'Restablece tu contraseña! HenryApp',
-        html: `Clickea en el link para cambiar tu contraseña 
+        html: `<img margin="auto" src="https://res.cloudinary.com/dxnd3uqlx/image/upload/v1601847591/HENRY_APP_j5g2mb.png"/>
+               <hr/>
+               <p>Clickea en el link para cambiar tu contraseña</p> 
                <p>Link:</p>
                <hr/>
                <a href='${url}'>${url}</a>        
