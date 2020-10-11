@@ -122,35 +122,28 @@ export default function Login() {
             ...state,
             [e.target.name]: e.target.value,
         })
-    }
-
-    const validate = (state) => {
-        let errors = {};
-        if (!state.email) {
-            console.log('first if', errors)
-            errors.email = 'Por favor, introduzca un email';
-        } else if (!state.email.includes("@")) {
-            console.log('second if', errors)
-            errors.email = 'Por favor, introduzca un formato de email valido';
-        }
-        if (!state.password) {
-            console.log('third if', errors)
-            errors.password = 'Por favor, introduzca una contraseña';
-        }
-        // console.log(errors)
-        return errors;
-
-    };
-    const handleSubmit = (e) => {
-        e.preventDefault();
         setErrors(validate({
             ...state,
             [e.target.name]: e.target.value
         }));
-        // console.log(e)
-        console.log(errors)
-        if (state.email && state.password) {
-            // console.log(state)
+    }
+
+    const validate = (state) => {
+        let errors = {};
+        if (!state.email) {            
+            errors.email = 'Por favor, introduzca un email';
+        } else if (!/\S+@\S+\.\S+/.test(state.email)) {           
+            errors.email = 'Por favor, introduzca un formato de email valido';
+        }
+        if (!state.password) {           
+            errors.password = 'Por favor, introduzca una contraseña';
+        }       
+        return errors;
+
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();     
+        if (state.email && state.password) {        
             dispatch(postLogin(state,history))
         }
     }
