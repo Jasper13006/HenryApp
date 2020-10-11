@@ -7,19 +7,27 @@ const nodemailer = require('nodemailer');
 const SECRET = process.env.SECRET;
 
 const transporter = nodemailer.createTransport({
-	service: 'gmail',
-	host: 'smtp.gmail.com',
-	port: 465,
-	secure: true,
-	auth: {
-	  type: 'OAuth2',
-	  user: process.env.user,
-	  clientId: process.env.clientId,
-	  clientSecret: process.env.clientSecret,
-	  refreshToken: process.env.refreshToken,
-	  accessToken: process.env.accessToken
-	}
-  })
+  host: 'smtp.gmail.com',
+  auth: {
+      user: 'ecomerce0410@gmail.com',
+      pass: "henry1234."
+  }
+});
+
+// const transporter = nodemailer.createTransport({
+// 	service: 'gmail',
+// 	host: 'smtp.gmail.com',
+// 	port: 465,
+// 	secure: true,
+// 	auth: {
+// 	  type: 'OAuth2',
+// 	  user: process.env.user,
+// 	  clientId: process.env.clientId,
+// 	  clientSecret: process.env.clientSecret,
+// 	  refreshToken: process.env.refreshToken,
+// 	  accessToken: process.env.accessToken
+// 	}
+//   })
 
 const uploadImage = (file) => new Promise((resolve, reject) => {
 
@@ -211,8 +219,13 @@ module.exports = {
       const mailOptions = {
         from: process.env.user,
         to: email,
-        subject: 'Restablece tu contraseña!',
-        html: `Clickea en el link para cambiar tu contraseña <a href='${url}'>${url}</a>. Este link expira en un dia y solo es válido una vez..!` 
+        subject: 'Restablece tu contraseña! HenryApp',
+        html: `Clickea en el link para cambiar tu contraseña 
+               <p>Link:</p>
+               <hr/>
+               <a href='${url}'>${url}</a>        
+               <hr/>
+               <p>Este link expira en un dia y solo es válido una vez..!</p>` 
       }
       transporter.sendMail(mailOptions, (err, response) => {
         if (err) {
