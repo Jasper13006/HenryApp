@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {useSelector} from 'react-redux'
 import './AppRouter.css';
 import Panel from "../components/panel/Panel.js";
+
 import Home from '../pages/Home';
 import Login from '../components/login/MainLogin';
 import Register from '../components/register/RegisterMain';
