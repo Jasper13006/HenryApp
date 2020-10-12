@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Navigator from './Navigator';
 import Header from './Header';
 import Main from './Main.js'
-import Calendario from '../Calendar/Calendar'
 
 function Copyright() {
     return (
