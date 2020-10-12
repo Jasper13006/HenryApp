@@ -161,8 +161,7 @@ export default function Login() {
                     fullWidth
                     id="email"
                     label="Email"
-                    name="email"
-                    autoComplete="off"
+                    name="email"                    
                     autoFocus
                     value={state.email}
                     />
@@ -175,8 +174,7 @@ export default function Login() {
                     name="password"
                     label="Contraseña"
                     type="password"
-                    id="password"
-                    autoComplete="off"
+                    id="password"                    
                     value={state.password}
                     />
                 {errors.password && (<p style={{ color: "red" }}>{errors.password}</p>)}

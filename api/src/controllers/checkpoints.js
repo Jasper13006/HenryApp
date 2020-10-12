@@ -24,5 +24,23 @@ module.exports = {
       console.log(error)
       res.status(500).send(error)
     }
-  }
+  },
+
+  async getNotasByUserId(req, res) {
+    try {
+      await Checkpoint.findAll({
+        where: {
+          userId: req.params.id,
+        },
+        })
+        .then((notas) => {
+          if (notas && notas.length === 0) {
+            return res.status(404).send({ message: "No hay calificaciones" });
+          }
+          res.status(200).send(notas);
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
