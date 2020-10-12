@@ -1,29 +1,37 @@
 import axios from 'axios'
-import { GET_USER, GET_INSTRUCTORS, GET_USERS } from '../consts/actionTypes'
-import { SET_USER } from '../consts/actionTypes'
-
-
-
+import { SET_USER, GET_INSTRUCTORS, GET_USERS } from '../consts/actionTypes'
+import Swal from 'sweetalert2'
 
 export function setUser(data){
-    return function(dispatch){
-        return axios({
-            method: 'POST',
-            url: `http://localhost:3001/user/login`,
-            data: data,
-        }).then(res=>
+    return async function(dispatch){
+        return await (
         dispatch({
             type: SET_USER,
-            payload: res.data})
+            payload: data})
         ).catch(err=>
             console.log(err)
     )}
 }
 
+export function setUserFromDB(id,token){
+    return async function(dispatch){
+        return await axios({
+            method: 'GET',
+            url: `http://localhost:3001/user/${id}`,
+            credentials: 'include',
+            headers: {"auth-token": token}
+        }).then(res => {
+            console.log(res.data)
+            dispatch({
+                type: SET_USER,
+                payload: res.data})
+        }).catch(err=> console.log(err))
+    }
+}
+
 export function changeUserData(data,id,token){
-    return function(dispatch){
-        console.log("el action")
-        return axios({
+    return async function(dispatch){
+        return await axios({
             method: 'PUT',
             url:`http://localhost:3001/user/profile/${id}`,
             data:data,
@@ -31,9 +39,46 @@ export function changeUserData(data,id,token){
             headers: {"auth-token": token},
 
         }).then(res=>{
-            console.log(res)
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: "Se han actualizado tus datos",
+                })
         }).catch(error=>{
             console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'No ha sido posible actualizar tus datos',
+                })
+        })
+    }
+}
+
+export function changeUserImage(data,id,token){
+    return async function(dispatch){
+        return await axios({
+            method: 'PUT',
+            url:`http://localhost:3001/user/profile/${id}`,
+            data:data,
+            credentials: "include",
+            headers: {
+                "auth-token": token,
+                'Content-Type':'multipart/form-data; boundary=${form._boundary}'
+            },
+        }).then(res=>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: "Se ha actualizado tu foto de perfil",
+                })
+        }).catch(error=>{
+            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'No ha sido posible actualizar tu foto',
+                })
         })
     }
 }
