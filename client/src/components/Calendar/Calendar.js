@@ -10,23 +10,47 @@ import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {createEventAllDay} from '../../redux/actions/calendar'
-import { useDispatch } from "react-redux";
+import { getCohortes } from '../../redux/actions/cohorte'
+import { useDispatch, useSelector } from "react-redux";
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
   export default function Calendar () {
     const [weekendsVisible, setWeekendsVisible] = useState(true)
     const [currentEvents, setCurrentEvents] = useState([]) //VARIABLE PARA GUARDAR TODOS LOS EVENTOS
     const [getEvents, setGetEvents] = useState()
     const dispatch = useDispatch()
-
+    const classes = useStyles();
+    const cohortes = useSelector(state => state.cohortes.data)
+    const [cohorteId, setCohorteId] = useState()
 
     useEffect(() => {
-      fetch(`http://localhost:3001/calendar/1`)
-      .then(res => res.json())
-      .then(data => {
-        setGetEvents(data)
-        // console.log(data)
-      })
-  }, [])
+      dispatch(getCohortes())
+      if(cohorteId) {
+        fetch(`http://localhost:3001/calendar/${cohorteId}`)
+        .then(res => res.json())
+        .then(data => {
+          setGetEvents(data)
+        })
+      }
+  }, [cohorteId])
+
+    const handleChangeCohorteId = (event) => {
+      setCohorteId(event.target.value);
+    };
 
     const handleWeekendsToggle = () => {
       setWeekendsVisible(!weekendsVisible)
@@ -103,10 +127,10 @@ import { useDispatch } from "react-redux";
         if (arrResult.value[1] === 'Todo el dia') {
           const evento = {
             title: arrResult.value[0],
-            startDate: selectInfo.startStr,
-            endDate: selectInfo.endStr,
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
             allDay: true,
-            cohorteId: 1 //HARCODEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            cohorteId: cohorteId //HARCODEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
             //TRAER ESTE DATO DE ALGUN INPUT
           }
           calendarApi.addEvent(evento)
@@ -119,7 +143,7 @@ import { useDispatch } from "react-redux";
             startTime: timestart,
             endTime: timeend,
             allDay: false,
-            cohorteId: 1
+            cohorteId: cohorteId
           }
           calendarApi.addEvent(evento)
           dispatch(createEventAllDay(evento))
@@ -163,8 +187,19 @@ import { useDispatch } from "react-redux";
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
-            <label>Cohorte ID: </label><input type='text'/>
-            <h2>Instrucciones de uso</h2>
+          <FormControl className={classes.formControl} fullWidth>
+            <InputLabel id="demo-simple-select-label">Seleccione un cohorte</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={cohorteId}
+              onChange={handleChangeCohorteId}
+            >
+              {cohortes && cohortes.map((el, i) => (
+                <MenuItem value={el.id}>{el.name}</MenuItem>
+              ))}
+            </Select>
+      </FormControl>
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
               <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
@@ -205,13 +240,13 @@ import { useDispatch } from "react-redux";
             }}
             initialView='dayGridMonth'
             
-            editable={true}
+            // editable={true}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
             events={getEvents && getEvents}
             weekends={weekendsVisible}
-            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+            // initialEvents={INITIAL_EVENTS} alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}

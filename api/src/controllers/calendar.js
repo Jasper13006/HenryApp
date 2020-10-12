@@ -18,7 +18,7 @@ module.exports = {
             res.status(201).send(createEvent)
           } catch (err) {
             console.log(err)
-            res.status(500).send('Algo salio mal')
+            res.status(500).send('Crear evento por dia completo no funciono')
           }
         } else {
           if (!title || !startRecur || !endRecur || !startTime || !endTime || !cohorteId) {
@@ -37,7 +37,7 @@ module.exports = {
           res.status(201).send(createEvent)
         } catch (err) {
           console.log(err)
-          res.status(500).send('Algo salio mal')
+          res.status(500).send('Crear evento por horario no funciono')
         }
         }
       },
@@ -53,7 +53,7 @@ module.exports = {
             res.status(201).send(getEvent)
         } catch (err) {
             console.log(err)
-            res.status(500).send('Algo salio mal :(')
+            res.status(500).send('Algo salio mal :( aaa')
         }
     }
 }

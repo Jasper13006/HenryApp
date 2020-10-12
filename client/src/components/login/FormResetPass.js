@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector} from "react-redux";
-import Swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import Footer from '../home/Footer'
 
 const useStyles = makeStyles((theme) => ({ 
