@@ -187,8 +187,7 @@ function Paperbase(props) {
                 <div className={classes.app}>
                     <Header onDrawerToggle={handleDrawerToggle} />
                     <main className={classes.main}>
-                        <Main />
-                        {/* <Calendario /> */}
+                        <Main />                      
                     </main>
                     <footer className={classes.footer}>
                         <Copyright />

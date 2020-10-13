@@ -27,6 +27,7 @@ server.use('/', routes);
 
 server.post('/seed', async(req, res) => {
   const passwordInit = "12345678"
+//////////// USUARIOS //////////////////// el id 1 es el admin creado en el front
   const admin = await User.create({  //id: 2
     "email": "jordi@soyhenry.com",
     "password": passwordInit,    
@@ -553,7 +554,7 @@ server.post('/seed', async(req, res) => {
     "name": "Student",
     "lastName" : "It78",
   }) 
-  // cohortes
+/////////////// COHORTES ////////////////
   const cohorte1 = await Cohorte.create({
     "name":"webft01",
     "date": "09-11-2020",
@@ -565,6 +566,7 @@ server.post('/seed', async(req, res) => {
     "instructorId": 4
   })
 ///////////// CREAR GRUPOS PM//////////
+//cohorte1
   const grouppm1 = await Grouppm.create({
     "name" : "webft01Group01",
     "PM1Id": 5,
@@ -577,6 +579,7 @@ server.post('/seed', async(req, res) => {
     "PM2Id": 8,
     "cohorteId": 1
   })
+//cohorte2
   const grouppm3 = await Grouppm.create({
     "name" : "webft02Group01",
     "PM1Id": 5,
@@ -589,8 +592,8 @@ server.post('/seed', async(req, res) => {
     "PM2Id": 8,
     "cohorteId": 2
   })
-  ///////// PP
-  //grupo 1 (cohorte1)
+///////////// CREAR GRUPOS PP//////////
+//cohorte1
   const groupp1 = await Groupp.create({
     "name" : "Group01",
     "grouppmId": 1,  
@@ -611,6 +614,7 @@ server.post('/seed', async(req, res) => {
     "grouppmId": 2, 
     "cohorteId": 1
   })
+//cohorte2
   const groupp5 = await Groupp.create({
     "name" : "Group01",
     "grouppmId": 3, 
@@ -631,22 +635,19 @@ server.post('/seed', async(req, res) => {
     "grouppmId": 4, 
     "cohorteId": 2
   })
- //////// CREAR ESTUDIANTES
-
+ //////// CREAR ESTUDIANTES /////////////
   const student1 = await Student.create({
     "grouppId": 1,   
     "userId": 9,    
     "cohorteId": 1,
     "groupmId": 1,
-  })
-  
+  })  
   const student2 = await Student.create({
     "grouppId": 1,
     "userId": 10,     
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student3 = await Student.create({
     "grouppId": 1,
     "userId": 11,     
@@ -659,21 +660,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student5 = await Student.create({
     "grouppId": 1,
     "userId": 13,    
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student6 = await Student.create({
     "grouppId": 1,
     "userId": 14,     
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student7 = await Student.create({
     "grouppId": 1,
     "userId": 15,     
@@ -709,15 +707,13 @@ server.post('/seed', async(req, res) => {
     "userId": 20,    
     "cohorteId": 1,
     "groupmId": 1,
-  })
-  
+  })  
   const student13 = await Student.create({
     "grouppId": 2,
     "userId": 21,     
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student14 = await Student.create({
     "grouppId": 2,
     "userId": 22,     
@@ -730,21 +726,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student16 = await Student.create({
     "grouppId": 2,
     "userId": 24,    
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student17 = await Student.create({
     "grouppId": 2,
     "userId": 25,     
     "cohorteId": 1,
     "groupmId": 1,
   })
-
   const student18 = await Student.create({
     "grouppId": 2,
     "userId": 26,     
@@ -780,15 +773,13 @@ server.post('/seed', async(req, res) => {
     "userId": 31,    
     "cohorteId": 1,
     "groupmId": 2,
-  })
-  
+  })  
   const student24 = await Student.create({
     "grouppId": 3,
     "userId": 32,     
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student25 = await Student.create({
     "grouppId": 3,
     "userId": 33,     
@@ -801,21 +792,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student27 = await Student.create({
     "grouppId": 3,
     "userId": 35,    
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student28 = await Student.create({
     "grouppId": 3,
     "userId": 36,     
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student29 = await Student.create({
     "grouppId": 3,
     "userId": 37,     
@@ -851,15 +839,13 @@ server.post('/seed', async(req, res) => {
     "userId": 42,    
     "cohorteId": 1,
     "groupmId": 2,
-  })
-  
+  })  
   const student35 = await Student.create({
     "grouppId": 4,
     "userId": 43,     
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student36 = await Student.create({
     "grouppId": 4,
     "userId": 44,     
@@ -872,21 +858,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student38 = await Student.create({
     "grouppId": 4,
     "userId": 46,    
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student39 = await Student.create({
     "grouppId": 4,
     "userId": 47,     
     "cohorteId": 1,
     "groupmId": 2,
   })
-
   const student40 = await Student.create({
     "grouppId": 4,
     "userId": 48,     
@@ -922,15 +905,13 @@ server.post('/seed', async(req, res) => {
     "userId": 53,    
     "cohorteId": 2,
     "groupmId": 3,
-  })
-  
+  })  
   const student46 = await Student.create({
     "grouppId": 5,
     "userId": 54,     
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student47 = await Student.create({
     "grouppId": 5,
     "userId": 55,     
@@ -943,21 +924,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student49 = await Student.create({
     "grouppId": 5,
     "userId": 57,    
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student50 = await Student.create({
     "grouppId": 5,
     "userId": 58,     
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student51 = await Student.create({
     "grouppId": 6,
     "userId": 59,     
@@ -993,15 +971,13 @@ server.post('/seed', async(req, res) => {
     "userId": 64,    
     "cohorteId": 2,
     "groupmId": 3,
-  })
-  
+  })  
   const student57 = await Student.create({
     "grouppId": 6,
     "userId": 65,     
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student58 = await Student.create({
     "grouppId": 6,
     "userId": 66,     
@@ -1014,21 +990,18 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 2,
     "groupmId": 3,
   })
-
   const student60 = await Student.create({
     "grouppId": 6,
     "userId": 68,    
     "cohorteId": 2,
     "groupmId": 4,
   })
-
   const student61 = await Student.create({
     "grouppId": 7,
     "userId": 69,     
     "cohorteId": 2,
     "groupmId": 4,
   })
-
   const student62 = await Student.create({
     "grouppId": 7,
     "userId": 70,     
@@ -1064,15 +1037,13 @@ server.post('/seed', async(req, res) => {
     "userId": 74,    
     "cohorteId": 2,
     "groupmId": 4,
-  })
-  
+  })  
   const student68 = await Student.create({
     "grouppId": 7,
     "userId": 75,     
     "cohorteId": 2,
     "groupmId": 4,
   })
-
   const student69 = await Student.create({
     "grouppId": 7,
     "userId": 76,     
@@ -1085,14 +1056,12 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 2,
     "groupmId": 4,
   })
-
   const student71 = await Student.create({
     "grouppId": 8,
     "userId": 78,    
     "cohorteId": 2,
     "groupmId": 4,
   })
-
   const student72 = await Student.create({
     "grouppId": 8,
     "userId": 79,     
@@ -1147,7 +1116,7 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 2,
     "groupmId": 4,
   })
-  res.send('final')
+  res.status(200).send('seed finalizado exitosamente!!')
  })
 
 
