@@ -1,6 +1,6 @@
-import { GET_PM, GET_GROUP_PM, GET_GROUP_PM_COHORTE } from '../consts/actionTypes.js';
+import { GET_PM, GET_GROUP_PM, GET_GROUP_PM_COHORTE, ADD_GROUP_PM } from '../consts/actionTypes.js';
 
-const initialState = []
+const initialState = {}
 
 export default function getPm(state = initialState, action) {
     switch (action.type) {
@@ -15,6 +15,11 @@ export default function getPm(state = initialState, action) {
                 data: action.payload
             }
         case GET_GROUP_PM_COHORTE:
+            return {
+                ...state,
+                data: action.payload
+            }
+        case ADD_GROUP_PM:
             return {
                 ...state,
                 data: action.payload

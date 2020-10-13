@@ -3,6 +3,7 @@ import Header from '../../components/panel/Header'
 import { GET_MY_COHORTE, GET_STUDENTS_BY_COHORTE_ID, GET_MODULOS, GET_COHORTES } from '../consts/actionTypes'
 import Swal from 'sweetalert2'
 
+
 export function getCohorteUser(id) {
     return function (dispatch) {
         return axios({
@@ -15,16 +16,16 @@ export function getCohorteUser(id) {
                     payload: response.data
                 })
             })
-            // .catch(err => {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: "No eres parte de ningun cohorte",
-            //     })
-            //     setTimeout(() => {
-            //         window.location.assign("/panel")
-            //     }, 800)
-            // })
+        // .catch(err => {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Oops...',
+        //         text: "No eres parte de ningun cohorte",
+        //     })
+        //     setTimeout(() => {
+        //         window.location.assign("/panel")
+        //     }, 800)
+        // })
     }
 }
 
