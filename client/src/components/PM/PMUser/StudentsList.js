@@ -29,16 +29,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ComplexGrid({ unique }) {
+export default function ComplexGrid({ id }) {
     const classes = useStyles();
     const students = useSelector(state => state.pm.data && state.pm.data.students)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(traerGrupoPm(1))
+        dispatch(traerGrupoPm(id))
     }, [])
 
-
+    console.log(students)
     return (
         <div className={classes.root}>
             {students && students.map((student) => (<Paper key={student.id} className={classes.paper}>

@@ -2,9 +2,10 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { GET_PM, GET_GROUP_PM, GET_GROUP_PM_COHORTE, ADD_GROUP_PM } from '../consts/actionTypes'
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjAxNzYxMzcwfQ.jT_7aowpVaeCYDsi0omaUHzmBRc9NROtciAXcs57h6w"
 
 export function traerPm(data) {
-    const token = localStorage.getItem("token")
+    // const token = localStorage.getItem("token")
     return function (dispatch) {
         return axios({
             method: 'GET',
@@ -29,7 +30,7 @@ export function traerPm(data) {
 
 export function traerGrupoPm(id) {
     return function (dispatch) {
-        const token = localStorage.getItem("token")
+        // const token = localStorage.getItem("token")
         return axios({
             method: 'GET',
             url: `http://localhost:3001/cohorte/group-pm/${id}`,
