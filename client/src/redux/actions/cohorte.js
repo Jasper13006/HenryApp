@@ -84,14 +84,14 @@ export function getCohortes() {
                 })
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "No eres parte de ningun cohorte",
-                })
-                setTimeout(() => {
-                    window.location.assign("/panel")
-                }, 800)
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Oops...',
+                //     text: "No eres parte de ningun cohorte",
+                // })
+                // setTimeout(() => {
+                //     window.location.assign("/panel")
+                // }, 800)
             })
     }
 }

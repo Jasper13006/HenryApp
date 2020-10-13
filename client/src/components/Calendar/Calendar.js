@@ -9,7 +9,7 @@ import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import {createEventAllDay} from '../../redux/actions/calendar'
+import {createEvent, deleteEvent} from '../../redux/actions/calendar'
 import { getCohortes } from '../../redux/actions/cohorte'
 import { useDispatch, useSelector } from "react-redux";
 import FormControl from '@material-ui/core/FormControl';
@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  inputlabel: {
+    marginLeft: '5px',
+    // color: 'black',
+    fontSize: '130%',
+  },
 }));
 
   export default function Calendar () {
@@ -36,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     const classes = useStyles();
     const cohortes = useSelector(state => state.cohortes.data)
     const [cohorteId, setCohorteId] = useState()
+    const [update, setUpdate] = useState(0)
 
     useEffect(() => {
       dispatch(getCohortes())
@@ -46,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
           setGetEvents(data)
         })
       }
-  }, [cohorteId])
+  }, [cohorteId, update])
 
     const handleChangeCohorteId = (event) => {
       setCohorteId(event.target.value);
@@ -62,105 +68,118 @@ const useStyles = makeStyles((theme) => ({
       let timestart = ''
       let timeend = ''
       let arrResult =  []
-      
-      await Swal.mixin({
-        confirmButtonText: 'Sigueinte &rarr;',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        progressSteps: ['1', '2']
-      }).queue([
-        {
-          title: 'Titulo del evento',
-          input: 'text',
-        },
-        {
-          title: 'Tipo de evento',
-          input: 'radio',
-          inputOptions: {
-            'Todo el dia': 'Todo el dia',
-            'Horario': 'Horario',
+      console.log(selectInfo)
+
+      if(cohorteId){
+        await Swal.mixin({
+          confirmButtonText: 'Sigueinte &rarr;',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          progressSteps: ['1', '2']
+        }).queue([
+          {
+            title: 'Titulo del evento',
+            input: 'text',
+            // inputValue: {}
           },
-          inputValidator: (result) => {
-            return !result && 'Debes seleccionar al menos una opcion'
-          }
-        },
-      ]).then((result) => {
-        arrResult = result
-      })
+          {
+            title: 'Tipo de evento',
+            input: 'radio',
+            inputOptions: {
+              'Todo el dia': 'Todo el dia',
+              'Horario': 'Horario',
+            },
+            inputValidator: (result) => {
+              return !result && 'Debes seleccionar al menos una opcion'
+            }
+          },
+        ]).then((result) => {
+          arrResult = result
+        })
 
-        if (arrResult.value && arrResult.value.length !== 0) {
-          if (arrResult.value[1] === 'Horario'){
+          if (arrResult.value && arrResult.value.length !== 0) {
+            if (arrResult.value[1] === 'Horario'){
 
-            await Swal.fire({
-              title: 'Selecciona el horario de tu nuevo evento',
-              html: `
-              <h5>Comienzo: </h5>
-                <input
-                  type="time"
-                  class="swal2-input"
-                  id="startTime">
-                  <h5>Fin: </h5>
+              await Swal.fire({
+                title: 'Selecciona el horario de tu nuevo evento',
+                html: `
+                <h5>Comienzo: </h5>
                   <input
-                  type="time"
-                  id="endTime"
-                  class="swal2-input"
-                  >`,
-              confirmButtonText: 'Crear evento',
-              didOpen: () => {
+                    type="time"
+                    class="swal2-input"
+                    id="startTime">
+                    <h5>Fin: </h5>
+                    <input
+                    type="time"
+                    id="endTime"
+                    class="swal2-input"
+                    >`,
+                confirmButtonText: 'Crear evento',
+                didOpen: () => {
+                  
+                  const startTime = Swal.getContent().querySelector('#startTime')
+                  const endTime = Swal.getContent().querySelector('#endTime')
                 
-                const startTime = Swal.getContent().querySelector('#startTime')
-                const endTime = Swal.getContent().querySelector('#endTime')
-              
-                startTime.addEventListener('change', () => {
-                  timestart = startTime.value
-                })
+                  startTime.addEventListener('change', () => {
+                    timestart = startTime.value
+                  })
 
-                endTime.addEventListener('change', () => {
-                  timeend = endTime.value
-                })
+                  endTime.addEventListener('change', () => {
+                    timeend = endTime.value
+                  })
+                }
+              })
+            }
+          }
+
+        if (arrResult.value && arrResult.value.length > 0) {
+          if (arrResult.value[1] === 'Todo el dia') {
+              const evento = {
+                title: arrResult.value[0],
+                start: selectInfo.startStr,
+                end: selectInfo.endStr,
+                allDay: true,
+                cohorteId: cohorteId
               }
-            })
+              const aux = dispatch(createEvent(evento))
+              console.log(aux)
+              setUpdate(update + 1)
+          } else {
+            const evento = {
+              title: arrResult.value[0],
+              startRecur: selectInfo.startStr,
+              endRecur: selectInfo.endStr,
+              startTime: timestart,
+              endTime: timeend,
+              allDay: false,
+              cohorteId: cohorteId
+            }
+            dispatch(createEvent(evento))
+            setUpdate(update + 1)
           }
         }
-
-      if (arrResult.value && arrResult.value.length > 0) {
-        if (arrResult.value[1] === 'Todo el dia') {
-          const evento = {
-            title: arrResult.value[0],
-            start: selectInfo.startStr,
-            end: selectInfo.endStr,
-            allDay: true,
-            cohorteId: cohorteId //HARCODEADOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-            //TRAER ESTE DATO DE ALGUN INPUT
-          }
-          calendarApi.addEvent(evento)
-          dispatch(createEventAllDay(evento))
-        } else {
-          const evento = {
-            title: arrResult.value[0],
-            startRecur: selectInfo.startStr,
-            endRecur: selectInfo.endStr,
-            startTime: timestart,
-            endTime: timeend,
-            allDay: false,
-            cohorteId: cohorteId
-          }
-          calendarApi.addEvent(evento)
-          dispatch(createEventAllDay(evento))
-        }
+      } else {
+        Swal.fire(
+              'Seleccione el cohorte donde desee crear el evento',
+              '',
+              'info'
+            )
       }
     }
 
     const handleEditEvent = async (data) => {
-
+      let editEvent = {
+        
+      }
     }
   
     const handleEventClick = async (clickInfo) => {
+      console.log(clickInfo)
      await Swal.fire({
         title: 'Que deseas hacer con este evento?',
         showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: `Editar`,
+        // showCancelButton: true,
+        confirmButtonText: `Cancelar`,
         denyButtonText: `Eliminar`,
         customClass: {
           cancelButton: 'order-1 right-gap',
@@ -169,12 +188,13 @@ const useStyles = makeStyles((theme) => ({
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log(clickInfo)
-          handleDateSelect(clickInfo)
+          // console.log(clickInfo)
+          // handleEditEvent(clickInfo)
         } else if (result.isDenied) {
           Swal.fire('Evento eliminado', '', 'error')
-          clickInfo.event.remove()
+          dispatch(deleteEvent(clickInfo.event._def.publicId))
         }
+        setUpdate(update + 1)
       })
     }
   
@@ -188,12 +208,13 @@ const useStyles = makeStyles((theme) => ({
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
           <FormControl className={classes.formControl} fullWidth>
-            <InputLabel id="demo-simple-select-label">Seleccione un cohorte</InputLabel>
+            <InputLabel className={classes.inputlabel}>Seleccione un cohorte</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={cohorteId}
               onChange={handleChangeCohorteId}
+              // variant='outlined'
             >
               {cohortes && cohortes.map((el, i) => (
                 <MenuItem value={el.id}>{el.name}</MenuItem>
@@ -240,7 +261,7 @@ const useStyles = makeStyles((theme) => ({
             }}
             initialView='dayGridMonth'
             
-            // editable={true}
+            editable={false}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
