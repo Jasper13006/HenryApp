@@ -10,6 +10,7 @@ import { traerGrupoPm } from '../../../redux/actions/pm';
 import StudentsList from './StudentsList'
 import PMAdmin from '../PMAdmin/PMAdmin'
 import axios from 'axios'
+import { getStudent } from '../../../redux/actions/user'
 import Swal from 'sweetalert2'
 
 
@@ -56,29 +57,39 @@ export default function SimpleAccordion() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const pmGroup = useSelector(state => state.pm.data && state.pm.data.gpm)
-    const students = useSelector(state => state.pm.data && state.pm.data.students)
+    const students = useSelector(state => state.student.data)
     const option = useSelector(state => state.panel.data)
     const user = JSON.parse(localStorage.getItem("user"))
     const [unique, setUnique] = useState()
+    const [active, setActive] = useState(false)
+    const [active2, setActive2] = useState(false)
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjAxNzYxMzcwfQ.jT_7aowpVaeCYDsi0omaUHzmBRc9NROtciAXcs57h6w"
-
-    const getId = () => {
-        axios.get(`http://localhost:3001/student/${user.id}`)
-            .then((res) => {
-                setUnique(res.data[0].grouppmId)
-            }).catch(err => console.log(err))
-    }
+    const token = localStorage.getItem("token")
 
 
-    useEffect(async () => {
-        getId()
-        dispatch(traerGrupoPm(unique))
-
+    useEffect(() => {
+        dispatch(getStudent(user.id))
 
     }, [])
 
-    console.log(unique)
+
+
+    if (students && !active) {
+        axios({
+            method: "GET",
+            url: `http://localhost:3001/student/${students[0].id}`,
+            headers: { "auth-token": token }
+        }).then((res) => {
+            setUnique(res.data[0].grouppmId)
+        }).catch(err => alert(err))
+        setActive(true)
+    }
+
+    if (unique && !active2) {
+        dispatch(traerGrupoPm(unique))
+        setActive2(true)
+    }
+
 
     return (
 
