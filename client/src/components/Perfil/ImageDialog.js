@@ -4,11 +4,13 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import EditIcon from '@material-ui/icons/Edit'
-import { DialogTitle, FormControl, IconButton, TextField } from '@material-ui/core'
+import { DialogTitle, FormControl } from '@material-ui/core'
 import ImageUploader from 'react-images-upload'
 import { makeStyles } from '@material-ui/core/styles'
-import {useDispatch, useSelector} from 'react-redux'
-import {changeUserData} from '../../redux/actions/user'
+import {useDispatch} from 'react-redux'
+import { changeUserImage} from '../../redux/actions/user'
+import {update} from '../../redux/actions/update'
+import './Perfil.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,98 +22,77 @@ const useStyles = makeStyles((theme) => ({
     width: '80%',
     margin: 'auto',
   },
+  instructions:{
+    textAlign:'center',
+    display:'flex',
+    justifyContent:'center',
+    marginTop: '0px',
+  },
 }));
 
-export default function ImageDialog({user,formatString}) {
+export default function ImageDialog({user}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false)
   const [files, setFiles] = useState(null)
-  const [inputs,setInputs] =useState(null)
   const dispatch=useDispatch()
-  // const token=useSelector(state=>state.login.data)
-
+  
   const token=localStorage.getItem('token')
-
-  useEffect(()=>{
-    console.log(inputs)
-  },[inputs])
 
   const handleClickOpen = () => {
     setOpen(true);
-  };
+  }
 
   const handleClose = () => {
     setOpen(false);
-  };
+  }
 
   const filesHandler = function (files) {
     setFiles(files)
-  };
+  }
 
-  const handleInputChange=(e)=>{
-    setInputs({
-      ...inputs,
-            [e.target.name]: e.target.value,
-    })
+  const uploadImage = async () => {
+    let formData = new FormData();
+    if (files && files.length > 0) {
+        formData.append('photo', files[0]);
+      }
+    dispatch(changeUserImage(formData,user.id,token))
   }
 
   const handleSubmit=(e)=>{
-    console.log("handleSubmit")
-    let data={}
-    data.city=inputs.city
-    data.country=inputs.country
-    console.log(data)
-    dispatch(changeUserData(data,user.id,token))
+    uploadImage()
     handleClose()
+    setTimeout(()=>{
+      dispatch(update())
+    },10000)
   }
 
-
-  if(files){
-    console.log(files[0].name)
-  }
-  if(token){
-    console.log("token: ",token)
-  }
   return (
-    <div>
-      <IconButton onClick={handleClickOpen}>
-        <EditIcon/>
-      </IconButton>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.root}>
-      <FormControl onChange={handleInputChange}>
+    <div className="editPhotoIcon">
+      <EditIcon  onClick={handleClickOpen}/>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.root} >
+      <FormControl>
         <DialogContent>
-        
-          <DialogTitle>Editar Información Personal</DialogTitle>
-          
-          <TextField 
-            label="Ciudad"
-            variant="outlined"
-            name="city"
-            value={inputs && inputs.city}
-            defaultValue={formatString(user.city)}
-            />
-          <TextField 
-            label="Pais" 
-            variant="outlined"
-            name="country"
-            value={inputs && inputs.country}
-            defaultValue={formatString(user.country)}/>
-        <ImageUploader
-            className={classes.upload}
-            withIcon={true}
-            buttonText='Subir imagen'
-            onChange={filesHandler}
-            imgExtension={['.jpg', '.jpeg', '.png', '.PNG']}
-            maxFileSize={52428800}
-            withPreview={false}
+          <DialogTitle>Editar Imagen de Perfil</DialogTitle>
+          <p className={classes.instructions}>jpg | jpeg | png </p>
+          <ImageUploader
+              className={classes.upload}
+              withIcon={false}
+              label='Máximo: 5MB'
+              fileSizeError='El archivo que intenta subir excede los 5MB'
+              fileTypeError='Extensión no permitida'
+              buttonText='Subir imagen'
+              onChange={filesHandler}
+              singleImage={true}
+              imgExtension={['.jpg', '.jpeg', '.png', '.PNG']}
+              maxFileSize={52428800}
+              withPreview={true}
           />
-        {files && <p> {files[0].name}</p>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="inherit" variant="outlined">
             Cancelar
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="inherit" variant="outlined">
             Actualizar
           </Button>
         </DialogActions>

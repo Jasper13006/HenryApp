@@ -2,8 +2,8 @@ const server = require("express").Router();
 const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, forgotPassword, mailResetPassword,
-  promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback } = require('../controllers/user')
-const { calificarAlumno } = require('../controllers/checkpoints')
+  promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback, getUserByMail } = require('../controllers/user')
+const { calificarAlumno, getNotasByUserId } = require('../controllers/checkpoints')
 
 
 
@@ -30,9 +30,11 @@ server.get("/instructor", getInstructors)
 //Obtener users q sean pm's
 server.get("/pms", getPms)
 
-
 // calificar checkpoint del alumno
 server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
+
+// traer notas checkpoint del alumno
+server.get('/nota-checkpoint/:id', authenticate, getNotasByUserId)
 
 // calificar companero de pair programing
 server.post('/nota-pp', authenticate, calificarCompaneros)
@@ -48,5 +50,8 @@ server.post('/reset_password', mailResetPassword);
 
 // cambia contraseña recibiendo por params token que fue enviado por mail, y por body la nueva contraseña 
 server.put('/password/:token', forgotPassword)
+
+// Consulta por un usuario por su mail
+server.post('/email', getUserByMail)
 
 module.exports = server;

@@ -66,7 +66,7 @@ function Header(props) {
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
     "/panel/notas":["Resumen de Notas","Ranking"],
-    "/panel/invitacion":["Lista de ingreso"],
+    "/panel/invitacion":["Individual",'Hoja excel'],
   }
 
   useEffect(() => {
