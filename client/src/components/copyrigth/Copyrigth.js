@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     copy: {
-        color: '#ffffff'
+        position: "relative",
+        color: 'red'
     }
 }))
 export default function Copyright() {

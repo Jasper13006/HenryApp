@@ -34,7 +34,7 @@ module.exports = {
     try {
       await Student.findAll({
         where: {
-          id: req.params.id,
+          userId: req.params.id,
         },
         include: [
           {
@@ -106,7 +106,7 @@ module.exports = {
       })
         .then((students) => {
           if (students && students.length === 0) {
-            return res.status(404).send({ message: "No hay estudiantes para ese grupo pm" });
+            return res.status(200).send({ message: "No hay estudiantes para ese grupo pm" });
           }
           res.status(200).send(students);
         })

@@ -9,6 +9,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { traerGrupoPm } from '../../../redux/actions/pm';
 import StudentsList from './StudentsList'
 import PMAdmin from '../PMAdmin/PMAdmin'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+
 
 
 
@@ -53,18 +56,29 @@ export default function SimpleAccordion() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const pmGroup = useSelector(state => state.pm.data && state.pm.data.gpm)
+    const students = useSelector(state => state.pm.data && state.pm.data.students)
     const option = useSelector(state => state.panel.data)
     const user = JSON.parse(localStorage.getItem("user"))
+    const [unique, setUnique] = useState()
 
-    useEffect(() => {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjAxNzYxMzcwfQ.jT_7aowpVaeCYDsi0omaUHzmBRc9NROtciAXcs57h6w"
 
-        dispatch(traerGrupoPm(1))
+    const getId = () => {
+        axios.get(`http://localhost:3001/student/${user.id}`)
+            .then((res) => {
+                setUnique(res.data[0].grouppmId)
+            }).catch(err => console.log(err))
+    }
+
+
+    useEffect(async () => {
+        getId()
+        dispatch(traerGrupoPm(unique))
+
 
     }, [])
 
-
-
-
+    console.log(unique)
 
     return (
 
@@ -82,7 +96,7 @@ export default function SimpleAccordion() {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                <img style={{ height: "80px", borderRadius: "50%" }} src="https://media-exp1.licdn.com/dms/image/C4D35AQHTRf0Cbu9-5w/profile-framedphoto-shrink_200_200/0?e=1602082800&v=beta&t=SgSzsYMJ-EbtxbpseeWBC13xb1tX1CiSUm8CCSU1GXc" alt="perfil" />
+                                <img style={{ height: "80px", borderRadius: "50%" }} src={pmGroup && pmGroup.PM1.image} alt="perfil" />
                                 <Typography className={classes.heading} style={{ color: "black" }} >{pmGroup && pmGroup.PM1.name + " " + pmGroup.PM1.lastName}</Typography>
 
                             </AccordionSummary>
@@ -99,7 +113,7 @@ export default function SimpleAccordion() {
                                 id="panel2a-header"
 
                             >
-                                <img style={{ height: "80px", borderRadius: "50%" }} src="https://media-exp1.licdn.com/dms/image/C4D35AQHapbLki-9hYw/profile-framedphoto-shrink_200_200/0?e=1602082800&v=beta&t=yvRswq9HgNOR1_HX6gdyRxujDWTpscSjw5sWERxY0l0" alt="perfil" />
+                                <img style={{ height: "80px", borderRadius: "50%" }} src={pmGroup && pmGroup.PM2.image} alt="perfil" />
                                 <Typography className={classes.heading2}>{pmGroup && pmGroup.PM2.name + " " + pmGroup.PM2.lastName}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
@@ -110,12 +124,13 @@ export default function SimpleAccordion() {
 
                         </Accordion> </div> :
 
-                    <StudentsList />
+                    <StudentsList id={unique} />
 
             }
 
         </div>
 
     );
+
 
 }

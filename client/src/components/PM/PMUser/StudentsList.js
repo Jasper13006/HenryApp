@@ -5,7 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import MessageIcon from '@material-ui/icons/Message';
-
 import { traerGrupoPm } from '../../../redux/actions/pm';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -30,17 +29,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ComplexGrid() {
+export default function ComplexGrid({ unique }) {
     const classes = useStyles();
-
-    const students = useSelector(state => state.getPm.data && state.getPm.data.students)
+    const students = useSelector(state => state.pm.data && state.pm.data.students)
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(traerGrupoPm(1))
     }, [])
 
-    console.log(students)
 
     return (
         <div className={classes.root}>
