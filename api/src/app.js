@@ -1,31 +1,31 @@
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const routes = require('./routes/index.js');
-const { User, Cohorte, Grouppm, Student, Groupp } = require("./db.js")
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const routes = require("./routes/index.js");
+const { User, Cohorte, Grouppm, Student, Groupp, Checkpoint, Calendar, Modulo } = require("./db.js")
 
 const server = express();
 
-server.name = 'API';
+server.name = "API";
 
 server.use(fileUpload({ useTempFiles: true }));
-server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+server.use(bodyParser.json({ limit: "50mb" }));
 server.use(cookieParser());
-server.use(morgan('dev'));
+server.use(morgan("dev"));
 server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // update to match the domain you will make the request from
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "*");
-  res.header('Access-Control-Allow-Methods', '*');
+  res.header("Access-Control-Allow-Methods", "*");
   next();
 });
 
-server.use('/', routes);
+server.use("/", routes);
 
-server.post('/seed', async (req, res) => {
+server.post("/seed", async (req, res) => {
   const passwordInit = "12345678"
   //////////// USUARIOS //////////////////// el id 1 es el admin creado en el front
   const admin = await User.create({  //id: 2
@@ -1116,7 +1116,106 @@ server.post('/seed', async (req, res) => {
     "cohorteId": 2,
     "grouppmId": 4,
   })
-  res.status(200).send('seed finalizado exitosamente!!')
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check1",
+    "qualification": "20/20",
+    "info": "excelente"
+  })
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check2",
+    "qualification": "19/19",
+    "info": "excelente"
+  })
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check3",
+    "qualification": "18/18",
+    "info": "excelente"
+  })
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check4",
+    "qualification": "17/17",
+    "info": "excelente"
+  })
+  const modulo2P1 = await Modulo.create({
+    "name":'2 - Frontend',
+    "nameClass": "DOM", 
+    "description": "introduccion al DOM", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/460236181/4004e82a9f?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  const modulo1P1 = await Modulo.create({
+    "name":'1 - JS Foundations',
+    "nameClass": "JS avanzado I", 
+    "description": "introduccion a JS", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/455889842/b7ceea0328?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  const modulo1P2 = await Modulo.create({
+    "name":'1 - JS Foundations',
+    "nameClass": "JS avanzado II", 
+    "description": "Continuacion con JS", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/456237088/0d30f4262b?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  const modulo1P3 =  await Modulo.create({
+    "name":'1 - JS Foundations',
+    "nameClass": "DSI", 
+    "description": "Continuacion", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/457023386/510dca40b9?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  const modulo1P4 = await Modulo.create({
+    "name":'1 - JS Foundations',
+    "nameClass": "DSII", 
+    "description": "Continuacion", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/457833873/855264abf8?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  const modulo1P5 = await Modulo.create({
+    "name":'1 - JS Foundations',
+    "nameClass": "Algoritmos", 
+    "description": "Continuacion", 
+    "linkVideos": "https://vimeo.com/soyhenry/review/458619858/bd6cf5a429?sort=lastUserActionEventDate&direction=desc", 
+    "cohorteId": 1
+  })
+  await Calendar.create({
+    "title": "Evento dia",
+    "start":  "2020-10-01",
+    "end": "2020-10-01",
+    "allDay": true,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Evento largo",
+    "start":  "2020-10-07",
+    "end": "2020-10-10",
+    "allDay": true,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Evento horario recurrente",
+    "startRecur":  "2020-10-09",
+    "endRecur": "2020-10-09",
+    "startTime": "09:00",
+    "endTime": "12:30",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Evento horario recurrente",
+    "startRecur":  "2020-10-16",
+    "endRecur": "2020-10-16",
+    "startTime": "09:00",
+    "endTime": "12:30",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  
+  res.status(200).send("seed finalizado exitosamente!!")
 })
 
 

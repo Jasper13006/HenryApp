@@ -66,10 +66,10 @@ export default function ForgetPass (){
       })
       const { usuario } = await user.json() 
       if (!usuario){
-          swal('Error','Cuenta inexistente','error');
+          swal.fire('Error','Cuenta inexistente','error');
           return
         } 
-      swal("Verifica tu correo electronico","Mail enviado","success")      
+      swal.fire("Verifica tu correo electronico","Mail enviado","success")      
       await fetch(`http://localhost:3001/user/reset_password`, {
         method: 'POST',
         body: JSON.stringify({ email: values.email }),

@@ -77,7 +77,7 @@ export default function SimpleAccordion() {
     if (students && !active) {
         axios({
             method: "GET",
-            url: `http://localhost:3001/student/${students[0].id}`,
+            url: `http://localhost:3001/student/${students[0].userId}`,
             headers: { "auth-token": token }
         }).then((res) => {
             setUnique(res.data[0].grouppmId)
