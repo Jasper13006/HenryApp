@@ -568,26 +568,26 @@ server.post('/seed', async(req, res) => {
 ///////////// CREAR GRUPOS PM//////////
 //cohorte1
   const grouppm1 = await Grouppm.create({
-    "name" : "webft01Group01",
+    "name" : "webft01Groupm01",
     "PM1Id": 5,
     "PM2Id": 6,
     "cohorteId": 1
   })
   const grouppm2 = await Grouppm.create({
-    "name" : "webft01Group01",
+    "name" : "webft01Groupm02",
     "PM1Id": 7,
     "PM2Id": 8,
     "cohorteId": 1
   })
 //cohorte2
   const grouppm3 = await Grouppm.create({
-    "name" : "webft02Group01",
+    "name" : "webft02Groupm01",
     "PM1Id": 5,
     "PM2Id": 6,
     "cohorteId": 2
   })
   const grouppm4 = await Grouppm.create({
-    "name" : "webft02Group01",
+    "name" : "webft02Groupm02",
     "PM1Id": 7,
     "PM2Id": 8,
     "cohorteId": 2
@@ -595,43 +595,43 @@ server.post('/seed', async(req, res) => {
 ///////////// CREAR GRUPOS PP//////////
 //cohorte1
   const groupp1 = await Groupp.create({
-    "name" : "Group01",
+    "name" : "Groupp01",
     "grouppmId": 1,  
     "cohorteId": 1
   })
   const groupp2 = await Groupp.create({
-    "name" : "Group02",
+    "name" : "Groupp02",
     "grouppmId": 1, 
     "cohorteId": 1
   })
   const groupp3 = await Groupp.create({
-    "name" : "Group03",
+    "name" : "Groupp01",
     "grouppmId": 2, 
     "cohorteId": 1
   })
   const groupp4 = await Groupp.create({
-    "name" : "Group04",
+    "name" : "Groupp02",
     "grouppmId": 2, 
     "cohorteId": 1
   })
 //cohorte2
   const groupp5 = await Groupp.create({
-    "name" : "Group01",
+    "name" : "Groupp01",
     "grouppmId": 3, 
     "cohorteId": 2
   })
   const groupp6 = await Groupp.create({
-    "name" : "Group02",
+    "name" : "Groupp02",
     "grouppmId": 3, 
     "cohorteId": 2
   })
   const groupp7 = await Groupp.create({
-    "name" : "Group03",
+    "name" : "Groupp01",
     "grouppmId": 4, 
     "cohorteId": 2
   })
   const groupp8 = await Groupp.create({
-    "name" : "Group04",
+    "name" : "Groupp02",
     "grouppmId": 4, 
     "cohorteId": 2
   })
