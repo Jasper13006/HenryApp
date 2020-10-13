@@ -45,9 +45,19 @@ export const ADD_USER_TO_A_COHORT = 'ADD_USER_TO_A_COHORT'
 export const GET_PM = "GET_PM";
 export const GET_GROUP_PM = "GET_GROUP_PM";
 export const GET_GROUP_PM_COHORTE = "GET_GROUP_PM_COHORTE";
+export const ADD_GROUP_PM = "ADD_GROUP_PM";
+
+/* ------------------------------------------------------------------------------- /
+/ STUDENT /
+/ ------------------------------------------------------------------------------- */
+
+export const GET_STUDENTS_BY_GROUP = "GET_STUDENTS_BY_GROUP";
+export const ADD_STUDENT_TO_GROUP = "ADD_STUDENT_TO_GROUP";
+
 
 /* ------------------------------------------------------------------------------- /
 / UPDATE /
 / ------------------------------------------------------------------------------- */
 
 export const UPDATE = "UPDATE";
+

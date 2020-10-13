@@ -14,6 +14,7 @@ import student from './student'
 import update from './update'
 
 
+
 const rootReducer = combineReducers({
     usuario,
     panel,
@@ -25,9 +26,10 @@ const rootReducer = combineReducers({
     cohortes,
     instructors,
     usuarios,
-    students,
     student,
+    students,
     update,
+
 });
 
 export default rootReducer;
