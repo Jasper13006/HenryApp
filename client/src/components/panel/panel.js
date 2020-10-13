@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Navigator from './Navigator';
 import Header from './Header';
 import Main from './Main.js'
-import Calendario from '../Calendar/Calendar'
 
 function Copyright() {
     return (
@@ -187,8 +186,7 @@ function Paperbase(props) {
                 <div className={classes.app}>
                     <Header onDrawerToggle={handleDrawerToggle} />
                     <main className={classes.main}>
-                        <Main />
-                        {/* <Calendario /> */}
+                        <Main />                      
                     </main>
                     <footer className={classes.footer}>
                         <Copyright />

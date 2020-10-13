@@ -1,35 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import{ Typography, Backdrop, CircularProgress}from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Copyright from '../copyrigth/Copyrigth'
-import IconButton from '@material-ui/core/IconButton';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import { CgGoogle } from 'react-icons/cg';
-import { postLogin } from "../../redux/actions/login";
 import {yellow} from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Axios from 'axios';
+import Excel from './ExcelInv'
 import Swal from 'sweetalert2'
 
-const theme = createMuiTheme({
-    
-    palette: {
-    
-        secondary: yellow,
-    },
-      
-  });
+
 
 const useStyles = makeStyles((theme) => ({    
     main: {
@@ -71,39 +57,22 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },    
     
 
 }));
 
-async function sendEmail (data){
-    try {
-        const send = await Axios.post('http://localhost:3001/invite/send',data)
-        console.log(send)
-        Swal.fire({
-            icon: 'success',
-            title: 'Se ha enviado una invitacion',
-            
-        })
-    }catch(err){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: "no se ha podido enviar la invitacion"
-            
-        })
-    } 
-    
-}
-
 export default function Login() {
     const classes = useStyles();
-    const dispatch = useDispatch()
     const [state, setState] = useState({
         email: '',
         name: '',
     })
     const [errors, setErrors] = useState({});
+    const [open, setOpen] = useState(false);
 
     const handleInputChange = (e) => {
         setState({
@@ -112,6 +81,7 @@ export default function Login() {
         })
        
     }
+    const option=useSelector(state=>state.panel.data)
 
     const validate = (state) => {
         let errors = {};
@@ -145,18 +115,52 @@ export default function Login() {
             sendEmail(data)
         }
     }
-
+   
+    async function sendEmail (data){
+        setOpen(true)
+        try {
+            const send = await Axios.post('http://localhost:3001/invite/send',data)
+            console.log(send)
+            setOpen(false)
+            if(send.data.status === 400){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: send.data.msg
+                    
+                })
+            }else{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Se ha enviado una invitacion',
+                    
+                })
+            }   
+        }catch(err){
+            setOpen(false)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "no se ha podido enviar la invitacion"
+                
+            })
+            
+        } 
+        
+    }
 
     return (
-        <Container component="main" maxWidth="xs" className={classes.main}>
+        <div>
+            <Container component="main" maxWidth="xs" className={classes.main}>
+            
             <CssBaseline />
-            <div className={classes.paper}>
+            {!option && <div className={classes.paper}>
                 <Avatar src='./henry.jpg' className={classes.avatar} >
 
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Enviar email de invitación
-        </Typography>
+                </Typography>
                 <form className={classes.form} noValidate onChange={handleInputChange} onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
@@ -195,9 +199,14 @@ export default function Login() {
                     >
                         Enviar
                     </Button>
+                    <Backdrop className={classes.backdrop} open={open}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </form>
-            </div>
-            
-        </Container>
+            </div>}          
+            </Container>
+            {option ? <Excel/> : null}
+        </div>
+        
     );
 }

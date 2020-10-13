@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {useSelector} from 'react-redux'
 import './AppRouter.css';
-import Panel from "../components/panel/panel.js";
+import Panel from "../components/panel/Panel";
 import Home from '../pages/Home';
 import Login from '../components/login/MainLogin';
 import Register from '../components/register/RegisterMain';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
-import Axios from 'axios';
+import axios from 'axios';
+import ForgetPass from '../components/login/ForgetPass';
+import FormResetPass from '../components/login/FormResetPass'
 
 const AppRouter = () => {
 
@@ -17,7 +18,7 @@ const AppRouter = () => {
     useEffect(() => {
         const fectData = async () => {
             const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }
-            const { data } = await Axios.post('http://localhost:3001/create-admin', admin)
+            const { data } = await axios.post('http://localhost:3001/create-admin', admin)
             console.log(data)
         }
         fectData()
@@ -29,6 +30,8 @@ const AppRouter = () => {
                 <PublicRoute exact path="/register/:token" component={Register} />
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
+                <Route exact path="/olvidemicontraseña" component={ForgetPass} />
+                <Route exact path="/user/resetpassword/:token" component={FormResetPass} />
                 <Route path="/panel" isToken={token} component={Panel} />
             </Switch>
 

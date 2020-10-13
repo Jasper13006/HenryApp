@@ -12,7 +12,7 @@ const inviteRouter = require ("./invite")
 const moduloRouter = require("./modulo");
 
 const cohorteRouter = require("./cohorte");
-// const grouppmRouter = require ("./grouppm");
+const calendarRouter = require ("./calendar");
 const studentRouter = require("./student");
 const groupPpRouter = require ('./pP')
 const adminRoute = require('./createAdmin')
@@ -29,7 +29,7 @@ router.use("/modulo", moduloRouter);
 router.use("/cohorte", cohorteRouter);
 router.use("/groupPp", groupPpRouter);
 router.use("/invite", inviteRouter);
-// router.use("/grouppm", grouppmRouter);
+router.use("/calendar", calendarRouter);
 
 module.exports = router;
 

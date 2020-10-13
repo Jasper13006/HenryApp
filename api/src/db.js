@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const calendar = require('./models/calendar');
 const {  DB_USER, DB_PASSWORD, DB_HOST,} = process.env;
 
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/henryapp`, {
@@ -28,7 +29,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp } = sequelize.models;
+const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Relaciones
@@ -53,6 +54,9 @@ Groupp.belongsTo(Grouppm)
 Checkpoint.belongsTo(User) // deberia agregar columna UserId a Checkpoint
 
 Modulo.belongsTo(Cohorte)  // deberia agregar columna cohorteId a Modulo
+
+Calendar.belongsTo(User)
+Calendar.belongsTo(Cohorte)
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

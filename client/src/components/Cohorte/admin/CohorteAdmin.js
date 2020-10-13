@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { getInstructors } from '../../redux/actions/user'
-
+import { getInstructors } from '../../../redux/actions/user'
+import EditCohort from './EditCohort'
+import AddStudent from './AddStudent'
+import AddOneCohorte from './AddCohort'
+import imagenTriste from '../triste.png'
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -9,11 +12,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
-
-
+import { CardActions, IconButton } from '@material-ui/core'
 
 
 function encontrarInstructor(idUser, arrayInstructors){
@@ -26,28 +25,36 @@ function encontrarInstructor(idUser, arrayInstructors){
 
 
 const useStyles = makeStyles((theme) => ({
+    instructorName: {
+        ...theme.typography.button,
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(1),
+        backgroundColor: "rgba(177,34,143,1) 0%",
+        fontFamily: 'Raleway'
+    },
     heading: {
-
         display: "flex",
         margin: "auto",
         alignItems: "center",
         color: "black",
-
-
         fontSize: theme.typography.pxToRem(15),
         fontWeight: "bolder",
         height: '80px',
         fontSize: "30px"
     },
-    fab: {
-        display: "flex",
-        margin: theme.spacing(2),
-    },
-    buttonAdd: {
+    cardExtern: {
         display: "flex",
         justifyContent: "flex-end",
-
+        alignItems: "center",
     },
+    accordion: {
+        background: "rgb(177,34,143)",
+        background: "linear-gradient(135deg, rgba(177,34,143,1) 0%, rgba(69,181,210,1) 100%)",
+    },
+    cohortDetails: {
+        display: "flex",
+        justifyContent: "space-between",
+    }
 }))
 
 export default function CohorteAdmin(){
@@ -59,18 +66,16 @@ export default function CohorteAdmin(){
     useEffect(() => {
         dispatch(getInstructors())
     }, [])
-    instructores && console.log(instructores, cohortes)
+
     return (
         <div>
-            <div className= {classes.buttonAdd}>
-                <Tooltip title="Add" aria-label="add">
-                    <Fab color="primary" className={classes.fab}>
-                    <AddIcon />
-                    </Fab>
-                </Tooltip>
-            </div>
-            {cohortes && cohortes.length > 0 && cohortes.map((cohorte) => (
-            <Accordion style={{ backgroundColor: "#FFDC00" }} key={cohorte.id}>
+            <CardActions className={classes.cardExtern}>
+                <IconButton>
+                    <AddOneCohorte/>
+                </IconButton>
+            </CardActions>
+            {cohortes && cohortes.length > 0 ? cohortes.map((cohorte) => (
+            <Accordion className={classes.accordion}  key={cohorte.id}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon style={{ color: "black" }} />}
                     aria-controls="panel1a-content"
@@ -79,12 +84,20 @@ export default function CohorteAdmin(){
                     <img style={{ height: "80px", borderRadius: "50%" }} src="https://i.pinimg.com/originals/f9/63/a6/f963a62eff1cd6f5b2903b1f3452b7b8.jpg" alt="perfil" />
                     <Typography className={classes.heading} style={{ color: "black" }} >{cohorte && cohorte.name}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                    <Typography style={{ fontWeight: "bold" }}>
+                <AccordionDetails className={classes.cohortDetails}>
+                    <div className={classes.instructorName}>
                         instructor: {cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}
-                    </Typography>
+                    </div>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <EditCohort instructores={instructores} data={cohorte}/>
+                        <AddStudent id={cohorte.id} name={cohorte.name}/>
+                    </div>
                 </AccordionDetails>
-            </Accordion>))
+            </Accordion>)):
+            <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
+                <h3 style={{display: "flex", justifyContent: "center"}}>No hay ningun cohorte de momento</h3>
+                <img src={imagenTriste}/>
+            </div>
             }
         </div>
     )

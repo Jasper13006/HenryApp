@@ -4,11 +4,11 @@ module.exports = (sequelize) => {
     sequelize.define("checkpoint", {
 
         name: {
-            type: DataTypes.ENUM('check1', 'check2', 'check3', 'check4')
+            type: DataTypes.ENUM('check1', 'check2', 'check3', 'check4','henrylab')
         },
 
         qualification: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
 
