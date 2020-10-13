@@ -6,7 +6,7 @@ import PM from '../PM/PMUser/PM'
 import Pair_programming from '../Pair_programming/Pair_programming'
 import Notas from '../Notas/Notas'
 import Invitacion from '../invitacion/Invitacion'
-import cohorteAdmin from '../Cohorte/CohorteAdmin'
+import cohorteAdmin from '../Cohorte/admin/CohorteAdmin'
 import Calendar from '../Calendar/Calendar'
 
 const AppRouter = () => {
