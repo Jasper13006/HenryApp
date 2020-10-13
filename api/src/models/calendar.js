@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     sequelize.define('calendar', {
         title: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         start: {
             type: DataTypes.STRING,

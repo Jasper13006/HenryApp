@@ -1,6 +1,6 @@
 import swal from 'sweetalert2'
 
-export const createEventAllDay = (event) => async dispatch => {
+export const createEvent = (event) => async dispatch => {
 	try {
 		const data = await fetch('http://localhost:3001/calendar/createEvent', {
 			method: 'POST',
@@ -9,7 +9,8 @@ export const createEventAllDay = (event) => async dispatch => {
 				'Content-Type': 'application/json'
 			}
 		})
-		const res = await data.json()
+		// const res = await data.json()
+		// return (res)
 		
 		// dispatch({
 		// 	type: 'CREATE_EVETN',
@@ -17,6 +18,23 @@ export const createEventAllDay = (event) => async dispatch => {
 		// })
 	} catch (error) {
 		console.log(error)
-		swal('Algo salio mal', ':(', 'error')
+		// swal('Algo salio mal', ':(', 'error')
+	}
+}
+
+export const deleteEvent = (id) => async dispatch => {
+	try {
+		const data = await fetch('http://localhost:3001/calendar/deleteEvent', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				eventId: id
+			}),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+	} catch (error) {
+		console.log(error)
+		// swal('Algo salio mal', ':(', 'error')
 	}
 }
