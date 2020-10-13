@@ -77,14 +77,13 @@ server.post('/seed', async(req, res) => {
     "lastName" : "Arganaraz",  
     "pm": true, 
   })
-  const pm5 = await User.create({ //id: 9
+  const alum0 = await User.create({ //id: 9
     "email": "jeremias@soyhenry.com",
     "password": passwordInit,    
     "name": "Jeremias",
-    "lastName" : "Koch",   
-    "pm": true    
+    "lastName" : "Koch",     
   })
-  const alum = await User.create({ //id: 10
+  const alum1 = await User.create({ //id: 10
     "email": "cecilia@soyhenry.com",
     "password": passwordInit,
     "name": "Cecilia",
@@ -437,122 +436,122 @@ server.post('/seed', async(req, res) => {
   const alum59 = await User.create({ //id: 68
     "email": "student59@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It59",
   })
   const alum60 = await User.create({ //id: 69
     "email": "student60@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It60",
   })
   const alum61 = await User.create({ //id: 70
     "email": "student61@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It61",
   })
   const alum62 = await User.create({ //id: 71
     "email": "student62@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It62",
   })
   const alum63 = await User.create({ //id: 72
     "email": "student63@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It63",
   })
   const alum64 = await User.create({ //id: 73
     "email": "student64@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It64",
   })
   const alum65 = await User.create({ //id: 74
     "email": "student65@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It65",
   })
   const alum66 = await User.create({ //id: 75
     "email": "student66@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It66",
   })
   const alum67 = await User.create({ //id: 76
     "email": "student67@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It67",
   })
   const alum68 = await User.create({ //id: 77
     "email": "student68@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It68",
   })
   const alum69 = await User.create({ //id: 78
     "email": "student69@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It69",
   })
   const alum70 = await User.create({ //id: 79
     "email": "student70@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It70",
   })
   const alum71 = await User.create({ //id: 80
     "email": "student71@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It71",
   })
   const alum72 = await User.create({ //id: 81
     "email": "student72@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It72",
   })
   const alum73 = await User.create({ //id: 82
     "email": "student73@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It73",
   })
   const alum74 = await User.create({ //id: 83
     "email": "student74@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It74",
   })
   const alum75 = await User.create({ //id: 84
     "email": "student75@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It75",
   })
   const alum76 = await User.create({ //id: 85
     "email": "student76@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It76",
   })
   const alum77 = await User.create({ //id: 86
     "email": "student77@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It77",
   })
   const alum78 = await User.create({ //id: 87
     "email": "student78@gmail.com",
     "password": passwordInit,  
-    "name": "Julieta",
-    "lastName" : "It",
+    "name": "Student",
+    "lastName" : "It78",
   }) 
   // cohortes
   const cohorte1 = await Cohorte.create({
@@ -891,7 +890,7 @@ server.post('/seed', async(req, res) => {
   const student40 = await Student.create({
     "grouppId": 4,
     "userId": 48,     
-    "cohorteId": 2,
+    "cohorteId": 1,
     "groupmId": 3,
   })
   const student41 = await Student.create({

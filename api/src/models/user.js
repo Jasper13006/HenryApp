@@ -4,23 +4,11 @@ module.exports = (sequelize) => {
   const User = sequelize.define("user", {
     name: {
       type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        is: {
-          args: ["^[a-zA-Z-,]+(s{0,1}[a-zA-Z-, ])*$"],
-          msg: "Campo name - Debe ser una palabra",
-        },
-      },
+      allowNull: false,     
     },
     lastName: {
       type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        is: {
-          args: ["^[a-zA-Z-,]+(s{0,1}[a-zA-Z-, ])*$"],
-          msg: "Campo apellido - Debe ser una palabra",
-        },
-      },
+      allowNull: false,     
     },
     email: {
       type: DataTypes.TEXT,
