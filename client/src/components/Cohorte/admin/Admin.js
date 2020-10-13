@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCohortes } from '../../redux/actions/cohorte'
+import { getCohortes } from '../../../redux/actions/cohorte'
+import store from '../../../redux/store';
 import AlumnosAdmin from './AlumnosAdmin'
 import CohorteAdmin from './CohorteAdmin'
 
 export default function Admin(){
     const dispatch = useDispatch()
     const option = useSelector(state=> state.panel.data)
-
+    const [cohortes, setCohortes] = useState()
     useEffect(()=> {
         dispatch(getCohortes())
     }, [])
+
+    store.subscribe(() => {
+        setCohortes(() => store.getState().cohortes.data)
+    })
+
 
     return (
         <div>
@@ -18,7 +24,7 @@ export default function Admin(){
                 option === 0 || !option?
                 <CohorteAdmin/>
                 : 
-                <AlumnosAdmin/>
+                <AlumnosAdmin data={cohortes}/>
             }
         </div>
     )

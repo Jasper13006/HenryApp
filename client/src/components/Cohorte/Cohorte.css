@@ -1,26 +1,14 @@
-.pizarron {
-    background-image:  url("./pizarron.jpg");
-    height: 500px;
-    width: 1150px;
-    border-radius: 50px;
-    display: grid;
-    /* grid-template-columns: % 90%; */
-    grid-gap: 10px;
-    grid-auto-rows: 100px;
-    color: whitesmoke;
-    font-size: 15px;
-}
 .subtitulo{
-    display: grid;
-    grid-column: 1;
-    justify-self: center;
-    direction: ltr;
-    color: white;
-    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(255,207,0,1) 0%, rgba(238,255,0,0) 100%, rgba(0,0,0,1) 100%);
+    color: rgba(0, 0, 0);
+    font-size: 30px;
 }
 
 .links{
-    color: yellow;
+    color: black;
     border-radius: 1px solid black;
 }
 

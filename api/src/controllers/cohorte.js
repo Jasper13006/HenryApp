@@ -37,7 +37,9 @@ module.exports = {
 
   async getCohortes(req, res) {
     try {
-      const cohortes = await Cohorte.findAll()
+      const cohortes = await Cohorte.findAll({
+        order:[['id','ASC']]
+      })
       if (cohortes && cohortes.length === 0) {
         return res.status(404).send({ message: "No hay cohortes" });
       }
@@ -120,4 +122,25 @@ module.exports = {
        console.log(error)      
     }      
   },
+  
+  async modifyCohort(req, res){
+    const { id } = req.params
+    const { name, date, instructorId } = req.body
+    if(!name && !date && !instructorId) return res.status(400).json({message: "para modificar un cohorte debes integrar el campo que quieres que cambie"})
+    try {
+      const cohort = await Cohorte.findOne({
+        where: {
+          id: id
+        }
+      })
+      console.log(cohort)
+        cohort.name = name || cohort.name
+        cohort.date = date || cohort.date
+        cohort.instructorId = instructorId || cohort.instructorId
+        cohort.save()
+        return  res.status(201).json(cohort)
+    }catch{
+      return res.status(401).json({message: "No se pudo encontrar el cohorte que quiere modificar"})
+    }
+  }
 }

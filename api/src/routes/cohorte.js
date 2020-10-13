@@ -1,16 +1,20 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth');
-const { createCohorte, getCohortes, addStudent, getCohortesId,getGourpmbyCohorte} = require('../controllers/cohorte')
+const { createCohorte, getCohortes, addStudent, getCohortesId,getGourpmbyCohorte, modifyCohort} = require('../controllers/cohorte')
 const { getGroupPm, editGroupPm, editStudent, createPmGroup} = require('../controllers/pm')
 const isAdmin = require('../utils/isAdmin')
 
 //Ruta obtener todos los cohortes
 server.get("/", getCohortes);
 
+//Ruta para obtener un cohorte en particular
 server.get('/:id', getCohortesId)
 
 //Ruta crear cohorte
 server.post("/create", authenticate, createCohorte);
+
+//Ruta para modificar los datos de un cohorte (se usa para poder pasar entre los modulos)
+server.put("/modifyCohort/:id", authenticate, modifyCohort)
 
 //Ruta agregar estudiantes a un cohorte
 server.post('/addStudent/:id',authenticate,isAdmin,addStudent)

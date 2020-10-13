@@ -1,5 +1,7 @@
 import axios from 'axios'
-import { SET_USER, GET_INSTRUCTORS, GET_USERS } from '../consts/actionTypes'
+import { GET_USER, GET_INSTRUCTORS, GET_USERS, GET_STUDENTS, STUDENT_BY_USER_ID } from '../consts/actionTypes'
+import { SET_USER } from '../consts/actionTypes'
+
 import Swal from 'sweetalert2'
 
 export function setUser(data){
@@ -121,6 +123,50 @@ export function traerUsuarios(){
         })
         .catch(error => {
             alert(error.message)
+        })
+    }
+}
+
+export function getStudents(){
+    return function(dispatch){
+        const token = localStorage.getItem("token")
+        return axios({
+            method: "GET",
+            url: `http://localhost:3001/student`,
+            headers: {"auth-token": token}
+        })
+        .then(response => {
+            dispatch({
+                type: GET_STUDENTS,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.message
+            })
+        })
+    }
+}
+
+export function getStudent(id){
+    return function(dispatch){
+        const token = localStorage.getItem("token")
+        return axios({
+            method: "GET",
+            url: `http://localhost:3001/student/info/${id}`,
+            headers: {"auth-token": token}
+        })
+        .then(response => {
+            dispatch({
+                type: STUDENT_BY_USER_ID,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+            console.log("no se pudo obtener los datos del estudiante ya que no aparece como estudiante en los registros")
         })
     }
 }
