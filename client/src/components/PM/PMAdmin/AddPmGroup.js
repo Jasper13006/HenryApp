@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({ handleCloseAdd, open }) {
+export default function FormDialog({ handleCloseAdd, open, cohorteId }) {
 
     // const pms = useSelector(state => state.pm)
     const classes = useStyles();
@@ -42,8 +42,8 @@ export default function FormDialog({ handleCloseAdd, open }) {
         name: "",
         PM1Id: "",
         PM2Id: "",
-        cohorteId: "",
-        submitted: true
+        cohorteId: cohorteId,
+        submitted: false
     })
 
     const getPm = () => {
@@ -58,7 +58,7 @@ export default function FormDialog({ handleCloseAdd, open }) {
     }, [])
 
 
-
+    console.log(cohorteId)
 
 
     const handleInputChange = (e) => {
@@ -71,22 +71,6 @@ export default function FormDialog({ handleCloseAdd, open }) {
 
     }
 
-    const handlePmChange = (e) => {
-        setPm(e.target.value)
-        console.log(e.target.value)
-    }
-
-    // const handlePm1Change = (e) => {
-    //     setPms({
-    //         ...state,
-    //         PM1Id: e.target.value
-    //     });
-    // }
-
-    // const handlePm2Change = (e) => {
-    //     SetselectPm2(e.target.value);
-    // }
-
 
 
 
@@ -95,6 +79,7 @@ export default function FormDialog({ handleCloseAdd, open }) {
         console.log(e.target.value);
         dispatch(agregarGrupoPm(state))
         setState({ submitted: true })
+        handleCloseAdd()
     }
 
 
@@ -151,32 +136,6 @@ export default function FormDialog({ handleCloseAdd, open }) {
                         </Select>
                     </FormControl>
 
-                    {/* <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-label">PM2</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selectPm2}
-                            onChange={handlePm2Change}
-                        >
-                            {pms && pms.map((pm) => (<div><MenuItem value={pm.id}>{pm.name}</MenuItem>
-                            </div>))}
-
-                        </Select>
-                    </FormControl> */}
-
-
-                    <TextField
-                        onChange={handleInputChange}
-                        autoFocus
-                        margin="dense"
-                        type="number"
-                        name="cohorteId"
-                        id="cohorteId"
-                        label="Numero de cohorte"
-                        type="email"
-                        fullWidth
-                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAdd} color="primary">

@@ -15,18 +15,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertDialogSlide({ handleClose, id }) {
+export default function AlertDialogSlide({ handleClose, id, cohorteId }) {
 
     const students = useSelector(state => state.student.data)
-    const [loading, setLoading] = useState(true)
-    const [student, setStudent] = useState();
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [active, setActive] = useState(false)
     const dispatch = useDispatch();
 
 
 
     useEffect(() => {
-        const data = dispatch(traerAlumnosPorGrupo(id))
+        dispatch(traerAlumnosPorGrupo(id))
     }, [])
 
 
@@ -62,7 +61,7 @@ export default function AlertDialogSlide({ handleClose, id }) {
                 Agregar
                 </Button>
             <Dialog open={openDialog} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
-                {openDialog && <AddStudentToGroup id={id} />}
+                {openDialog && <AddStudentToGroup handleClose={handleClose} id={id} cohorteId={cohorteId} />}
             </Dialog>
 
 

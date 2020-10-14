@@ -79,7 +79,6 @@ export default function Perfil(){
                 headers: {"auth-token": token}
             }).then(res => {
                 setUsuario(res.data)
-                console.log(res.data)
             }).catch(err=> console.log(err))
         }
     },[update])
@@ -116,15 +115,20 @@ export default function Perfil(){
                                 {usuario.instructor && "Instructor"}
                                 </td></tr>
                             <tr><td>GitHub</td><td>
-                                <SocialNetworkDialog red="GitHub"/>
+                                <SocialNetworkDialog red="GitHub" data={usuario.gitHubId} user={usuario} token={token}/>
                                 </td>
                             </tr>
                             <tr><td>LinkedIn</td><td>
-                                <SocialNetworkDialog red="LinkedIn"/>
+                                <SocialNetworkDialog red="LinkedIn" data={usuario.googleId} user={usuario} token={token}/>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+                        <form><br/>
+                            <label for="share">Me gustaría compartir mi información </label>
+                            <input type="checkbox" name="share"></input>
+                        </form>
+                        
                     </div>
                     <div className={classes.paperProfilePhoto}>
                         <Card className={classes.card}>
@@ -138,6 +142,7 @@ export default function Perfil(){
         {option===1 && usuario &&
         <PasswordForm token={token} id={usuario.id}/>
         }
+        
         </div>
     )
 }
