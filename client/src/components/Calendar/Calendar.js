@@ -17,6 +17,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
+import { update } from '../../redux/actions/update'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -41,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
     const classes = useStyles();
     const cohortes = useSelector(state => state.cohortes.data)
     const [cohorteId, setCohorteId] = useState()
-    const [update, setUpdate] = useState(0)
+    // const [update, setUpdate] = useState(0)
+    const refresh = useSelector(state => state.update)
 
     useEffect(() => {
       dispatch(getCohortes())
@@ -52,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
           setGetEvents(data)
         })
       }
-  }, [cohorteId, update])
+  }, [cohorteId, refresh])
 
     const handleChangeCohorteId = (event) => {
       setCohorteId(event.target.value);
@@ -143,7 +145,8 @@ const useStyles = makeStyles((theme) => ({
               }
               const aux = dispatch(createEvent(evento))
               console.log(aux)
-              setUpdate(update + 1)
+              // setUpdate(update + 1)
+              dispatch(update())
           } else {
             const evento = {
               title: arrResult.value[0],
@@ -155,7 +158,8 @@ const useStyles = makeStyles((theme) => ({
               cohorteId: cohorteId
             }
             dispatch(createEvent(evento))
-            setUpdate(update + 1)
+            // setUpdate(update + 1)
+            dispatch(update())
           }
         }
       } else {
@@ -194,7 +198,8 @@ const useStyles = makeStyles((theme) => ({
           Swal.fire('Evento eliminado', '', 'error')
           dispatch(deleteEvent(clickInfo.event._def.publicId))
         }
-        setUpdate(update + 1)
+        // setUpdate(update + 1)
+        dispatch(update())
       })
     }
   
