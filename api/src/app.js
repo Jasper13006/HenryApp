@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
-const { User, Cohorte, Grouppm, Student, Groupp } = require("./db.js")
+const { User, Cohorte, Grouppm, Student, Groupp, Checkpoint } = require("./db.js");
+
 
 const server = express();
 
@@ -1116,6 +1117,36 @@ server.post('/seed', async(req, res) => {
     "cohorteId": 2,
     "groupmId": 4,
   })
+  await Checkpoint.create({
+    "userId":12,
+    "name": "henrylab",
+    "qualification": "10",
+    "info": "excelente"    
+  }),
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check1",
+    "qualification": "20/20",
+    "info": "excelente"    
+  }),
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check2",
+    "qualification": "19/19",
+    "info": "excelente"    
+  }),
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check3",
+    "qualification": "18/18",
+    "info": "excelente"    
+  }),
+  await Checkpoint.create({
+    "userId":12,
+    "name": "check4",
+    "qualification": "17/17",
+    "info": "excelente"    
+  }),
   res.status(200).send('seed finalizado exitosamente!!')
  })
 
