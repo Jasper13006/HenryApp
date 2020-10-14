@@ -83,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
             title: 'Titulo del evento',
             input: 'text',
             // inputValue: {}
+            inputValidator: (result) => {
+              return !result && 'Elegi un titulo para tu evento'
+            }
           },
           {
             title: 'Tipo de evento',
@@ -146,7 +149,9 @@ const useStyles = makeStyles((theme) => ({
               const aux = dispatch(createEvent(evento))
               console.log(aux)
               // setUpdate(update + 1)
-              dispatch(update())
+              setTimeout(() => {
+                dispatch(update())
+              }, 100)
           } else {
             const evento = {
               title: arrResult.value[0],
@@ -159,7 +164,9 @@ const useStyles = makeStyles((theme) => ({
             }
             dispatch(createEvent(evento))
             // setUpdate(update + 1)
-            dispatch(update())
+            setTimeout(() => {
+              dispatch(update())
+            }, 100)
           }
         }
       } else {
@@ -199,7 +206,9 @@ const useStyles = makeStyles((theme) => ({
           dispatch(deleteEvent(clickInfo.event._def.publicId))
         }
         // setUpdate(update + 1)
-        dispatch(update())
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
       })
     }
   

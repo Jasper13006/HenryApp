@@ -2,17 +2,17 @@ import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudents } from '../../../redux/actions/user'
 import imagenTriste from '../triste.png'
-
+import Paper from '@material-ui/core/Paper';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import { DialogTitle, MenuItem } from '@material-ui/core';
+import { DialogTitle, MenuItem, TableContainer } from '@material-ui/core';
 import {Select} from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import Toolbar from '@material-ui/core/Toolbar';
-import Fab from '@material-ui/core/Fab';
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles(() => ({
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
     },
     tableCell: {
         borderRaduis:"50px",
-        background: "linear-gradient(180deg, rgba(38,38,255,1) 0%, rgba(0,212,255,1) 77%)"
+        // background: "linear-gradient(180deg, rgba(38,38,255,1) 0%, rgba(0,212,255,1) 77%)"
     },
     title: {
         display: "flex",
@@ -45,12 +45,18 @@ const useStyles = makeStyles(() => ({
     },
     cohortTitle: {
         display: "flex",
-        justifyContent: "center",
-        background: "rgb(160,160,253)",
-        background: "radial-gradient(circle, rgba(160,160,253,1) 39%, rgba(251,251,251,1) 100%)",
+        justifyContent: "left",
+        // background: "rgb(160,160,253)",
+        // background: "radial-gradient(circle, rgba(160,160,253,1) 39%, rgba(251,251,251,1) 100%)",
+        marginTop: '10px'
     },
     cohortFilter: {
         marginBottom: "40px",
+        marginLeft: '10px'
+    },
+    separadorTables: {
+        marginBottom: '100px',
+        marginTop: '100px'
     }
 }))
 
@@ -75,9 +81,9 @@ export default function AlumnosAdmin(cohortes){
     }
     return (
         <div className={classes.root}>
-            <Fab color="black">
-                <DialogTitle className={classes.title}>Estudiantes</DialogTitle>
-            </Fab>
+            <Typography component="h2" variant="h5" color="initial">
+                Estudiantes
+            </Typography>
             <Toolbar className={classes.toolbar}>
                 <div className={classes.container}>
                     <ul>
@@ -93,14 +99,15 @@ export default function AlumnosAdmin(cohortes){
                             </Select>
                         </div>
                             {!filter || filter === "Todos"?
-                                <Table size="medium">
+                            <TableContainer component={Paper}>
+                                <Table size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell>Nombre</TableCell>
-                                                <TableCell>Apellido</TableCell>
-                                                <TableCell>Email</TableCell>
-                                                <TableCell>PM</TableCell>
-                                                <TableCell style={{minWidth: "100px"}}>registro</TableCell>
+                                                <TableCell style={{minWidth: "150px", fontWeight: 'bold', fontSize: '16px'}}>Nombre</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>Apellido</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>Email</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>PM</TableCell>
+                                                <TableCell style={{minWidth: "100px", fontWeight: 'bold', fontSize: '16px'}}>Registro</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -110,7 +117,7 @@ export default function AlumnosAdmin(cohortes){
                                                     <TableCell>{alumno.user.lastName}</TableCell>
                                                     <TableCell style={{minWidth: "350px", maxWidth: "350px"}}>{alumno.user.email}</TableCell>
                                                     <TableCell>{alumno.user.pm? "Si": "No"}</TableCell>
-                                                    <TableCell style={{minWidth: "150px"}}>{alumno.user.createdAt.split('T')[0]}</TableCell>
+                                                    <TableCell style={{minWidth: "130px"}}>{alumno.user.createdAt.split('T')[0]}</TableCell>
                                                 </TableRow>
                                                 )): 
                                                 <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
@@ -120,21 +127,28 @@ export default function AlumnosAdmin(cohortes){
                                             }
                                         </TableBody>
                                 </Table>
+                                </TableContainer>
                                 :
                                 filter === "Por_cohorte" &&
                                 <div>
-                                    <Table size="medium">
                                         {cohortes.data && cohortes.data.length !== 0? cohortes.data.map(cohorte => (
                                         filterStudents(usuarios, cohorte.id).length > 0 ?
                                         <div className={classes.cohortFilter}>
-                                            <DialogTitle className={classes.cohortTitle}>{cohorte.name}</DialogTitle>
+                                            <div className={classes.cohortTitle}>
+                                            <Typography component="h2" variant="h6" color="primary" gutterBottom={true}>
+                                                {cohorte.name}
+                                            </Typography>
+                                            </div>
+                                            {/* <DialogTitle className={classes.cohortTitle}>{cohorte.name}</DialogTitle> */}
+                                    <TableContainer component={Paper}>
+                                    <Table size="small">
                                             <TableHead>
-                                                <TableRow style={{border: "black 2px solid"}} >
-                                                    <TableCell>Nombre</TableCell>
-                                                    <TableCell>Apellido</TableCell>
-                                                    <TableCell style={{minWidth: "350px", maxWidth: "350px"}}>Email</TableCell>
-                                                    <TableCell>PM</TableCell>
-                                                    <TableCell style={{width: "100px"}}>registro</TableCell>
+                                                <TableRow >
+                                                <TableCell style={{minWidth: "150px", fontWeight: 'bold', fontSize: '16px'}}>Nombre</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>Apellido</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>Email</TableCell>
+                                                <TableCell style={{fontWeight: 'bold', fontSize: '16px'}}>PM</TableCell>
+                                                <TableCell style={{minWidth: "100px", fontWeight: 'bold', fontSize: '16px'}}>Registro</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -142,15 +156,17 @@ export default function AlumnosAdmin(cohortes){
                                                     filterStudents(usuarios, cohorte.id).map(student => (
                                                         student.length !== 0?
                                                         <TableRow key={cohorte.id} className={classes.tableCell} hover={true}>
-                                                            <TableCell style={{minWidth: "100px"}}>{student.user.name}</TableCell>
-                                                            <TableCell style={{minWidth: "100px"}}>{student.user.lastName}</TableCell>
-                                                            <TableCell style={{minWidth: "100px"}}>{student.user.email}</TableCell>
-                                                            <TableCell style={{minWidth: "100px"}}>{student.pm? "Si": "No"}</TableCell>
-                                                            <TableCell style={{minWidth: "150px"}}>{student.createdAt.split('T')[0]}</TableCell>
+                                                            <TableCell>{student.user.name}</TableCell>
+                                                            <TableCell>{student.user.lastName}</TableCell>
+                                                            <TableCell style={{minWidth: "350px", maxWidth: "350px"}}>{student.user.email}</TableCell>
+                                                            <TableCell>{student.user.pm? "Si": "No"}</TableCell>
+                                                            <TableCell style={{minWidth: "130px"}}>{student.user.createdAt.split('T')[0]}</TableCell>
                                                         </TableRow>: null
                                                     ))
                                                 }
                                             </TableBody>
+                                            </Table>
+                                            </TableContainer>
                                         </div>: null
                                         )):
                                             <div style={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
@@ -158,7 +174,6 @@ export default function AlumnosAdmin(cohortes){
                                                 <img src={imagenTriste}/>
                                             </div>
                                         }
-                                    </Table>
                                 </div>
                             }
                     </ul>
