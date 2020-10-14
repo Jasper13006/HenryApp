@@ -63,11 +63,11 @@ export default function FormResetPass() {
       })
       .then(res=>{
           if (res.status == 400){
-            Swal("Error", "Link para cambiar contraseña expirado, recuerde contraseña nuevamente" , "error")
+            Swal.fire("Error", "Link para cambiar contraseña expirado, recuerde contraseña nuevamente" , "error")
           }else if(res.status == 500) {
-            Swal("Error", "Error de servidor, pruebe más tarde" , "error")            
+            Swal.fire("Error", "Error de servidor, pruebe más tarde" , "error")            
           }else{
-            Swal("Success", "password cambiado con exito" , "success")
+            Swal.fire("Password cambiado con exito", "" , "success")
             history.push(`/login`)
           }
       })               

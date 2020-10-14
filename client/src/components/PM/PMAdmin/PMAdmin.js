@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { getCohortes  } from '../../../redux/actions/cohorte';
+import { getCohortes } from '../../../redux/actions/cohorte';
 import { useDispatch, useSelector } from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
 import PmGroup from './PmGroup'
 import Slide from '@material-ui/core/Slide';
 import DialogActions from '@material-ui/core/DialogActions';
+
+
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -57,21 +60,12 @@ export default function ComplexGrid() {
     return (
         <div className={classes.root}>
 
-            {cohortes && cohortes.map((cohorte) => (<div key={cohorte.id}><Button onClick={() => handleClickOpen(cohorte.id)} style={{ fontSize: "30px", height: "150px", width: "270px", marginTop: "20px" }} variant="contained" color="primary" disableElevation>
+            {cohortes && cohortes.map((cohorte) => (<div key={cohorte.id}><Button onClick={() => handleClickOpen(cohorte.id)} style={{ fontSize: "30px", height: "150px", width: "270px", marginTop: "20px", fontFamily: "-moz-initial" }} variant="contained" color="primary" disableElevation>
                 {cohorte.name}
 
             </Button>
-                <Dialog
-                    open={open}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
-                >
-                    {open && <PmGroup cohorteId={id} />}
-                    <DialogActions>
-                    </DialogActions>
+                <Dialog fullScreen={false} fullWidth={true} open={open} onClose={() => handleClose} TransitionComponent={Transition}>
+                    {open && <PmGroup cohorteId={id} handleClose={handleClose} handleClickOpen={handleClickOpen} />}
                 </ Dialog>
 
             </div>

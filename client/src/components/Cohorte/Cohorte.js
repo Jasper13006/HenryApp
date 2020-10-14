@@ -109,7 +109,7 @@ export default function Cohorte(){
         user.admin?
             <Admin/>    
         :
-        cohorte?
+        cohorte && cohorte.instructor ?
         !option?
             <div>
                 <Hidden only="sm">
@@ -128,8 +128,9 @@ export default function Cohorte(){
                                     <TableCell key={i}>
                                         <Link
                                             className={classes.Link}
-                                            to={module.linkVideos}
-                                            target="_blank"
+                                            onClick={() => {
+                                                window.open(module.linkVideos)
+                                            }}
                                         >
                                             {module.nameClass}
                                         </Link>
