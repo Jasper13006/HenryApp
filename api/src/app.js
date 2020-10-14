@@ -1247,10 +1247,6 @@ server.post("/seed", async (req, res) => {
   res.status(200).send('seed finalizado exitosamente!!')
  })
 
-
-
-
-
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   const status = err.status || 500;
