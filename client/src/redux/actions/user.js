@@ -41,6 +41,7 @@ export function changeUserData(data,id,token){
             headers: {"auth-token": token},
 
         }).then(res=>{
+            console.log(res.status)
             Swal.fire({
                 icon: 'success',
                 title: 'Éxito',

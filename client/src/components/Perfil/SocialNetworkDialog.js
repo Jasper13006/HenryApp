@@ -35,12 +35,12 @@ const useStyles = makeStyles(() => ({
 },
 }));
 
-export default function GitHubDialog({red}) {
+export default function GitHubDialog({red,data,user,token}) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false)
-  const [user,setUser] =useState(null)
-  const [temporaryUser,setTemporaryUser] = useState(null)
+  const [open, setOpen] = useState(false)  
+  const [value, setValue] = useState(null)
   const dispatch=useDispatch()
+
  
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,19 +51,49 @@ export default function GitHubDialog({red}) {
   };
 
   const handleInputChange=(e)=>{
-    setTemporaryUser(e.target.value)
+    setValue(e.target.value)
   }
 
   const handleSubmit=(e)=>{
-    setUser(temporaryUser)
+    if(!value){
+      return(false)
+    }
+    console.log(value)
+    let data={}
+    if(red==="GitHub"){
+      data = {
+        gitHubId: value
+      }
+    }
+    else if(red==="LinkedIn"){
+      data = {
+        googleId: value
+      }
+    }
+    if(data.gitHubId || data.googleId){
+      dispatch(changeUserData(data,user.id,token))
+      setTimeout(()=>{
+        dispatch(update())
+      },1000)
+    }
+    
+    
     handleClose()
   }
 
+  if(user && red && data && token){
+    console.log("user: ",user)
+    console.log("red: ",red)
+    console.log("data: ",data)
+    console.log("token: ",token)
+  }
+  
+
   return (
     <div>
-    {user?
+    {data?
     <div className={classes.githubEdit}>
-    {user}
+      {red==="GitHub"?user.gitHubId:user.googleId}
     <EditIcon className="editIcon" onClick={handleClickOpen}/>
     </div>
       :<Button onClick={handleClickOpen} className={classes.addInfoButton} size="small">Agregar</Button>}
@@ -76,7 +106,7 @@ export default function GitHubDialog({red}) {
                 variant="outlined"
                 name="github"
                 onChange={handleInputChange}
-                defaultValue={user}
+                defaultValue={data}
               />
         </DialogContent>
         <DialogActions>
