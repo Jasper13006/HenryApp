@@ -73,7 +73,6 @@ function Navigator(props) {
     }
 
     useEffect(()=> {
-        console.log(user)
     }, [])
     
     return (

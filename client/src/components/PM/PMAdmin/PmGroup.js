@@ -18,6 +18,7 @@ import StudentList from './StudentList'
 import AddPmGroup from './AddPmGroup'
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import { Tooltip } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,12 +71,7 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
 
 
     useEffect(() => {
-
         dispatch(traerGrupoPmPorCohorte(cohorteId))
-
-
-
-
     }, []);
 
 
@@ -83,18 +79,16 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
     return (
         <div>
             <AppBar className={classes.appBar}>
-                <Toolbar >
+                <Toolbar>
                     <IconButton onClick={handleClose} edge="start" color="inherit" aria-label="close">
-
                         <CloseIcon />
                     </IconButton>
-
                     <Typography variant="h6" className={classes.title}>
                         Grupos de PM
-              </Typography>
+                    </Typography>
                 </Toolbar>
             </AppBar>
-            {grupos && grupos.length > 0 && grupos.map((grupo) => (
+            {(grupos && grupos.length > 0) && grupos.map((grupo) => (
                 <div onClick={() => handleOpenThis(grupo.groupPm.id)} key={grupo.groupPm.id} >
                     <List >
                         <ListItem button >
@@ -106,7 +100,7 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
                                 aria-labelledby="alert-dialog-slide-title"
                                 aria-describedby="alert-dialog-slide-description"
                             >
-                                {open && open && <StudentList /> && <StudentList handleClose={handleClose} id={id} />}
+                                {open && <StudentList handleClose={handleClose} id={id} />}
                             </Dialog>
 
 
