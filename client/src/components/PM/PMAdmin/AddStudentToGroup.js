@@ -19,7 +19,7 @@ import { getAlumnosCohorte } from '../../../redux/actions/cohorte'
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
+        minWidth: 350,
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
@@ -27,79 +27,73 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({ id }) {
+export default function FormDialog({ id, cohorteId, handleClose }) {
     const classes = useStyles()
     const dispatch = useDispatch();
-    const allStudents = useSelector(state => state)
+    const allStudents = useSelector(state => state.getAlumnosCohorte.data)
     const [open, setOpen] = React.useState(false);
+    const [state, setState] = useState({
+        userId: "",
+        grouppmId: id
+    })
+    const [student, setStudent] = React.useState();
 
 
-    const [student, setStudent] = React.useState({
-        userId: ""
-    });
 
 
 
     useEffect(() => {
-        getAlumnosCohorte(id)
+        dispatch(getAlumnosCohorte(cohorteId))
     }, [])
 
-    console.log(allStudents)
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
 
-    const handleSubmit = (id, e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log(e.target.value);
-        dispatch(agregarEstudianteAGrupo(id, e))
+        dispatch(agregarEstudianteAGrupo(cohorteId, state))
+        handleClose()
     }
 
     const handleChange = (e) => {
-        setStudent({
-            ...student,
+        setState({
+            ...state,
             [e.target.name]: e.target.value
         })
     };
 
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
             <DialogTitle id="form-dialog-title">Selecciona un estudiante</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    To subscribe to this website, please enter your email address here. We will send updates
-                    occasionally.
+                    Selecciona un estudiante para agregarlo al grupo
           </DialogContentText>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+                <FormControl className={classes.formControl} onChange={handleChange}>
+                    <InputLabel id="demo-simple-select-helper-label">Estudiante</InputLabel>
                     <Select
                         labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        name={"userId"}
+                        id="userId"
+                        name="userId"
                         value={student}
                         onChange={handleChange}
                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {allStudents && allStudents.map((student) => (<MenuItem value={student.userId}>{student && student.user.name + " " + student.user.lastName}</MenuItem>))}
+
                     </Select>
-                    <FormHelperText>Some important helper text</FormHelperText>
+                    <FormHelperText>Selecciona la persona que deseas agregar</FormHelperText>
                 </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                    Cancel
+                    Cancelar
           </Button>
-                <Button onClick={handleClose} color="primary">
-                    Subscribe
+                <Button onClick={handleSubmit} color="primary">
+                    Agregar
           </Button>
             </DialogActions>
 
-        </div>
+        </form>
     );
 }

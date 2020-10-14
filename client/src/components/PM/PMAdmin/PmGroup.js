@@ -58,23 +58,11 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
         setOpen(true)
     }
 
-    console.log(id)
-
-    const handleClickOpenAdd = () => {
-        setOpenAdd(true);
-    };
-
-    const handleCloseAdd = () => {
-        setOpenAdd(false);
-    };
 
 
     useEffect(() => {
 
         dispatch(traerGrupoPmPorCohorte(cohorteId))
-
-
-
 
     }, []);
 
@@ -106,7 +94,7 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
                                 aria-labelledby="alert-dialog-slide-title"
                                 aria-describedby="alert-dialog-slide-description"
                             >
-                                {open && open && <StudentList /> && <StudentList handleClose={handleClose} id={id} />}
+                                {open && open && <StudentList /> && <StudentList handleClose={handleClose} id={id} cohorteId={cohorteId} />}
                             </Dialog>
 
 
@@ -120,7 +108,7 @@ export default function FullScreenDialog({ handleClose, cohorteId }) {
 
                 <Fab onClick={setOpenAdd} style={{ color: "black", backgroundColor: "yellow" }} aria-label="add" >
                     <AddIcon />
-                    <AddPmGroup handleCloseAdd={handleClose} open={openAdd} />
+                    <AddPmGroup handleCloseAdd={handleClose} open={openAdd} cohorteId={cohorteId} />
                 </Fab>
 
             </div>

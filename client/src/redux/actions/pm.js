@@ -88,7 +88,7 @@ export function traerGrupoPmPorCohorte(id, data) {
 }
 
 
-export function agregarGrupoPm(data) {
+export function agregarGrupoPm(data, history) {
     const token = localStorage.getItem("token")
     return function (dispatch) {
         return axios({
@@ -106,9 +106,9 @@ export function agregarGrupoPm(data) {
                 })
                 Swal.fire({
                     icon: 'success',
-                    title: 'Agregado correctamente',
+                    title: '¡Listo!',
                     showConfirmButton: false,
-                    timer: 1000
+                    text: "Se ha creado el grupo correctamente",
                 })
 
             })

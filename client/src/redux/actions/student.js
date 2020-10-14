@@ -34,7 +34,7 @@ export function agregarEstudianteAGrupo(id, data) {
     return function (dispatch) {
 
         return axios({
-            method: 'POST',
+            method: 'PUT',
             url: `http://localhost:3001/cohorte/addStudent/${id}`,
             data: data,
             credentials: "include",
@@ -48,15 +48,14 @@ export function agregarEstudianteAGrupo(id, data) {
                 })
                 Swal.fire({
                     icon: 'success',
-                    title: 'Agregado correctamente',
-                    showConfirmButton: false,
-                    timer: 1000
+                    title: '¡Listo!',
+                    text: "Se ha agreado al estudiante correctamente",
                 })
 
             })
             .catch(e => {
 
-                throw e;
+                throw e.message;
             })
     }
 }
