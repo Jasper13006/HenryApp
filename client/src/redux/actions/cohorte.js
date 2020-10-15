@@ -2,6 +2,7 @@ import axios from 'axios'
 import Header from '../../components/panel/Header'
 import { GET_MY_COHORTE, GET_STUDENTS_BY_COHORTE_ID, GET_MODULOS, GET_COHORTES, CREATE_COHORT, EDIT_COHORT, ADD_USER_TO_A_COHORT } from '../consts/actionTypes'
 import Swal from 'sweetalert2'
+import students from '../reducers/students'
 
 
 export function getCohorteUser(id) {
@@ -18,6 +19,7 @@ export function getCohorteUser(id) {
                 })
             })
 
+
         // .catch(err => {
         //     Swal.fire({
         //         icon: 'error',
@@ -28,10 +30,27 @@ export function getCohorteUser(id) {
         //         window.location.assign("/panel")
         //     }, 800)
         // })
-
-
     }
 }
+
+// export const getCohorteUser = (id) => async dispatch => {
+// 	try {
+//         const token = localStorage.getItem("token")
+//         axios({
+//             method: 'GET',
+//             url: `http://localhost:3001/cohorte/user/${id}`,
+//             headers: { "auth-token": token }
+//         })
+//         .then(response => {
+//             return dispatch({
+//                 type: GET_MY_COHORTE,
+//                 payload: response.data
+//             })
+//         })
+// 		} catch (error) {
+// 		console.log(error)
+// 	}
+// }
 
 export function getAlumnosCohorte(id) {
     return function (dispatch) {

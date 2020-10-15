@@ -11,11 +11,6 @@ export default function getCohorteUser(state = initialState, action) {
                 ...state,
                 data: action.payload
             }
-        case GET_COHORTES:
-            return {
-                ...state,
-                data: action.payload
-            }
         default:
             return {
                 ...state

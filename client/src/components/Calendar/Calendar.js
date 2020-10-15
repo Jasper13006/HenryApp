@@ -18,6 +18,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
+import { getCohorteUser } from '../../redux/actions/cohorte'
+import { getStudent } from '../../redux/actions/user'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -44,11 +46,21 @@ const useStyles = makeStyles((theme) => ({
     const [cohorteId, setCohorteId] = useState()
     // const [update, setUpdate] = useState(0)
     const refresh = useSelector(state => state.update)
+    const user = JSON.parse(localStorage.getItem("user"))
+    const student = useSelector(state => state.student.data)
 
     useEffect(() => {
       dispatch(getCohortes())
+      dispatch(getStudent(user.id))
       if(cohorteId) {
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
+        .then(res => res.json())
+        .then(data => {
+          setGetEvents(data)
+        })
+      }
+      if(student && student[0].cohorteId) {
+        fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
         .then(res => res.json())
         .then(data => {
           setGetEvents(data)
@@ -186,30 +198,32 @@ const useStyles = makeStyles((theme) => ({
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
-     await Swal.fire({
-        title: 'Que deseas hacer con este evento?',
-        showDenyButton: true,
-        // showCancelButton: true,
-        confirmButtonText: `Cancelar`,
-        denyButtonText: `Eliminar`,
-        customClass: {
-          cancelButton: 'order-1 right-gap',
-          confirmButton: 'order-2',
-          denyButton: 'order-3',
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // console.log(clickInfo)
-          // handleEditEvent(clickInfo)
-        } else if (result.isDenied) {
-          Swal.fire('Evento eliminado', '', 'error')
-          dispatch(deleteEvent(clickInfo.event._def.publicId))
-        }
-        // setUpdate(update + 1)
-        setTimeout(() => {
-          dispatch(update())
-        }, 100)
-      })
+      if (!student) {
+        await Swal.fire({
+           title: 'Que deseas hacer con este evento?',
+           showDenyButton: true,
+           // showCancelButton: true,
+           confirmButtonText: `Cancelar`,
+           denyButtonText: `Eliminar`,
+           customClass: {
+             cancelButton: 'order-1 right-gap',
+             confirmButton: 'order-2',
+             denyButton: 'order-3',
+           }
+         }).then((result) => {
+           if (result.isConfirmed) {
+             // console.log(clickInfo)
+             // handleEditEvent(clickInfo)
+           } else if (result.isDenied) {
+             Swal.fire('Evento eliminado', '', 'error')
+             dispatch(deleteEvent(clickInfo.event._def.publicId))
+           }
+           // setUpdate(update + 1)
+           setTimeout(() => {
+             dispatch(update())
+           }, 100)
+         })
+      }
     }
   
     //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
@@ -221,35 +235,48 @@ const useStyles = makeStyles((theme) => ({
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
-          <FormControl className={classes.formControl} fullWidth>
-            <InputLabel className={classes.inputlabel}>Seleccione un cohorte</InputLabel>
+            {student ?
+          <FormControl className={classes.formControl} fullWidth disabled>
+            <InputLabel className={classes.inputlabel}>Tu cohorte:</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={cohorteId}
-              onChange={handleChangeCohorteId}
-              // variant='outlined'
+              value={student ? student[0].cohorteId : null}
             >
               {cohortes && cohortes.map((el, i) => (
                 <MenuItem value={el.id}>{el.name}</MenuItem>
               ))}
             </Select>
-      </FormControl>
+          </FormControl>
+            :
+            <FormControl className={classes.formControl} fullWidth>
+            <InputLabel className={classes.inputlabel}>Seleccione un cohorte</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={cohorteId}
+              defaultValue={student ? student[0].cohorteId : null}
+              onChange={handleChangeCohorteId}
+            >
+              {cohortes && cohortes.map((el, i) => (
+                <MenuItem value={el.id}>{el.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          }
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
-              <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
+              {/* <li>Arrastra, suelta y cambia el tamaño de los eventos</li> */}
               <li>Hace click en un evento para eliminarlo</li>
             </ul>
           </div>
           <div className='demo-app-sidebar-section'>
-            <label>
               <input
                 type='checkbox'
                 checked={weekendsVisible}
                 onChange={handleWeekendsToggle}
               ></input>
-               Alternar dias de fin de semana
-            </label>
+              <label>Alternar dias de fin de semana</label>
           </div>
           <div className='demo-app-sidebar-section'>
             <h2>Todos los eventos ({currentEvents.length})</h2>
@@ -276,7 +303,7 @@ const useStyles = makeStyles((theme) => ({
             initialView='dayGridMonth'
             
             editable={false}
-            selectable={true}
+            selectable={student ? false : true}
             selectMirror={true}
             dayMaxEvents={true}
             events={getEvents && getEvents}
