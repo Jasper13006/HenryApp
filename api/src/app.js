@@ -1214,13 +1214,8 @@ server.post("/seed", async (req, res) => {
     "allDay": false,
     "cohorteId": 1,
   })
-  
-  res.status(200).send("seed finalizado exitosamente!!")
-})
-
-
-
-
+  res.status(200).send('seed finalizado exitosamente!!')
+ })
 
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
