@@ -29,7 +29,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar } = sequelize.models;
+const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar,Msg } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Relaciones
@@ -57,6 +57,9 @@ Modulo.belongsTo(Cohorte)  // deberia agregar columna cohorteId a Modulo
 
 Calendar.belongsTo(User)
 Calendar.belongsTo(Cohorte)
+
+Msg.belongsTo(User, { as: 'from' }) 
+Msg.belongsTo(User, { as: 'to' }) 
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
