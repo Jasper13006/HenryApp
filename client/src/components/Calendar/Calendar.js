@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import FullCalendar, { formatDate, renderMicroColGroup } from '@fullcalendar/react'
+import FullCalendar, { formatDate } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list';
 import Swal from 'sweetalert2'
-import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
@@ -18,9 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
-import { getCohorteUser } from '../../redux/actions/cohorte'
 import { getStudent } from '../../redux/actions/user'
-import students from '../../redux/reducers/students'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -199,11 +196,11 @@ const useStyles = makeStyles((theme) => ({
       }
     }
 
-    const handleEditEvent = async (data) => {
-      let editEvent = {
+    // const handleEditEvent = async (data) => {
+    //   let editEvent = {
         
-      }
-    }
+    //   }
+    // }
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
