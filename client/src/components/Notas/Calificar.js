@@ -69,11 +69,9 @@ export default function Calificar() {
 
     const validate = (state) => {
         let errors = {};
-        if (!state.email) {
-            console.log('first if', errors)
+        if (!state.email) {          
             errors.email = 'Por favor, introduzca un email';
-        } else if (!state.email.includes("@")) {
-            console.log('second if', errors)
+        } else if (!/\S+@\S+\.\S+/.test(state.email)) {           
             errors.email = 'Por favor, introduzca un formato de email valido';
         }      
         return errors;
