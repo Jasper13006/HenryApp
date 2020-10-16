@@ -61,3 +61,9 @@ export const ADD_STUDENT_TO_GROUP = "ADD_STUDENT_TO_GROUP";
 
 export const UPDATE = "UPDATE";
 
+/* ------------------------------------------------------------------------------- /
+/ MSG/
+/ ------------------------------------------------------------------------------- */
+
+export const ADD_NEWMSG = "ADD_NEWMSG";
+
