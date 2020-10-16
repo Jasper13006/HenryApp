@@ -20,6 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getCohorteUser } from '../../redux/actions/cohorte'
 import { getStudent } from '../../redux/actions/user'
+import students from '../../redux/reducers/students'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,23 +51,31 @@ const useStyles = makeStyles((theme) => ({
     const student = useSelector(state => state.student.data)
 
     useEffect(() => {
-      dispatch(getCohortes())
       dispatch(getStudent(user.id))
+      dispatch(getCohortes())
+      // para el admin
       if(cohorteId) {
+        console.log('entro al if de cohorteId')
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
         .then(res => res.json())
         .then(data => {
           setGetEvents(data)
         })
       }
-      if(student && student[0].cohorteId) {
-        fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
-        .then(res => res.json())
-        .then(data => {
-          setGetEvents(data)
-        })
-      }
   }, [cohorteId, refresh])
+
+  useEffect(() => {
+    if(student) {
+      console.log('entro al if de student')
+      fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
+      .then(res => res.json())
+      .then(data => {
+        setGetEvents(data)
+      })
+      console.log(student[0].cohorteId)
+      setCohorteId(student[0].cohorteId)
+    }
+  }, [student])
 
     const handleChangeCohorteId = (event) => {
       setCohorteId(event.target.value);
@@ -232,22 +241,16 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const renderSidebar= () => {
+      if (student) {
+        console.log('COHORTE USER:', student[0].cohorteId)
+      }
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
             {student ?
-          <FormControl className={classes.formControl} fullWidth disabled>
-            <InputLabel className={classes.inputlabel}>Tu cohorte:</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={student ? student[0].cohorteId : null}
-            >
-              {cohortes && cohortes.map((el, i) => (
-                <MenuItem value={el.id}>{el.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <div style={{display: 'flex'}}>
+            <h6>Perteneces al cohorte: {student[0].cohorte.name}</h6>
+          </div>
             :
             <FormControl className={classes.formControl} fullWidth>
             <InputLabel className={classes.inputlabel}>Seleccione un cohorte</InputLabel>
@@ -255,7 +258,7 @@ const useStyles = makeStyles((theme) => ({
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={cohorteId}
-              defaultValue={student ? student[0].cohorteId : null}
+              // defaultValue={student ? student[0].cohorteId : null}
               onChange={handleChangeCohorteId}
             >
               {cohortes && cohortes.map((el, i) => (
@@ -275,8 +278,7 @@ const useStyles = makeStyles((theme) => ({
                 type='checkbox'
                 checked={weekendsVisible}
                 onChange={handleWeekendsToggle}
-              ></input>
-              <label>Alternar dias de fin de semana</label>
+              ></input> <label>Alternar dias de fin de semana</label>
           </div>
           <div className='demo-app-sidebar-section'>
             <h2>Todos los eventos ({currentEvents.length})</h2>
@@ -301,13 +303,14 @@ const useStyles = makeStyles((theme) => ({
               right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             }}
             initialView='dayGridMonth'
-            
+            eventDisplay='auto'
             editable={false}
             selectable={student ? false : true}
             selectMirror={true}
             dayMaxEvents={true}
             events={getEvents && getEvents}
             weekends={weekendsVisible}
+            nowIndicator={true}
             // initialEvents={INITIAL_EVENTS} alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
