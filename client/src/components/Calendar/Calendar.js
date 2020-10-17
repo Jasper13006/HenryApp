@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import {createEvent, deleteEvent} from '../../redux/actions/calendar'
+import {createEvent, deleteEvent, modifyEvent} from '../../redux/actions/calendar'
 import { getCohortes } from '../../redux/actions/cohorte'
 import { useDispatch, useSelector } from "react-redux";
 import FormControl from '@material-ui/core/FormControl';
@@ -164,8 +164,7 @@ const useStyles = makeStyles((theme) => ({
                 allDay: true,
                 cohorteId: cohorteId
               }
-              const aux = dispatch(createEvent(evento))
-              console.log(aux)
+              createEvent(evento)
               // setUpdate(update + 1)
               setTimeout(() => {
                 dispatch(update())
@@ -196,11 +195,28 @@ const useStyles = makeStyles((theme) => ({
       }
     }
 
-    // const handleEditEvent = async (data) => {
-    //   let editEvent = {
-        
-    //   }
-    // }
+    const handleEditEvent = async (data) => {
+      console.log('ENTRO A LA FUNCION PADREEEEEEE')
+      console.log(data)
+      if (data.event.allDay) {
+        const evento = {
+          eventId: data.event._def.publicId,
+          start: data.event.startStr,
+          end: data.event.endStr,
+        }
+        console.log(evento)
+        await dispatch(modifyEvent(evento))
+      } else {
+        const evento = {
+          eventId: data.event._def.publicId,
+          startRecur: data.event.startStr,
+          endRecur: data.event.endStr,
+          startTime: data.event.startStr.split('T')[1],
+          endTime: data.event.endStr.split('T')[1],
+        }
+        await dispatch(modifyEvent(evento))
+      }
+    }
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
@@ -301,7 +317,7 @@ const useStyles = makeStyles((theme) => ({
             }}
             initialView='dayGridMonth'
             eventDisplay='auto'
-            editable={false}
+            editable={true}
             selectable={student ? false : true}
             selectMirror={true}
             dayMaxEvents={true}
@@ -313,9 +329,9 @@ const useStyles = makeStyles((theme) => ({
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+            eventChange={handleEditEvent}
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
-            eventChange={function(){}}
             eventRemove={function(){}}
             */
           />
