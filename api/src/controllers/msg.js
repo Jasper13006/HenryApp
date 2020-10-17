@@ -28,9 +28,11 @@ module.exports = {
                 await chat.save() 
                 let newMsg = await Msg.create({
                     description,
-                    chatId:chat.id
+                    chatId:chat.id,
+                    fromId,
+                    toId
                 })
-                return res.status(200).send(newMsg)
+                return res.status(200).send(chat)
             } 
             
             const newChat = await Chat.create({
@@ -40,9 +42,11 @@ module.exports = {
             }) 
             let newMsg = await Msg.create({
                 description,
-                chatId:newChat.id
+                chatId:newChat.id,
+                fromId,
+                toId
             })           
-            return res.status(200).send(newMsg)
+            return res.status(200).send(newChat)
         }
         catch(err){
             return res.status(401).send(err)
@@ -67,12 +71,37 @@ module.exports = {
                     { model: User, as: 'from',attributes:['id','fullName','image','name','lastName']  },
                             
                 ],
-                attributes:['id','updatedAt'],
-                limit:5
+                attributes:['id','updatedAt','check'],
+                limit:10
                 
               
             });            
             return res.send(allMsg)
+        }catch(err){
+            return res.status(400).send(err)
+        }
+    },
+
+    async getMsg (req,res) {
+        const {chatId} = req.params
+        const chat = await Chat.findOne({
+            where:{id:chatId}
+        })
+        if(!chat){
+            return res.send({msg:'no existe el chat',status:400})
+        }
+        try{
+            const allMsg = await Msg.findAll({
+                where:{chatId},
+                order:[['updatedAt','ASC']],
+                include: [
+                    { model: Chat, as: 'chat',attributes:['id','updatedAt','check']},                    
+                    {model:User,as: 'to',attributes:['id','fullName','image','name','lastName'] },
+                    {model:User,as:'from',attributes:['id','fullName','image','name','lastName'] },
+                ],
+                attributes:['id','updatedAt','description'],
+            })
+            return res.status(200).send(allMsg)
         }catch(err){
             return res.status(400).send(err)
         }

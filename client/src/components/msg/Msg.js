@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   fade,
   withStyles,
   makeStyles,
 } from '@material-ui/core/styles';
-import {InputBase,IconButton,Box,Dialog,DialogContentText,Avatar,Typography,ListItemText,ListItemIcon,ListItem} from '@material-ui/core/';
+import {InputBase,IconButton,Box,Avatar,Typography,ListItemText,ListItemIcon,ListItem,List} from '@material-ui/core/';
 import FormControl from '@material-ui/core/FormControl';
 import SendIcon from '@material-ui/icons/Send';
 import Picker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
-import {addMsg} from '../../redux/actions/msg'
+import {addMsg,getMsg} from '../../redux/actions/msg'
 
-
+/* EACF15
+15EA9D */
 
 
 const BootstrapInput = withStyles((theme) => ({
@@ -64,6 +65,17 @@ const useStyles = makeStyles((theme) => ({
         padding:'20px',
         alignItems:'center'
     },
+    boxItem:{
+      background:'linear-gradient(135deg, #fdeb71 0%,#f8d800 100%)',
+      borderRadius:'20px',
+      width:'90%',
+      height:'auto',
+      display:'flex',
+      padding:'20px',
+      alignItems:'center',
+      borderBottom:'1px solid gray',
+    },
+
     boxMsg:{
       borderBottom:'1px solid gray',
       backgroundColor: 'white',  
@@ -74,8 +86,8 @@ const useStyles = makeStyles((theme) => ({
       padding:'20px',
       position: 'absolute',
       top: '10.6em',
-      overflowY:'scroll',
-      
+      overflowY:'auto',
+      scrollBehavior: 'smooth',      
       
     },
 
@@ -104,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
       width: '225px',
       height: '283px',
       marginLeft: '46em',
-      marginTop: '11.7em',
+      marginTop: '4.3em',
       position:'absolute'
     },
     small: {
@@ -141,6 +153,7 @@ export default function Msg(props) {
     const userTo = JSON.parse(localStorage.getItem('toUser'))
     const userFrom = JSON.parse(localStorage.getItem('user'))
     const token = localStorage.getItem('token')
+    const chatId = JSON.parse(localStorage.getItem('chatId'))
     const dispatch = useDispatch()
     const mensajes=useSelector(state=>state.msg.mensajes)
     const date = new Date()
@@ -171,10 +184,9 @@ export default function Msg(props) {
       setOpen(false);
       const data = {
         description:description,
-        toId:userTo.id,
+        toId:userTo.id,        
         to:userTo,
-        from:userFrom,
-        
+        from:userFrom,        
       }
       if(data.description){
         dispatch(addMsg(data,token))
@@ -184,11 +196,16 @@ export default function Msg(props) {
 
     }
 
+    useEffect(()=>{
+      if(!mensajes.length && chatId){        
+        dispatch(getMsg(chatId,token))
+      }
+    })
+
     // modificamos la fecha y la validamos
 
-    const changeDate = (createdAt,validate) => {
-      const fecha = new Date(createdAt)
-      console.log(fecha.toTimeString().split('G'))
+    const changeDate = (updatedAt,validate) => {
+      const fecha = new Date(updatedAt)
       if(validate && fecha.toDateString() === date.toDateString()){
         return 'Hoy';        
       }else if(validate){
@@ -196,7 +213,6 @@ export default function Msg(props) {
       }
       return fecha.toTimeString().split('G')[0];  
     }
-    
     return (    
     <div className={classes.root} >
         <Box className={classes.boxMsg}>
@@ -212,37 +228,40 @@ export default function Msg(props) {
             </Box>
             
           </Box>
-          {mensajes.map((msg,key,elements)=>(
-              <ListItem key={key} style={{display:'flex',flexDirection:'Column'}}>
-                {!key && <Box className = {classes.boxDate}>
-                  <Typography className={classes.name} variant="h5">
-                      {changeDate(msg.createdAt,true)}
-                  </Typography>
-                </Box> }
-                {key && msg.createdAt.split('T')[0] !== elements[key-1].createdAt.split('T')[0] ? <Box>
-                  <Typography className={classes.name} variant="h5">
-                    {changeDate(msg.createdAt,true)}
-                  </Typography>
-                </Box> : null}
-                <Box className={classes.box}>
-                  <ListItemIcon>
-                  <div className={classes.root}>
-                      <Avatar src={msg.from.image} className={classes.small} />
-                      </div>
-                  </ListItemIcon>
-                  <div >
-                    <Typography className={classes.name}>
-                      {msg.from.fullName}
+          <List component="nav" aria-label="main mailbox folders">
+            {mensajes.map((msg,key,elements)=>(
+                <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
+                  {!key && <Box className = {classes.boxDate} style={{backgroundColor:'#EACF15'}}>
+                    <Typography className={classes.name} variant="h5">
+                        {changeDate(msg.updatedAt,true)}
                     </Typography>
-                    <Typography style={{fontSize: '0.8em',color: 'darkgray'}}>
-                      {changeDate(msg.createdAt,false)}
-                    </Typography>                     
-                    <ListItemText primary={msg.description} />
-                  </div> 
-                     
-                </Box>                               
-              </ListItem>
-          ))}  
+                  </Box> }
+                  {key && msg.updatedAt.split('T')[0] !== elements[key-1].updatedAt.split('T')[0] ? <Box>
+                    <Typography className={classes.name} variant="h5">
+                      {changeDate(msg.updatedAt,true)}
+                    </Typography>
+                  </Box> : null}
+                  <Box className={classes.boxItem} style = {msg.from.id !== userFrom.id ? {background:'linear-gradient(135deg, #ddffff 0%,#74abbe 100%)'} : null}>
+                    <ListItemIcon>
+                    <div className={classes.root}>
+                        <Avatar src={msg.from.image} className={classes.small} />
+                        </div>
+                    </ListItemIcon>
+                    <div >
+                      <Typography className={classes.name}>
+                        {msg.from.fullName}
+                      </Typography>
+                      <Typography style={{fontSize: '0.8em',color: 'darkgray'}}>
+                        {changeDate(msg.updatedAt,false)}
+                      </Typography>                     
+                      <ListItemText primary={msg.description} />
+                    </div> 
+                      
+                  </Box>                               
+                </ListItem>
+            ))}
+          </List>
+            
         </Box>
         {open && 
           <Box className={classes.boxEmoji}>

@@ -13,8 +13,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {useDispatch,useSelector} from 'react-redux'
-import {getChats} from '../../redux/actions/msg'
-
+import {getChats,getMsg} from '../../redux/actions/msg'
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -61,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
-export default function ControlledAccordions() {
+export default function NavMsg(props) {
+  const history = useHistory()
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const chats = useSelector(state => state.msg.chats);
@@ -69,9 +70,26 @@ export default function ControlledAccordions() {
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
 
+  // expande el menu 
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  // direcciona al componente mensaje
+
+  const handeClick = chat => {
+    
+    if(chat.from.id == id) {
+      localStorage.setItem('toUser', JSON.stringify(chat.to));
+    }else{
+      localStorage.setItem('toUser', JSON.stringify(chat.from));
+    }
+    localStorage.setItem('chatId',chat.id);
+    dispatch(getMsg(chat.id,token))
+    history.push('/panel/msg')
+
+  }
 
   React.useEffect(() => {
     dispatch(getChats(token))
@@ -98,7 +116,7 @@ export default function ControlledAccordions() {
         <AccordionDetails>
           <List component="nav" aria-label="main mailbox folders">
           {chats.map((chat,key)=>(
-            <ListItem button type='submit'key={key} className={classes.itemList}>
+            <ListItem button type='submit'key={key} onClick = {() => handeClick(chat)} className={classes.itemList}>
                 <ListItemIcon>                    
                     <Avatar src={chat.from.id == id ? chat.to.image : chat.from.image} className={classes.small} />                    
                 </ListItemIcon>

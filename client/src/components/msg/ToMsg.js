@@ -12,7 +12,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {getMsg,deleteMsgs} from '../../redux/actions/msg'
 
 
 
@@ -87,21 +88,37 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function CustomizedInputs(props) {
+export default function ToMsg(props) {
     const dispatch = useDispatch()
     const classes = useStyles();
     const [searchTerm, setSearchTerm] = React.useState("");
     const [searchResults, setSearchResults] = React.useState([]);
+    const chats = useSelector(state => state.msg.chats)
     const [users,setUsers] = React.useState()
+    const token = localStorage.getItem('token')
+    const userFrom = JSON.parse(localStorage.getItem('user'))
 
     /// seteo los datos que voy ingresando en el input
     const handleChange = event => {
+        
         event.preventDefault()
         setSearchTerm(event.target.value); 
     };
 
     // selecciono el usuario al que se le envia el msg
     const handleClick = user => { 
+        let validate = true;
+        chats.map((chat) => {
+            if(chat.from.id === user.id || chat.to.id === user.id){
+                dispatch(getMsg(chat.id,token))
+                validate = false
+            }
+
+        })
+        if(validate){
+            dispatch(deleteMsgs())
+            localStorage.removeItem('chatId');
+        }
         localStorage.setItem('toUser', JSON.stringify(user));       
         props.history.push('/panel/msg')
     };
@@ -118,11 +135,13 @@ export default function CustomizedInputs(props) {
 
         // si escribo algo en el input, filtro los usuarios
         if(searchTerm){
-            const results = users.filter(user =>               
-               user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+            const results = users.filter(user => {
+                if(user.id !== userFrom.id){
+                    return user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+                }    
+            });
             setSearchResults(results.splice(0,5));
-        }   
+        }  
         else{
             setSearchResults([]);
         }

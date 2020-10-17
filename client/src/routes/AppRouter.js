@@ -16,12 +16,15 @@ const AppRouter = () => {
     const token = localStorage.getItem("token")
 
     useEffect(() => {
-        const fectData = async () => {
-            const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }
-            const { data } = await axios.post('http://localhost:3001/create-admin', admin)
-            console.log(data)
+        if(!token){
+            const fectData = async () => {
+                const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }
+                const { data } = await axios.post('http://localhost:3001/create-admin', admin)
+                console.log(data)
+            }
+            fectData()
         }
-        fectData()
+        
     }, [])
 
     return (

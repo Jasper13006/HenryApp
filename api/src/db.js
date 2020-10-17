@@ -61,6 +61,8 @@ Calendar.belongsTo(Cohorte)
 Chat.belongsTo(User, { as: 'from' }) 
 Chat.belongsTo(User, { as: 'to' }) 
 Msg.belongsTo(Chat,{as:'chat'})
+Msg.belongsTo(User, { as: 'from' }) 
+Msg.belongsTo(User, { as: 'to' }) 
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
