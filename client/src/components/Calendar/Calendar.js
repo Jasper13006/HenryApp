@@ -48,9 +48,10 @@ const useStyles = makeStyles((theme) => ({
     const student = useSelector(state => state.student.data)
 
     useEffect(() => {
-      dispatch(getStudent(user.id))
+      if(!user.admin) {
+        dispatch(getStudent(user.id))
+      }
       dispatch(getCohortes())
-      // para el admin
       if(cohorteId) {
         console.log('entro al if de cohorteId')
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
@@ -63,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
 
   useEffect(() => {
     if(student) {
-      console.log('entro al if de student')
       fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
       .then(res => res.json())
       .then(data => {
@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
       let timestart = ''
       let timeend = ''
       let arrResult =  []
-      console.log(selectInfo)
 
       if(cohorteId){
         await Swal.mixin({
@@ -196,7 +195,6 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const handleEditEvent = async (data) => {
-      console.log('ENTRO A LA FUNCION PADREEEEEEE')
       console.log(data)
       if (data.event.allDay) {
         const evento = {
@@ -206,6 +204,9 @@ const useStyles = makeStyles((theme) => ({
         }
         console.log(evento)
         await dispatch(modifyEvent(evento))
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
       } else {
         const evento = {
           eventId: data.event._def.publicId,
@@ -215,6 +216,9 @@ const useStyles = makeStyles((theme) => ({
           endTime: data.event.endStr.split('T')[1],
         }
         await dispatch(modifyEvent(evento))
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
       }
     }
   
@@ -254,9 +258,6 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const renderSidebar= () => {
-      if (student) {
-        console.log('COHORTE USER:', student[0].cohorteId)
-      }
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
@@ -317,9 +318,9 @@ const useStyles = makeStyles((theme) => ({
             }}
             initialView='dayGridMonth'
             eventDisplay='auto'
-            editable={true}
+            editable={student ? false : true}
             selectable={student ? false : true}
-            selectMirror={true}
+            selectMirror={false}
             dayMaxEvents={true}
             events={getEvents && getEvents}
             weekends={weekendsVisible}
@@ -349,7 +350,6 @@ function renderEventContent(eventInfo) {
   )
 }
 function renderSidebarEvent(event) {
-  console.log(event)
   return (
     <li key={event.id}>
       <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}{!event.allDay ? ' -' + ' ' + formatDate(event.start, {hour: '2-digit', minute: '2-digit'}) : null}:</b>
