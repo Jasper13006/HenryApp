@@ -77,9 +77,10 @@ export default function EditCohort(data) {
             [e.target.name]: e.target.value
         })
     }
-    const handleSubmit= () => { 
-        dispatch(editCohort(data.data.id, cohort))
+    const handleSubmit= () => {
+        window.location.reload() 
         handleClose()
+        dispatch(editCohort(data.data.id, cohort))
 
     }
     return (
