@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
+import {Accordion,List} from '@material-ui/core/';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
@@ -12,10 +12,13 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import {useDispatch,useSelector} from 'react-redux'
+import {getChats} from '../../redux/actions/msg'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',   
+    width: '100%',
+    marginBottom:'30px'   
     
   },
   accordion:{
@@ -36,9 +39,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     
   },
-  list:{
+  itemList:{
     display:'flex',
-    flexDirection:'column'
+    backgroundColor: 'white',
+    border: '1px solid',
+    borderRadius: '10px',
+    '&:hover': {
+      color: 'yellow',
+      backgroundColor:'black'
+    }
   },
   small: {
     width: theme.spacing(3),
@@ -55,16 +64,19 @@ const useStyles = makeStyles((theme) => ({
 export default function ControlledAccordions() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [userMsg,setUserMsg] = React.useState([])
+  const chats = useSelector(state => state.msg.chats);
+  const id = localStorage.getItem('idUser')
+  const token = localStorage.getItem('token')
+  const dispatch = useDispatch();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   React.useEffect(() => {
+    dispatch(getChats(token))
     
-    
-  })
+  },[])
 
   return (
     <div className={classes.root}>
@@ -84,16 +96,16 @@ export default function ControlledAccordions() {
           
         </AccordionSummary>
         <AccordionDetails>
-          {userMsg.map((user,key)=>(
-            <ListItem button type='submit'key={key}>
-                <ListItemIcon>
-                <div className={classes.list}>
-                    <Avatar src={user.image} className={classes.small} />
-                    </div>
+          <List component="nav" aria-label="main mailbox folders">
+          {chats.map((chat,key)=>(
+            <ListItem button type='submit'key={key} className={classes.itemList}>
+                <ListItemIcon>                    
+                    <Avatar src={chat.from.id == id ? chat.to.image : chat.from.image} className={classes.small} />                    
                 </ListItemIcon>
-                <ListItemText primary={user.fullName} />
+                <ListItemText primary={chat.from.id == id ? chat.to.fullName : chat.from.fullName} />
             </ListItem>
           ))} 
+          </List>
         </AccordionDetails>
       </Accordion>
     </div>

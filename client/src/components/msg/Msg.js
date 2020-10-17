@@ -4,13 +4,13 @@ import {
   withStyles,
   makeStyles,
 } from '@material-ui/core/styles';
-import {InputBase,IconButton,Box,Dialog,DialogContentText} from '@material-ui/core/';
+import {InputBase,IconButton,Box,Dialog,DialogContentText,Avatar,Typography,ListItemText,ListItemIcon,ListItem} from '@material-ui/core/';
 import FormControl from '@material-ui/core/FormControl';
 import SendIcon from '@material-ui/icons/Send';
 import Picker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-
-
+import {useDispatch,useSelector} from 'react-redux'
+import {addMsg} from '../../redux/actions/msg'
 
 
 
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent:'center'
-        
+               
     },
          
     submit: {
@@ -59,15 +59,24 @@ const useStyles = makeStyles((theme) => ({
         borderBottom:'1px solid gray',
         backgroundColor: 'white',  
         width:'100%', 
-        height:'auto'
+        height:'auto',
+        display:'flex',
+        padding:'20px',
+        alignItems:'center'
     },
     boxMsg:{
       borderBottom:'1px solid gray',
       backgroundColor: 'white',  
-      width:'100%', 
-      height:'80vh',
+      width:'81%', 
+      height:'53vh',
       display:'flex',
-      flexDirection:'column'
+      flexDirection:'column',
+      padding:'20px',
+      position: 'absolute',
+      top: '10.6em',
+      overflowY:'scroll',
+      
+      
     },
 
     boxInput:{
@@ -76,12 +85,13 @@ const useStyles = makeStyles((theme) => ({
       border:'1px solid gray',
       borderRadius:'10px',
       backgroundColor: 'white',
-      marginTop:'auto',
+      marginTop:'27em',
       marginLeft:'auto',
       marginRight:'auto',
       marginBottom:'30px',
       display:'flex',
-      flexDirection:'column'
+      flexDirection:'column',
+      position:'sticky'
       
     },
     
@@ -93,10 +103,33 @@ const useStyles = makeStyles((theme) => ({
     boxEmoji:{
       width: '225px',
       height: '283px',
-      marginLeft: 'auto',
-      marginTop: '115px',
-      marginRight:'98px'
+      marginLeft: '46em',
+      marginTop: '11.7em',
+      position:'absolute'
+    },
+    small: {
+      width: theme.spacing(8),
+      height: theme.spacing(8),
+      position:'inherit',
+      marginRight:'30px'
+    },
+    name:{    
+      fontSize: '15',
+      fontWeight: 'bold'
+    },
+    boxDate:{
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor: '#D8D7D0',
+      width:'147px;',
+      padding:'auto',
+      padding:'13px;',
+      borderRadius: '10px',
+      borderColor: 'black;',
+      border: '1px solid;,'
+      
     }
+    
 }));
 
 
@@ -105,36 +138,118 @@ export default function Msg(props) {
     const classes = useStyles();
     const [description,setDescription] = React.useState('')
     const [open, setOpen] = React.useState(false);
+    const userTo = JSON.parse(localStorage.getItem('toUser'))
+    const userFrom = JSON.parse(localStorage.getItem('user'))
+    const token = localStorage.getItem('token')
+    const dispatch = useDispatch()
+    const mensajes=useSelector(state=>state.msg.mensajes)
+    const date = new Date()
+
+    // abre y cierra la ventana de emojis
 
     const handleClickOpen = () => {
       setOpen(!open);
     };
 
+    // setea al mensaje el emoji seleccionado 
 
     const onEmojiClick = (event, emojiObject) => {
       setDescription(description.concat(emojiObject.emoji))
     };
 
+    // setea el texto al mensaje 
+
     const handleChange = event => {
       event.preventDefault()
       setDescription(event.target.value); 
     };
+
+    // guarda el mensaje en bd y store de redux
+
+    const handleSendMsg = event => {
+      event.preventDefault()
+      setOpen(false);
+      const data = {
+        description:description,
+        toId:userTo.id,
+        to:userTo,
+        from:userFrom,
+        
+      }
+      if(data.description){
+        dispatch(addMsg(data,token))
+      }
+      setDescription('')
+      
+
+    }
+
+    // modificamos la fecha y la validamos
+
+    const changeDate = (createdAt,validate) => {
+      const fecha = new Date(createdAt)
+      console.log(fecha.toTimeString().split('G'))
+      if(validate && fecha.toDateString() === date.toDateString()){
+        return 'Hoy';        
+      }else if(validate){
+        return fecha.toDateString();
+      }
+      return fecha.toTimeString().split('G')[0];  
+    }
     
     return (    
     <div className={classes.root} >
-        <Box className={classes.box} >
-            Mensaje
-        </Box>
-        <Box className={classes.box}>
-            info
-        </Box>
         <Box className={classes.boxMsg}>
-          {open && 
-          <div className={classes.boxEmoji}>
+          <Box className={classes.box} >
+            <Avatar src={userTo.image} className={classes.small} />
+            <Box>
+              <Typography component="h1" variant="h5">
+                  {userTo.fullName}
+              </Typography>
+              <Typography  component='h5' >
+                  Este es el inicio de tu conversacion con {userTo.fullName}
+              </Typography>
+            </Box>
+            
+          </Box>
+          {mensajes.map((msg,key,elements)=>(
+              <ListItem key={key} style={{display:'flex',flexDirection:'Column'}}>
+                {!key && <Box className = {classes.boxDate}>
+                  <Typography className={classes.name} variant="h5">
+                      {changeDate(msg.createdAt,true)}
+                  </Typography>
+                </Box> }
+                {key && msg.createdAt.split('T')[0] !== elements[key-1].createdAt.split('T')[0] ? <Box>
+                  <Typography className={classes.name} variant="h5">
+                    {changeDate(msg.createdAt,true)}
+                  </Typography>
+                </Box> : null}
+                <Box className={classes.box}>
+                  <ListItemIcon>
+                  <div className={classes.root}>
+                      <Avatar src={msg.from.image} className={classes.small} />
+                      </div>
+                  </ListItemIcon>
+                  <div >
+                    <Typography className={classes.name}>
+                      {msg.from.fullName}
+                    </Typography>
+                    <Typography style={{fontSize: '0.8em',color: 'darkgray'}}>
+                      {changeDate(msg.createdAt,false)}
+                    </Typography>                     
+                    <ListItemText primary={msg.description} />
+                  </div> 
+                     
+                </Box>                               
+              </ListItem>
+          ))}  
+        </Box>
+        {open && 
+          <Box className={classes.boxEmoji}>
             <Picker onEmojiClick={onEmojiClick} className={classes.boxEmoji} disableSkinTonePicker='false'/>
-          </div>}
-          <Box className={classes.boxInput}>
-            <form >                         
+        </Box>} 
+        <Box className={classes.boxInput}>
+            <form onSubmit={handleSendMsg}>                         
                 <FormControl className={classes.input}>
                     <BootstrapInput placeholder="Escribe tu mensaje" id="bootstrap-input" value={description} autoComplete='off' onChange={handleChange} />
                 </FormControl>                   
@@ -143,15 +258,10 @@ export default function Msg(props) {
               <IconButton className={classes.submit} onClick={handleClickOpen} aria-label="add to shopping cart">
                   <InsertEmoticonIcon/>
               </IconButton>
-              <IconButton className={classes.submit} type='submit' aria-label="add to shopping cart">
+              <IconButton className={classes.submit} type='submit' onClick={handleSendMsg} aria-label="add to shopping cart">
                   <SendIcon/>
-              </IconButton>
-              
-                  
-            </div> 
-                           
-          </Box>
-          
+              </IconButton>     
+            </div>                    
         </Box>
         
         

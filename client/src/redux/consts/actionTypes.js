@@ -66,4 +66,5 @@ export const UPDATE = "UPDATE";
 / ------------------------------------------------------------------------------- */
 
 export const ADD_NEWMSG = "ADD_NEWMSG";
+export const GET_CHATS = "GET_CHATS";
 

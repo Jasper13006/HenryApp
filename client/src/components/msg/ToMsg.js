@@ -102,7 +102,7 @@ export default function CustomizedInputs(props) {
 
     // selecciono el usuario al que se le envia el msg
     const handleClick = user => { 
-        localStorage.setItem('toUser', JSON.stringify({to:user}));       
+        localStorage.setItem('toUser', JSON.stringify(user));       
         props.history.push('/panel/msg')
     };
 

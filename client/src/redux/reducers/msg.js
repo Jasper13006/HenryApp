@@ -1,7 +1,8 @@
-import {ADD_NEWMSG} from '../consts/actionTypes'
+import {ADD_NEWMSG,GET_CHATS} from '../consts/actionTypes'
 
 const initialState = {
-    msg:[]
+    mensajes:[],
+    chats:[]
 }
 
 export default function msg (state = initialState,action){
@@ -9,7 +10,17 @@ export default function msg (state = initialState,action){
         case ADD_NEWMSG:
             return{
                 ...state,
-                msg:state.msg.concat(action.payload)
+                mensajes:state.mensajes.concat(action.payload)
+            };
+        case GET_CHATS:
+            return{
+                ...state,
+                chats:action.payload
             }
+        default:
+            return {
+                ...state,
+            }
+
     }
 }
