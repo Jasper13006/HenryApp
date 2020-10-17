@@ -11,6 +11,7 @@ import axios from 'axios';
 import ForgetPass from '../components/login/ForgetPass';
 import ResetPass from '../components/login/ResetPass'
 
+
 const AppRouter = () => {
 
     const token = localStorage.getItem("token")
@@ -31,7 +32,7 @@ const AppRouter = () => {
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
                 <Route exact path="/olvidemicontraseña" component={ForgetPass} />
-                <Route exact path="/user/resetpassword/:token" component={ResetPass} />
+                <Route exact path="/user/resetpassword/:token" component={ResetPass} />            
                 <Route path="/panel" isToken={token} component={Panel} />
             </Switch>
 
