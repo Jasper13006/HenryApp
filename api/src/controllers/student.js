@@ -131,7 +131,6 @@ module.exports = {
         include: [
           {
             model: Cohorte,
-            attributes: ["name"],
           },
           {
             model: Grouppm,

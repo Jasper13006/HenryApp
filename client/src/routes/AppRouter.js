@@ -10,7 +10,7 @@ import { PublicRoute } from './PublicRoute';
 import axios from 'axios';
 import ForgetPass from '../components/login/ForgetPass';
 import ResetPass from '../components/login/ResetPass'
-import Calificar from '../components/Notas/Calificar';
+
 
 const AppRouter = () => {
 
@@ -32,7 +32,7 @@ const AppRouter = () => {
                 <PublicRoute exact path="/login" isToken={token} component={Login} />
                 <Route exact path="/" component={Home} />
                 <Route exact path="/olvidemicontraseña" component={ForgetPass} />
-                <Route exact path="/user/resetpassword/:token" component={ResetPass} />                
+                <Route exact path="/user/resetpassword/:token" component={ResetPass} />            
                 <Route path="/panel" isToken={token} component={Panel} />
             </Switch>
 
