@@ -1,7 +1,7 @@
 const faker = require("faker");
 const { User } = require('../db.js')
 module.exports = {
-    async generateUsers() {
+    async generateUsers(numberId) {
         let users = [];
         for (let id = 1; id <= 150; id++) {
             const name = faker.name.firstName();
@@ -11,15 +11,18 @@ module.exports = {
             const country = faker.address.country();
             const password = 'admin';
             const image = faker.image.avatar();
+            const idUser = numberId + id
 
             const user = await User.create({  //id: 2
+                id: idUser,
                 name: name,
-                lastName: 'lastName',
+                lastName: lastName,
                 email: email,
                 city: city,
                 country: country,
                 password: password,
                 image: image,
+                admin: true,
             })
             console.log(user)
             users.push({
@@ -32,11 +35,6 @@ module.exports = {
                 image: image,
             });
         }
-        // User.bulkCreate([users])
-        //     .then(() => {
         return console.log('150 users');
-        //     }
-        //     ).catch(err => console.log(err))
-
     }
 }
