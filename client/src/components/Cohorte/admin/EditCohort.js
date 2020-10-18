@@ -1,7 +1,6 @@
 import React, { useState} from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { editCohort } from '../../../redux/actions/cohorte'
-
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core'
@@ -15,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import { purple } from '@material-ui/core/colors';
+import { update } from '../../../redux/actions/update'
 
 
 const useStyles = makeStyles(() => ({
@@ -77,11 +77,10 @@ export default function EditCohort(data) {
             [e.target.name]: e.target.value
         })
     }
-    const handleSubmit= () => {
-        window.location.reload() 
+    const handleSubmit= async () => { 
+        await dispatch(editCohort(data.data.id, cohort))
         handleClose()
-        dispatch(editCohort(data.data.id, cohort))
-
+        await dispatch(update())
     }
     return (
         <div>

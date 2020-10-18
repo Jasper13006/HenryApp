@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { createCohort } from '../../../redux/actions/cohorte'
-
+import { update } from '../../../redux/actions/update'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -107,11 +107,10 @@ export default function AddOneCohorte(){
         })
     }
 
-    const handleSubmit = (e) => {
-        window.location.reload()
+    const handleSubmit = async (e) => {
+        await dispatch(createCohort(cohorte))
         handleClose()
-        dispatch(createCohort(cohorte))
-        // dispatch(update())
+        await dispatch(update())
     }
     return (
         <div>

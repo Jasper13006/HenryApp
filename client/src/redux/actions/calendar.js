@@ -38,3 +38,17 @@ export const deleteEvent = (id) => async dispatch => {
 		// swal('Algo salio mal', ':(', 'error')
 	}
 }
+
+export const modifyEvent = (event) => async dispatch => {
+	try {
+		const data = await fetch('http://localhost:3001/calendar/editEvent', {
+			method: 'PUT',
+			body: JSON.stringify(event),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+	} catch (err) {
+		console.log(err)
+	}
+}
