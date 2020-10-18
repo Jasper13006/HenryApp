@@ -167,7 +167,7 @@ export function getStudent(id){
             })
         })
         .catch(error => {
-            console.log("no se pudo obtener los datos del estudiante ya que no aparece como estudiante en los registros")
+            // console.log("no se pudo obtener los datos del estudiante ya que no aparece como estudiante en los registros")
         })
     }
 }

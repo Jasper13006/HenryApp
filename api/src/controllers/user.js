@@ -315,7 +315,7 @@ module.exports = {
       if (usuario) {
         res.status(200).send({ msg: 'este es tu usuario', status: 200, usuario })
       } else {
-        res.status(400).send({ msg: 'usuario no existe', status: 400 })
+        res.send({ msg: 'usuario no existe', status: 400 })
       }
     } catch (err) {
       res.status(500).send(err)

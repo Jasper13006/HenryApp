@@ -77,12 +77,12 @@ export function getAlumnosCohorte(id) {
     }
 }
 
-export function getLinkVideos() {
+export function getLinkVideos(id) {
     return function (dispatch) {
         const token = localStorage.getItem("token")
         return axios({
             method: "GET",
-            url: `http://localhost:3001/modulo`,
+            url: `http://localhost:3001/modulo/${id}`,
             credentials: "include",
             headers: { "auth-token": token }
         })

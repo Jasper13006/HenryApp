@@ -102,7 +102,6 @@ export default function Cohorte(){
         dispatch(getCohorteUser(student[0].cohorteId))
         setDispatchActivo(true)
     }
-    console.log(modulos)
     return (
         <div className={classes.root}>
         {
