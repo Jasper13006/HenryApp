@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import Swal from 'sweetalert2'
-import Varios from './Varios'
+import Consultar from './Consultar'
 
 
 
@@ -208,7 +208,7 @@ export default function Calificar() {
                 </form>
              </div>}       
             </Container>     
-            {option===1 && <Varios/>  }       
+            {option===1 && <Consultar/>  }       
         </div>
         
     );
