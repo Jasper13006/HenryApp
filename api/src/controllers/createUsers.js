@@ -22,7 +22,7 @@ module.exports = {
                 country: country,
                 password: password,
                 image: image,
-                admin: true,
+                // admin: true,
             })
             console.log(user)
             users.push({
