@@ -3,8 +3,10 @@ const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, forgotPassword, mailResetPassword,
   promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback, getUserByMail } = require('../controllers/user')
-const { calificarAlumno, getNotasByUserId } = require('../controllers/checkpoints')
+
 const {setPrivacy, getPrivacy,changePrivacy} = require('../controllers/privacy')
+const { calificarAlumno, getNotasByUserId,getNotaRepetida, editNota } = require('../controllers/checkpoints')
+
 
 
 
@@ -35,6 +37,12 @@ server.post('/nota-checkpoint/:userId', authenticate, isAdmin, calificarAlumno)
 
 // traer notas checkpoint del alumno
 server.get('/nota-checkpoint/:id', authenticate, getNotasByUserId)
+
+// editar notas checkpoint del alumno
+server.put('/nota-checkpoint/:id', authenticate ,editNota)
+
+// ver si hay nota repetida
+server.post('/nota-checkpoint/repetida/:id', authenticate, getNotaRepetida)
 
 // calificar companero de pair programing
 server.post('/nota-pp', authenticate, calificarCompaneros)
