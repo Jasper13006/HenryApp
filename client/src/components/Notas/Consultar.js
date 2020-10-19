@@ -12,7 +12,6 @@ export default function Notas(){
     const [errors,setErrors] = useState('')
     const [userId,setUserId] = useState('')  
 
-
     useEffect(() => {              
         axios({
             method: 'GET',
