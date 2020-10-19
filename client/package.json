@@ -13,6 +13,7 @@
     "@fullcalendar/timegrid": "^5.3.1",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -23,6 +24,7 @@
     "formik": "^2.1.7",
     "jquery": "^3.5.1",
     "material-table": "^1.69.1",
+    "notistack": "^1.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-excel-renderer": "^1.1.0",
@@ -34,6 +36,7 @@
     "react-twemoji-picker": "github:brianhung/emojipicker",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "save": "^2.4.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^10.3.5"
   },

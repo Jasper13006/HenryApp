@@ -10,7 +10,7 @@ import SendIcon from '@material-ui/icons/Send';
 import Picker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
-import {addMsg,getMsg} from '../../redux/actions/msg'
+import {addMsg,getMsg,editValidate} from '../../redux/actions/msg'
 
 /* EACF15
 15EA9D */
@@ -132,13 +132,14 @@ const useStyles = makeStyles((theme) => ({
     boxDate:{
       display:'flex',
       justifyContent:'center',
-      backgroundColor: '#D8D7D0',
       width:'147px;',
       padding:'auto',
       padding:'13px;',
       borderRadius: '10px',
       borderColor: 'black;',
-      border: '1px solid;,'
+      border: '1px solid',
+      backgroundColor:'black',
+      color:'yellow'
       
     }
     
@@ -199,6 +200,7 @@ export default function Msg(props) {
     useEffect(()=>{
       if(!mensajes.length && chatId){        
         dispatch(getMsg(chatId,token))
+        dispatch(editValidate())
       }
     })
 
@@ -231,12 +233,12 @@ export default function Msg(props) {
           <List component="nav" aria-label="main mailbox folders">
             {mensajes.map((msg,key,elements)=>(
                 <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
-                  {!key && <Box className = {classes.boxDate} style={{backgroundColor:'#EACF15'}}>
+                  {!key && <Box className = {classes.boxDate} >
                     <Typography className={classes.name} variant="h5">
                         {changeDate(msg.updatedAt,true)}
                     </Typography>
                   </Box> }
-                  {key && msg.updatedAt.split('T')[0] !== elements[key-1].updatedAt.split('T')[0] ? <Box>
+                  {key && msg.updatedAt.split('T')[0] !== elements[key-1].updatedAt.split('T')[0] ? <Box className = {classes.boxDate}>
                     <Typography className={classes.name} variant="h5">
                       {changeDate(msg.updatedAt,true)}
                     </Typography>

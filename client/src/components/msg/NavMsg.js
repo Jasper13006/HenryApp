@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { makeStyles } from '@material-ui/core/styles';
-import {Accordion,List} from '@material-ui/core/';
+import {Accordion,List,Badge,Alert} from '@material-ui/core/';
+
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
@@ -13,8 +15,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {useDispatch,useSelector} from 'react-redux'
-import {getChats,getMsg} from '../../redux/actions/msg'
+import {getChats,getMsg,editChat} from '../../redux/actions/msg'
 import { useHistory } from 'react-router-dom';
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -47,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       color: 'yellow',
       backgroundColor:'black'
-    }
+    },
+    width:'100%'
   },
   small: {
     width: theme.spacing(3),
@@ -69,6 +75,7 @@ export default function NavMsg(props) {
   const id = localStorage.getItem('idUser')
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
+  
 
   // expande el menu 
 
@@ -87,6 +94,11 @@ export default function NavMsg(props) {
     }
     localStorage.setItem('chatId',chat.id);
     dispatch(getMsg(chat.id,token))
+    if(chat.from.id != id && !chat.check){
+      dispatch(editChat(chat.id,token))
+      
+    }
+    
     history.push('/panel/msg')
 
   }
@@ -117,11 +129,16 @@ export default function NavMsg(props) {
           <List component="nav" aria-label="main mailbox folders">
           {chats.map((chat,key)=>(
             <ListItem button type='submit'key={key} onClick = {() => handeClick(chat)} className={classes.itemList}>
-                <ListItemIcon>                    
-                    <Avatar src={chat.from.id == id ? chat.to.image : chat.from.image} className={classes.small} />                    
-                </ListItemIcon>
-                <ListItemText primary={chat.from.id == id ? chat.to.fullName : chat.from.fullName} />
-            </ListItem>
+              <ListItemIcon>                    
+                  <Avatar src={chat.from.id == id ? chat.to.image : chat.from.image} className={classes.small} style={{minWidth:'33px',minHeight:'33px'}}/>                    
+              </ListItemIcon>
+              <ListItemText >
+                <span style={{fontSize: '0.85em'}}>
+                  {chat.from.id == id ? chat.to.fullName : chat.from.fullName}
+                </span>
+              </ListItemText>
+              {chat.from.id != id && !chat.check && <Badge badgeContent={1} color="secondary" style={{position:'initial'}}/>}                   
+            </ListItem>                
           ))} 
           </List>
         </AccordionDetails>

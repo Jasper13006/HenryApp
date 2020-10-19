@@ -1,8 +1,10 @@
-import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS} from '../consts/actionTypes'
+import { ThemeProvider } from '@material-ui/core'
+import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE} from '../consts/actionTypes'
 
 const initialState = {
     mensajes:[],
-    chats:[]
+    chats:[],
+    validate:true
 }
 
 const filterOrDelete = (data,chats) => {
@@ -22,6 +24,7 @@ const filterOrDelete = (data,chats) => {
     return chats.concat(chat)
 
 }
+
 export default function msg (state = initialState,action){
     switch(action.type){
         case ADD_NEWMSG:
@@ -40,14 +43,38 @@ export default function msg (state = initialState,action){
                 ...state,
                 mensajes:action.payload
             };
+        case EDIT_CHAT:
+            return {
+                ...state,
+                chats:state.chats.map((chat)=> {
+                    if(chat.id === action.payload){                         
+                        return {
+                            ...chat,
+                            ['check']:true,
+                            ['from']:chat.to,
+                            ['to']:chat.from
+                        }           
+                    } else{
+                        return chat
+                    }                    
+                }),
+                validate:!state.validate
+                
+            };
         case DELETE_MSGS:
             return{
                 ...state,
                 mensajes:[]
+            };
+        case EDIT_VALIDATE:
+            return {
+                ...state,
+                validate:!state.validate
             }
         default:
             return {
                 ...state,
+                
             }
 
     }

@@ -11,7 +11,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Link, useLocation } from 'react-router-dom';
-
 import users from '../../redux/reducers/getUsers';
 import NavMsg from '../msg/NavMsg'
 

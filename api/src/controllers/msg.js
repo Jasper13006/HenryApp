@@ -25,6 +25,7 @@ module.exports = {
             if(chat){
                 chat.fromId = fromId;
                 chat.toId = toId;
+                chat.check = false;
                 await chat.save() 
                 let newMsg = await Msg.create({
                     description,
@@ -104,6 +105,24 @@ module.exports = {
             return res.status(200).send(allMsg)
         }catch(err){
             return res.status(400).send(err)
+        }
+    },
+
+    async editChat (req,res) {
+        const fromId = req.user.id;
+        const {chatId} = req.params;
+        try{ 
+            const chat = await Chat.findOne({
+                where:{id:chatId}
+            })           
+            chat.fromId=chat.fromId;
+            chat.toId = fromId;
+            chat.check = true;
+            chat.save();       
+            return res.send(chat)
+
+        }catch(err){
+            res.status(400).send(err)
         }
     }
 }

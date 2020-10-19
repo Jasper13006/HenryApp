@@ -69,4 +69,8 @@ export const ADD_NEWMSG = "ADD_NEWMSG";
 export const GET_CHATS = "GET_CHATS";
 export const GET_MSG = "GET_MSG"
 export const DELETE_MSGS = 'DELETE_MSGS'
+export const EDIT_CHAT = 'EDIT_CHAT'
+
+
+export const EDIT_VALIDATE = 'EDIT_VALIDATE'
 
