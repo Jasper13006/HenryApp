@@ -108,8 +108,8 @@ export default function Table({data}) {
             columns={state.columns}
             data={state.data}
             options={{
-                pageSize: 50,
-                pageSizeOptions: [50, 100, 150],
+                pageSize: 5,
+                pageSizeOptions: [5, 75, 150],
                 sorting: false
                 }}
             editable={{
