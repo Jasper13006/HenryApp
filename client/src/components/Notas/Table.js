@@ -128,11 +128,6 @@ export default function Table({data}) {
                 new Promise((resolve) => {
                     setTimeout(() => {
                     resolve();
-                    if(/\S+@\S+\.\S+/.test(newData.email)){
-                       newData.err = null
-                    }else{
-                        newData['err']='email invalido'
-                    }
                     if (oldData) {
                         setState((prevState) => {
                         const data = [...prevState.data];
