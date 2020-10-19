@@ -69,6 +69,12 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: null
-    }    
+    },
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+          return this.name + ' ' + this.lastName;
+      }
+    }  
   });
 };
