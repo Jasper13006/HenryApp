@@ -3,6 +3,8 @@ const authenticate = require('../utils/auth')
 const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, forgotPassword, mailResetPassword,
   promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback, getUserByMail } = require('../controllers/user')
+
+const {setPrivacy, getPrivacy,changePrivacy} = require('../controllers/privacy')
 const { calificarAlumno, getNotasByUserId,getNotaRepetida, editNota } = require('../controllers/checkpoints')
 
 
@@ -59,5 +61,11 @@ server.put('/password/:token', forgotPassword)
 
 // Consulta por un usuario por su mail
 server.post('/email', getUserByMail)
+
+server.post('/set_privacy', setPrivacy)
+
+server.post('/get_privacy', getPrivacy)
+
+server.put('/change_privacy',changePrivacy)
 
 module.exports = server;

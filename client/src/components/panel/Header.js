@@ -61,7 +61,7 @@ function Header(props) {
   //En este objeto colocar los nombres de las opciones para cada ruta del panel
   const options={
 
-    "/panel/perfil":["Datos Personales","Cambiar contraseña"],
+    "/panel/perfil":["Datos Personales","Cambiar contraseña","Configuración"],
     "/panel/cohorte":["Cohorte","Alumnos"],
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
