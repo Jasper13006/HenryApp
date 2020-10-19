@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
       }
       dispatch(getCohortes())
       if(cohorteId) {
-        console.log('entro al if de cohorteId')
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
         .then(res => res.json())
         .then(data => {
@@ -69,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
       .then(data => {
         setGetEvents(data)
       })
-      console.log(student[0].cohorteId)
       setCohorteId(student[0].cohorteId)
     }
   }, [student])
@@ -169,20 +167,22 @@ const useStyles = makeStyles((theme) => ({
                 dispatch(update())
               }, 100)
           } else {
-            const evento = {
-              title: arrResult.value[0],
-              startRecur: selectInfo.startStr,
-              endRecur: selectInfo.endStr,
-              startTime: timestart,
-              endTime: timeend,
-              allDay: false,
-              cohorteId: cohorteId
+            if (timestart && timeend) {
+              const evento = {
+                title: arrResult.value[0],
+                startRecur: selectInfo.startStr,
+                endRecur: selectInfo.endStr,
+                startTime: timestart,
+                endTime: timeend,
+                allDay: false,
+                cohorteId: cohorteId
+              }
+              dispatch(createEvent(evento))
+              // setUpdate(update + 1)
+              setTimeout(() => {
+                dispatch(update())
+              }, 100)
             }
-            dispatch(createEvent(evento))
-            // setUpdate(update + 1)
-            setTimeout(() => {
-              dispatch(update())
-            }, 100)
           }
         }
       } else {
@@ -202,7 +202,6 @@ const useStyles = makeStyles((theme) => ({
           start: data.event.startStr,
           end: data.event.endStr,
         }
-        console.log(evento)
         await dispatch(modifyEvent(evento))
         setTimeout(() => {
           dispatch(update())
@@ -228,9 +227,10 @@ const useStyles = makeStyles((theme) => ({
         await Swal.fire({
            title: 'Que deseas hacer con este evento?',
            showDenyButton: true,
-           // showCancelButton: true,
-           confirmButtonText: `Cancelar`,
+           showCancelButton: true,
+           confirmButtonText: `Editar`,
            denyButtonText: `Eliminar`,
+           cancelButtonText: 'Cancelar',
            customClass: {
              cancelButton: 'order-1 right-gap',
              confirmButton: 'order-2',
@@ -238,8 +238,7 @@ const useStyles = makeStyles((theme) => ({
            }
          }).then((result) => {
            if (result.isConfirmed) {
-             // console.log(clickInfo)
-             // handleEditEvent(clickInfo)
+             handleEditEvent(clickInfo)
            } else if (result.isDenied) {
              Swal.fire('Evento eliminado', '', 'error')
              dispatch(deleteEvent(clickInfo.event._def.publicId))
