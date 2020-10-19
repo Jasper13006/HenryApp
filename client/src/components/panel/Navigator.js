@@ -17,7 +17,7 @@ import users from '../../redux/reducers/getUsers';
 
 const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
 const modules=["Módulo 1","Módulo 2","Módulo 3","Módulo 4"]
-const adminOptions=["perfil","cohorte","PM","invitacion"]
+const adminOptions=["perfil","cohorte","PM","calificar","invitacion"]
 
 
 const styles = (theme) => ({

@@ -9,9 +9,11 @@ export default function Admin(){
     const dispatch = useDispatch()
     const option = useSelector(state=> state.panel.data)
     const [cohortes, setCohortes] = useState()
+    const refresh = useSelector(state => state.update)
+
     useEffect(()=> {
         dispatch(getCohortes())
-    }, [])
+    }, [refresh])
 
     store.subscribe(() => {
         setCohortes(() => store.getState().cohortes.data)

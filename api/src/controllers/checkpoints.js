@@ -35,7 +35,7 @@ module.exports = {
         })
         .then((notas) => {
           if (notas && notas.length === 0) {
-            return res.status(404).send({ message: "No hay calificaciones" });
+            return res.send('');
           }
           res.status(200).send(notas);
         })
@@ -43,4 +43,45 @@ module.exports = {
       console.log(error)
     }
   },
+
+  async getNotaRepetida(req, res) {
+    const { name } = req.body
+    console.log(name)
+    try {
+      await Checkpoint.findAll({
+        where: {
+          userId: req.params.id,
+          name: name
+        },
+        })
+        .then((notas) => {
+          if (notas && notas.length === 0) {
+            return res.send(false);
+          }
+          res.status(200).send(true);
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  async editNota(req, res){
+    const { id } = req.params
+    const { name, qualification, info } = req.body
+    if(!name && !qualification) return res.status(400).json({message: "faltan campos necesarios"})
+    try {
+      const check = await Checkpoint.findOne({
+        where: {
+          userId: id,
+          name: name
+        }
+      })              
+        check.qualification = qualification || check.qualification
+        check.info = info|| check.info
+        check.save()
+        return  res.status(201).json(check)
+    }catch{
+      return res.json({message: "Error"})
+    }
+  }
 }
