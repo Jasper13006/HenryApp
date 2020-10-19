@@ -67,7 +67,7 @@ function Header(props) {
     "/panel/pair_programming":["Feedback","Evaluar"],
     "/panel/notas":["Resumen de Notas"],
     "/panel/invitacion":["Individual",'Hoja excel'],
-    "/panel/calificar":["Individual",'Consultar'],
+    "/panel/calificar":["Individual",'Consultar','Múltiple'],
   }
 
   useEffect(() => {

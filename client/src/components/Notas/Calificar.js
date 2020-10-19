@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import Consultar from './Consultar'
+import Tabla from './Tabla'
 
 
 
@@ -208,7 +209,8 @@ export default function Calificar() {
                 </form>
              </div>}       
             </Container>     
-            {option===1 && <Consultar/>  }       
+            {option===1 && <Consultar/>}
+            {option===2 && <Tabla/>  }           
         </div>
         
     );
