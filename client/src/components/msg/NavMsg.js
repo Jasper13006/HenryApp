@@ -97,10 +97,8 @@ export default function NavMsg(props) {
     if(chat.from.id != id && !chat.check){
       dispatch(editChat(chat.id,token))
       
-    }
-    
-    history.push('/panel/msg')
-
+    }    
+    history.push('/panel/mensaje_directo')
   }
 
   React.useEffect(() => {
@@ -118,7 +116,7 @@ export default function NavMsg(props) {
           className={classes.headMsg}
         >
           <Typography className={classes.heading}>Mensajes Directos</Typography>
-          <Link to ={`/panel/toMsg`}>
+          <Link to ={`/panel/mensaje_usuario`}>
             <IconButton className={classes.submit} aria-label="add to shopping cart">
               <AddIcon />
             </IconButton>

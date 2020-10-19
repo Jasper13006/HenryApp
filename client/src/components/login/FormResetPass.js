@@ -15,9 +15,12 @@ import Footer from '../home/Footer'
 const useStyles = makeStyles((theme) => ({ 
   paper: {      
     marginTop: theme.spacing(4),
+    background: "white",
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    opacity: 0.7,
+    padding: '10px',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -25,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3),    
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -95,8 +98,9 @@ export default function FormResetPass() {
                 id="password"
                 autoComplete="current-password"
               />
+              { !password && (<p className={classes.danger}> Este campo es requerido </p>)}
             </Grid>
-            { !password && (<p className={classes.danger}> Este campo es requerido </p>)}
+            
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -110,10 +114,10 @@ export default function FormResetPass() {
                 id="confirmPassword"
                 autoComplete="current-password"
               />
+              {!confirmPassword || confirmPassword !== password ? (<p className={classes.danger}> No coinciden las contraseñas </p>) : null}
+              {!confirmPassword && (<p className={classes.danger}> Este campo es requerido </p>)}
             </Grid>
-            {!confirmPassword || confirmPassword !== password ? (<p className={classes.danger}> No coinciden las contraseñas </p>) : null}
-            <hr/>
-            {!confirmPassword && (<p className={classes.danger}> Este campo es requerido </p>)}
+            
     
           </Grid>
           <Button

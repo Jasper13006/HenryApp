@@ -80,7 +80,7 @@ export default function CustomizedMenus() {
         if(chat.from.id != id && !chat.check){
           dispatch(editChat(chat.id,token))
         }
-        history.push('/panel/msg')
+        history.push('/panel/mensaje_directo')
 
     }
 

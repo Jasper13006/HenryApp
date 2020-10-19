@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight:'30px'
     },
     name:{    
-      fontSize: '15',
+      fontSize: '15px',
       fontWeight: 'bold'
     },
     boxDate:{

@@ -120,7 +120,7 @@ export default function ToMsg(props) {
             localStorage.removeItem('chatId');
         }
         localStorage.setItem('toUser', JSON.stringify(user));       
-        props.history.push('/panel/msg')
+        props.history.push('/panel/mensaje_directo')
     };
 
     React.useEffect(() => {

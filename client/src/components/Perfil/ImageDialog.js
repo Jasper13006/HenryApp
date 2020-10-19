@@ -4,7 +4,7 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import EditIcon from '@material-ui/icons/Edit'
-import { DialogTitle, FormControl } from '@material-ui/core'
+import { DialogTitle, FormControl, CircularProgress } from '@material-ui/core'
 import ImageUploader from 'react-images-upload'
 import { makeStyles } from '@material-ui/core/styles'
 import {useDispatch} from 'react-redux'
@@ -34,6 +34,8 @@ export default function ImageDialog({user}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false)
   const [files, setFiles] = useState(null)
+  const [progress,setProgress] = useState(10)
+  const [displayProgress,setDisplayProgress] = useState(false)
   const dispatch=useDispatch()
   
   const token=localStorage.getItem('token')
@@ -50,24 +52,40 @@ export default function ImageDialog({user}) {
     setFiles(files)
   }
 
+  useEffect(()=>{
+    const timer = setInterval(()=>{
+      setProgress((prev)=>(prev>=100?10:prev+10))
+    },800)
+    return ()=>{
+      clearInterval(timer)
+    }
+  },[])
+  
+
   const uploadImage = async () => {
     let formData = new FormData();
     if (files && files.length > 0) {
         formData.append('photo', files[0]);
       }
     dispatch(changeUserImage(formData,user.id,token))
+    setDisplayProgress(true)
+    setTimeout(()=>{
+      setDisplayProgress(false)
+    },5000)
   }
 
   const handleSubmit=(e)=>{
     uploadImage()
-    handleClose()
     setTimeout(()=>{
       dispatch(update())
     },10000)
+    handleClose()
   }
 
   return (
     <div className="editPhotoIcon">
+      {displayProgress &&
+      <CircularProgress value={progress}/>}
       <EditIcon  onClick={handleClickOpen}/>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.root} >
       <FormControl>
@@ -94,7 +112,7 @@ export default function ImageDialog({user}) {
           </Button>
           <Button onClick={handleSubmit} color="inherit" variant="outlined">
             Actualizar
-          </Button>
+          </Button >
         </DialogActions>
         </FormControl>
       </Dialog>
