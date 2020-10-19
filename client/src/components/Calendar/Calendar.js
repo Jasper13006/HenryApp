@@ -18,6 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
+import {INITIAL_EVENTS} from './event-utils'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -391,10 +392,10 @@ const useStyles = makeStyles((theme) => ({
             selectable={student ? false : true}
             selectMirror={false}
             dayMaxEvents={true}
-            events={getEvents && getEvents}
+            // events={getEvents && getEvents}
             weekends={weekendsVisible}
             nowIndicator={true}
-            // initialEvents={INITIAL_EVENTS} alternatively, use the `events` setting to fetch from a feed
+            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}

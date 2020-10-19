@@ -8,7 +8,10 @@ export const INITIAL_EVENTS = [
     title: 'All-day event',
     start: todayStr,
     end: todayStr,
-    allDay:true
+    allDay:true,
+    backgroundColor: 'red',
+    borderColor: 'red',
+    textColor: 'blue'
   },
   {
     id: createEventId(),
