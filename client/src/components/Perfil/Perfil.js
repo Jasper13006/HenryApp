@@ -1,15 +1,20 @@
 import React,{useEffect,useState} from 'react'
 import './Perfil.css'
 import {useSelector,useDispatch} from 'react-redux'
-import { Typography } from '@material-ui/core'
+import { FormControlLabel, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import ImageDialog from './ImageDialog'
 import LocationDialog from './LocationDialog'
+import DeleteIcon from '@material-ui/icons/Delete';
 import SocialNetworkDialog from './SocialNetworkDialog'
 import PasswordForm from './PasswordForm'
+import Button from '@material-ui/core/Button'
 import axios from 'axios'
+import GitHubDetails from './GitHubDetails'
+import Switch from '@material-ui/core/Switch'
+import UserConfig from './UserConfig'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -69,18 +74,23 @@ export default function Perfil(){
     const update=useSelector(state=>state.update)
     const token = localStorage.getItem("token")
     const id = localStorage.getItem("idUser")
+    const [check,setCheck] = useState(false)
     
     useEffect(()=>{
-        if(id && token){
-            axios({
-                method: 'GET',
-                url: `http://localhost:3001/user/${id}`,
-                credentials: 'include',
-                headers: {"auth-token": token}
-            }).then(res => {
-                setUsuario(res.data)
-            }).catch(err=> console.log(err))
+        const fetchData= async()=>{
+            if(id && token){
+                await axios({
+                    method: 'GET',
+                    url: `http://localhost:3001/user/${id}`,
+                    credentials: 'include',
+                    headers: {"auth-token": token}
+                }).then(res => {
+                    setUsuario(res.data)
+                }).catch(err=> console.log(err))
+            }
         }
+        fetchData()
+        
     },[update])
 
     const formatString =(string)=>{
@@ -92,6 +102,13 @@ export default function Perfil(){
             }
         return("")
         
+    }
+
+    const handleSwitch=()=>{
+        setCheck(!check)
+    }
+    if(usuario){
+        console.log(usuario)
     }
 
     return (
@@ -115,19 +132,24 @@ export default function Perfil(){
                                 {usuario.instructor && "Instructor"}
                                 </td></tr>
                             <tr><td>GitHub</td><td>
-                                <SocialNetworkDialog red="GitHub" data={usuario.gitHubId} user={usuario} token={token}/>
+                                {(usuario.gitHubId && usuario.gitHubId!=="empty")?
+                                <GitHubDetails data={usuario.gitHubId} usuario={usuario} token={token}/>
+                                :<SocialNetworkDialog red="GitHub" data={usuario.gitHubId} user={usuario} token={token}/>}
                                 </td>
                             </tr>
                             <tr><td>LinkedIn</td><td>
-                                <SocialNetworkDialog red="LinkedIn" data={usuario.googleId} user={usuario} token={token}/>
+                                {(usuario.googleId && usuario.googleId!=="empty")?
+                                <Button>{usuario.googleId}</Button>
+                                :<SocialNetworkDialog red="LinkedIn" data={usuario.googleId} user={usuario} token={token}/>}
                                 </td>
                             </tr>
                             </tbody>
-                        </table>
-                        <form><br/>
-                            <label for="share">Me gustaría compartir mi información </label>
-                            <input type="checkbox" name="share"></input>
-                        </form>
+                        </table><br/>
+                        <FormControlLabel
+                            control={<Switch checked={check} onChange={handleSwitch} name="checked"/>}
+                            label={check?"En línea":"Desconectado"}
+                            color="primary">
+                        </FormControlLabel>
                         
                     </div>
                     <div className={classes.paperProfilePhoto}>
@@ -142,7 +164,9 @@ export default function Perfil(){
         {option===1 && usuario &&
         <PasswordForm token={token} id={usuario.id}/>
         }
-        
+        {option===2 && usuario &&
+        <UserConfig token={token} id={usuario.id}/>
+        }
         </div>
     )
 }

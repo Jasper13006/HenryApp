@@ -10,6 +10,8 @@ import {useDispatch} from 'react-redux'
 import { changeUserData } from '../../redux/actions/user'
 import {update} from '../../redux/actions/update'
 import './Perfil.css'
+import useFetch from './hooks/useFetch'
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,8 +41,10 @@ export default function GitHubDialog({red,data,user,token}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false)  
   const [value, setValue] = useState(null)
+  const [verifyGitHub, setVerifyGitHub] = useState(false)
   const dispatch=useDispatch()
 
+  const getGitHubUser=useFetch('https://api.github.com/users/')
  
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,8 +54,19 @@ export default function GitHubDialog({red,data,user,token}) {
     setOpen(false);
   };
 
-  const handleInputChange=(e)=>{
+  const handleInputChange=async(e)=>{
     setValue(e.target.value)
+    if(red==="GitHub"){
+      let gh = await getGitHubUser(e.target.value)
+      if(gh){
+        if(gh.login){
+          setVerifyGitHub(true)
+        }
+        else{
+          setVerifyGitHub(false)
+        }
+      }
+    }
   }
 
   const handleSubmit=(e)=>{
@@ -80,23 +95,11 @@ export default function GitHubDialog({red,data,user,token}) {
     
     handleClose()
   }
-
-  if(user && red && data && token){
-    console.log("user: ",user)
-    console.log("red: ",red)
-    console.log("data: ",data)
-    console.log("token: ",token)
-  }
   
-
   return (
     <div>
-    {data?
-    <div className={classes.githubEdit}>
-      {red==="GitHub"?user.gitHubId:user.googleId}
-    <EditIcon className="editIcon" onClick={handleClickOpen}/>
-    </div>
-      :<Button onClick={handleClickOpen} className={classes.addInfoButton} size="small">Agregar</Button>}
+    <>
+    <Button onClick={handleClickOpen} className={classes.addInfoButton} size="small">Agregar</Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.root}>
       <FormControl>
         <DialogContent>
@@ -106,19 +109,21 @@ export default function GitHubDialog({red,data,user,token}) {
                 variant="outlined"
                 name="github"
                 onChange={handleInputChange}
-                defaultValue={data}
+                defaultValue=""
               />
+              {verifyGitHub && <VerifiedUserIcon fontSize='large' color='primary'/>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancelar
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary" disabled={!verifyGitHub && red==="GitHub"}>
             Actualizar
           </Button>
         </DialogActions>
         </FormControl>
       </Dialog>
+      </>
     </div>
   );
 }

@@ -17,8 +17,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { purple } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",

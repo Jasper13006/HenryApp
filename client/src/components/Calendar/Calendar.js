@@ -161,7 +161,7 @@ const useStyles = makeStyles((theme) => ({
                 allDay: true,
                 cohorteId: cohorteId
               }
-              createEvent(evento)
+              dispatch(createEvent(evento))
               // setUpdate(update + 1)
               setTimeout(() => {
                 dispatch(update())
@@ -223,6 +223,8 @@ const useStyles = makeStyles((theme) => ({
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
+      let arrResult = []
+
       if (!student) {
         await Swal.fire({
            title: 'Que deseas hacer con este evento?',
@@ -238,12 +240,75 @@ const useStyles = makeStyles((theme) => ({
            }
          }).then((result) => {
            if (result.isConfirmed) {
-             handleEditEvent(clickInfo)
+             ///////////////////////////////////////////////////////////////////////////////
+             console.log(clickInfo)
+             Swal.mixin({
+              confirmButtonText: 'Sigueinte &rarr;',
+              showCancelButton: true,
+              cancelButtonText: 'Cancelar',
+              progressSteps: ['1', '2']
+            }).queue([
+              {
+                title: 'Titulo del evento',
+                input: 'text',
+                inputValue: clickInfo.event.title,
+                inputValidator: (result) => {
+                  return !result && 'Elegi un titulo para tu evento'
+                }
+              },
+              {
+                title: 'Tipo de evento',
+                input: 'radio',
+                inputValue: clickInfo.event.allDay ? 'Todo el dia' : 'Horario',
+                inputOptions: {
+                  'Todo el dia': 'Todo el dia',
+                  'Horario': 'Horario',
+                },
+                inputValidator: (result) => {
+                  return !result && 'Debes seleccionar al menos una opcion'
+                }
+              },
+            ]).then((result) => {
+              arrResult = result
+            })
+
+            if (arrResult.value && arrResult.value.length > 0) {
+              if (arrResult.value[1] === 'Todo el dia') {
+                  const evento = {
+                    title: arrResult.value[0],
+                    start: selectInfo.startStr,
+                    end: selectInfo.endStr,
+                    allDay: true,
+                    cohorteId: cohorteId
+                  }
+                  dispatch(modifyEvent(evento))
+                  // setUpdate(update + 1)
+                  setTimeout(() => {
+                    dispatch(update())
+                  }, 100)
+              } else {
+                if (timestart && timeend) {
+                  const evento = {
+                    title: arrResult.value[0],
+                    startRecur: selectInfo.startStr,
+                    endRecur: selectInfo.endStr,
+                    startTime: timestart,
+                    endTime: timeend,
+                    allDay: false,
+                    cohorteId: cohorteId
+                  }
+                  dispatch(modifyEvent(evento))
+                  setTimeout(() => {
+                    dispatch(update())
+                  }, 100)
+                }
+              }
+            }
+             ///////////////////////////////////////////////////////////////////////////////
            } else if (result.isDenied) {
              Swal.fire('Evento eliminado', '', 'error')
              dispatch(deleteEvent(clickInfo.event._def.publicId))
            }
-           // setUpdate(update + 1)
            setTimeout(() => {
              dispatch(update())
            }, 100)

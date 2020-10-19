@@ -1,8 +1,9 @@
-const { User, Feedback } = require("../db.js");
+const { User, Feedback, Privacy } = require("../db.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require('cloudinary');
 const nodemailer = require('nodemailer');
+
 
 const SECRET = process.env.SECRET;
 
@@ -321,7 +322,6 @@ module.exports = {
       res.status(500).send(err)
     }
   },
-
      
   async forgotPassword(req, res){
     try {

@@ -91,7 +91,6 @@ module.exports = {
           evento.allDay = allDay || evento.allDay
           evento.save()
             .then(() => {
-              console.log(evento)
               res.status(204).send(evento)
             })
         })
