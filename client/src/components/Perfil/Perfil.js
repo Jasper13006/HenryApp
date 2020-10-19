@@ -13,6 +13,7 @@ import PasswordForm from './PasswordForm'
 import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import GitHubDetails from './GitHubDetails'
+import LinkedInDetails from './LinkedInDetails'
 import Switch from '@material-ui/core/Switch'
 import UserConfig from './UserConfig'
 
@@ -100,15 +101,11 @@ export default function Perfil(){
             let noSpaces=arr.join("")
             return(noSpaces)
             }
-        return("")
-        
+        return("")   
     }
 
     const handleSwitch=()=>{
         setCheck(!check)
-    }
-    if(usuario){
-        console.log(usuario)
     }
 
     return (
@@ -139,7 +136,7 @@ export default function Perfil(){
                             </tr>
                             <tr><td>LinkedIn</td><td>
                                 {(usuario.googleId && usuario.googleId!=="empty")?
-                                <Button>{usuario.googleId}</Button>
+                                <LinkedInDetails data={usuario.googleId} usuario={usuario} token={token}/>
                                 :<SocialNetworkDialog red="LinkedIn" data={usuario.googleId} user={usuario} token={token}/>}
                                 </td>
                             </tr>
@@ -165,7 +162,7 @@ export default function Perfil(){
         <PasswordForm token={token} id={usuario.id}/>
         }
         {option===2 && usuario &&
-        <UserConfig token={token} id={usuario.id}/>
+        <UserConfig token={token} id={usuario.id} user={usuario}/>
         }
         </div>
     )
