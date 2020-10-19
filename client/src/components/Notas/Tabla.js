@@ -3,11 +3,7 @@ import axios from 'axios'
 import { Typography, Select, MenuItem } from '@material-ui/core'
 import Table from './Table'
 
-
-
-export default function Notas(){
-    const user = JSON.parse(localStorage.getItem("user"))
-    const id = localStorage.getItem("idUser")    
+export default function Notas(){    
     const token = localStorage.getItem("token") 
     const [cohortes,setCohortes] = useState('')
     const [cohortesel,setCohortesel] = useState('')  
@@ -37,6 +33,7 @@ export default function Notas(){
     const handleNameChange = (e) => {
         setCohortesel(e.target.value)                   
     }
+
     return (        
         <div>
             <h1>Tabla</h1>            
@@ -51,6 +48,4 @@ export default function Notas(){
             {students.length >0 && <Table data={students}/>}            
         </div>
     )
-
-
 }

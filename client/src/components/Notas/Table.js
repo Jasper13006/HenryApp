@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
-import {makeStyles,Button, MenuItem, Select, Typography, FormControl} from '@material-ui/core/';
+import {makeStyles,Button, MenuItem, Select, Typography} from '@material-ui/core/';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 
@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
         
     },
 }))
-
-
 
 export default function Table({data}) {
     const classes = useStyles();   
@@ -69,12 +67,10 @@ export default function Table({data}) {
             headers: { "auth-token": token },
             data: data
             })
-        }                 
-     
+        }        
     }   
     
-    useEffect(() => {
-        
+    useEffect(() => {        
         if(!state.data.length && !control){
             let datos = []
             data && data.map((d)=>{   
@@ -104,11 +100,9 @@ export default function Table({data}) {
         }
         Swal.fire('Success', 'calificaciones actualizadas', 'success')
    }
-
  
     return (
-        <div className={classes.table}>
-            {console.log(state.data)}
+        <div className={classes.table}>           
             <MaterialTable            
             title="Tabla de Estudiantes"
             columns={state.columns}
@@ -182,11 +176,9 @@ export default function Table({data}) {
                 className={classes.submit}
                 disabled={!name}
             >
-                Enviar
+            Enviar
             </Button> 
-            </div>           
-           
-            
+            </div>                         
         </div>
         
     );

@@ -52,6 +52,7 @@ export default function Calificar() {
     const [errors, setErrors] = useState({});
     const [name, setName] = useState('');  
     const token = localStorage.getItem("token")  
+    const option=useSelector(state=>state.panel.data)
     
     const handleNameChange = (e) => {
         setName(e.target.value)            
@@ -67,7 +68,6 @@ export default function Calificar() {
             [e.target.name]: e.target.value
         }));       
     }
-    const option=useSelector(state=>state.panel.data)
 
     const validate = (state) => {
         let errors = {};
@@ -126,15 +126,13 @@ export default function Calificar() {
                 email: '',
                 qualification: '',
                 info: '',
-            })
-              
+            })              
         }   
     }
 
     return (
         <div>
-            <Container component="main" maxWidth="xs" className={classes.main}>
-            
+            <Container component="main" maxWidth="xs" className={classes.main}>            
             <CssBaseline />
             {!option && <div className={classes.paper}>
                 <Avatar src='./henry.jpg' className={classes.avatar} >
