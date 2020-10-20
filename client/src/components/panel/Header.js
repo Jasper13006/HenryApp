@@ -55,7 +55,7 @@ const styles = (theme) => ({
 function Header(props) {
   const dispatch = useDispatch()
   const { classes, onDrawerToggle } = props;
-  const [user, setUser] = useState(null)
+  const user = JSON.parse(localStorage.getItem('user'))
   const [value, setValue] = useState(0)
 
   //En este objeto colocar los nombres de las opciones para cada ruta del panel
@@ -70,9 +70,7 @@ function Header(props) {
     "/panel/calificar":["Individual",'Consultar','Múltiple'],
   }
 
-  useEffect(() => {
-    setUser(store.getState().usuario.user)
-  }, [])
+
 
   const location = useLocation();
   const url = location.pathname;
@@ -140,9 +138,11 @@ function tabValue(index) {
             <Grid item>
               <IconButton color="inherit" className={classes.iconButtonAvatar}>
                 <Avatar src={user && user.image} alt="My Avatar" />
-
-                <ExitToAppOutlinedIcon onClick={() => handleLogOut()} />
-
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color="inherit">
+                <ExitToAppOutlinedIcon onClick={handleLogOut}/>
               </IconButton>
             </Grid>
           </Grid>
