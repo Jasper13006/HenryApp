@@ -4,6 +4,7 @@ import { traerUsuarios } from '../../../redux/actions/user'
 import { addUserToACohort } from '../../../redux/actions/cohorte'
 import { update } from '../../../redux/actions/update'
 
+//imports de material UI
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { IconButton } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles';

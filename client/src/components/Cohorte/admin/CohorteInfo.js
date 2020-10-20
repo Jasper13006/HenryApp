@@ -4,16 +4,16 @@ import { getLinkVideos } from '../../../redux/actions/cohorte';
 import { getStudent } from '../../../redux/actions/user';
 import { agregarClase } from '../../../redux/actions/modulos'
 
+//imports de material UI
+import Swal from 'sweetalert2';
 import MaterialTable from 'material-table';
-
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '@material-ui/core/Fab';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl } from '@material-ui/core'
-
 import { Link } from 'react-router-dom'
-import Swal from 'sweetalert2';
+
 
 const useStyles = makeStyles(() => ({
     addIcon: {
@@ -57,25 +57,17 @@ export default function CohorteInfo(cohorte){
         {title: "description", field: "description"}
     ]
 
-    useEffect(() => {
-        dispatch(getStudent(id))
-        dispatch(getLinkVideos(cohorte.data.id))
-    }, [])
+    useEffect(() =>{
+        var videos = []
+        modulos && modulos.map(modulo => {
+            return videos.push({ modulos:parseInt( modulo.name[0]), name: modulo.nameClass, link: <Link color="primary" onClick={() => window.open(modulo.linkVideos)}>link</Link>, description: modulo.description})
+        })
+        setActive(true)
+        setDataEditTable(videos)
+    }, [modulos])
 
-    //seteo en dataEditTable los datos que se van a visualizar en la tabla y desactivo el "active" para que no se vuelva a ejecutar
-        if(modulos && !active){
-            console.log(modulos)
-            var videos = []
-            modulos.map(modulo => {
-                return videos.push({ modulos:parseInt( modulo.name[0]), name: modulo.nameClass, link: <Link color="primary" onClick={() => window.open(modulo.linkVideos)}>link</Link>, description: modulo.description})
-            })
-            setActive(true)
-            setDataEditTable(videos)
-        }
-
-
-    const handleClickOpen = () => {
-        
+    const handleClickOpen = async() => {
+        await dispatch(getLinkVideos(cohorte.data.id))
         setOpen(true);
         console.log(cohorte.data.id)
     };
@@ -85,8 +77,10 @@ export default function CohorteInfo(cohorte){
     };
 
     const handleAdd = (data) => {
-        handleClose()
-        const newModule = {name: moduleType[parseInt(data.modulos)-1], nameClass: data.name, description: data.name, linkVideos: data.link, cohorteId: cohorte.data.id}
+        console.log(data)
+        // handleClose()
+        const newModule = {name: moduleType[parseInt(data.modulos)-1], nameClass: data.name, description: data.description, linkVideos: data.link, cohorteId: cohorte.data.id}
+        const newClass = { modulos:parseInt( data.name[0]), name: data.nameClass, link: <Link color="primary" onClick={() => window.open(data.linkVideos)}>link</Link>, description: data.description}
         dispatch(agregarClase(newModule))
     }
 
