@@ -6,7 +6,6 @@ export default function useFetch(url){
         await fetch(url + params.toString())
         .then(res=>res.json())
         .then(data=>{
-            console.log(data)
             out=data
         })
         .catch(e=>{
