@@ -18,7 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
-import {INITIAL_EVENTS} from './event-utils'
+import {INITIAL_EVENTS, createEventId} from './event-utils'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -86,6 +86,8 @@ const useStyles = makeStyles((theme) => ({
       calendarApi.unselect() // clear date selection
       let timestart = ''
       let timeend = ''
+      let color = ''
+      let url = ''
       let arrResult =  []
 
       if(cohorteId){
@@ -93,12 +95,11 @@ const useStyles = makeStyles((theme) => ({
           confirmButtonText: 'Sigueinte &rarr;',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
-          progressSteps: ['1', '2']
+          progressSteps: ['1', '2', '3']
         }).queue([
           {
             title: 'Titulo del evento',
             input: 'text',
-            // inputValue: {}
             inputValidator: (result) => {
               return !result && 'Elegi un titulo para tu evento'
             }
@@ -114,8 +115,38 @@ const useStyles = makeStyles((theme) => ({
               return !result && 'Debes seleccionar al menos una opcion'
             }
           },
+          {
+            title: 'Ajustes del evento',
+            html: `
+            <h5>Color del evento<h5>
+            <select name="color" id="color">
+            <option value="blue" selected>Azul</option>
+              <option value="red">Rojo</option> 
+              <option value="green">Verde</option>
+              <option value="yellow">Amarillo</option>
+            </select>
+            <h5>Link (opcional)<h5>
+            <input type="text" id="url">
+            `,
+            didOpen: () => {
+                  
+              var colorinput = Swal.getContent().querySelector('#color')
+              var urlinput = Swal.getContent().querySelector('#url')
+            
+              colorinput.addEventListener('change', () => {
+                color = colorinput.value
+              })
+
+              urlinput.addEventListener('change', () => {
+                url = urlinput.value
+              })
+            }
+          }
         ]).then((result) => {
           arrResult = result
+          console.log(result)
+          console.log(color)
+          console.log(url)
         })
 
           if (arrResult.value && arrResult.value.length !== 0) {
@@ -160,6 +191,9 @@ const useStyles = makeStyles((theme) => ({
                 start: selectInfo.startStr,
                 end: selectInfo.endStr,
                 allDay: true,
+                url: url,
+                color: color ? color : '#3788D8',
+                userId: user.id,
                 cohorteId: cohorteId
               }
               dispatch(createEvent(evento))
@@ -176,10 +210,11 @@ const useStyles = makeStyles((theme) => ({
                 startTime: timestart,
                 endTime: timeend,
                 allDay: false,
+                url: url,
+                userId: user.id,
                 cohorteId: cohorteId
               }
               dispatch(createEvent(evento))
-              // setUpdate(update + 1)
               setTimeout(() => {
                 dispatch(update())
               }, 100)
@@ -254,25 +289,21 @@ const useStyles = makeStyles((theme) => ({
         datos = result
       })
 
-      console.log(datos)
       if (datos.value && datos.value.length > 0) {
         if (datos.value[1] === 'Todo el dia') {
             const evento = {
               eventId: data.event._def.publicId,
               title: datos.value[0],
-              // start: selectInfo.startStr,
-              // end: selectInfo.endStr,
               allDay: true,
               cohorteId: cohorteId
             }
             dispatch(modifyEvent(evento))
-            // setUpdate(update + 1)
             setTimeout(() => {
               dispatch(update())
             }, 100)
         } else {
-          // if (timestart && timeend) {
             const evento = {
+              eventId: data.event._def.publicId,
               title: datos.value[0],
               // startRecur: selectInfo.startStr,
               // endRecur: selectInfo.endStr,
@@ -281,16 +312,18 @@ const useStyles = makeStyles((theme) => ({
               allDay: false,
               cohorteId: cohorteId
             }
+            console.log(evento)
             dispatch(modifyEvent(evento))
             setTimeout(() => {
               dispatch(update())
             }, 100)
-          // }
         }
       }
     }
   
     const handleEventClick = async (clickInfo) => {
+      console.log(clickInfo)
+      clickInfo.jsEvent.preventDefault();
       if (!student) {
         await Swal.fire({
            title: 'Que deseas hacer con este evento?',
@@ -306,11 +339,7 @@ const useStyles = makeStyles((theme) => ({
            }
           }).then((result) => {
             if (result.isConfirmed) {
-              ///////////////////////////////////////////////////////////////////////////////
-              console.log('result', result)
               editevent(clickInfo)
-               
-           ///////////////////////////////////////////////////////////////////////////////
           } else if (result.isDenied) {
              Swal.fire('Evento eliminado', '', 'error')
              dispatch(deleteEvent(clickInfo.event._def.publicId))
@@ -319,10 +348,11 @@ const useStyles = makeStyles((theme) => ({
              dispatch(update())
            }, 100)
          })
+      } else {
+        window.open(clickInfo.event.url);
       }
     }
   
-    //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
     const handleEvents = (events) => {
       setCurrentEvents(events)
     }
@@ -380,7 +410,7 @@ const useStyles = makeStyles((theme) => ({
         <div className='demo-app-main'>
           <FullCalendar
             locale={esLocale}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, bootstrapPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
@@ -392,10 +422,11 @@ const useStyles = makeStyles((theme) => ({
             selectable={student ? false : true}
             selectMirror={false}
             dayMaxEvents={true}
-            // events={getEvents && getEvents}
+            events={getEvents && getEvents}
             weekends={weekendsVisible}
             nowIndicator={true}
-            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+            navLinks={true}
+            // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
