@@ -24,7 +24,8 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-        minWidth: "100%"
+        minWidth: "100%",
+        marginTop:'20px',
     },
     filter:{
         order:1,

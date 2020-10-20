@@ -12,6 +12,7 @@ import usuarios from './getUsers'
 import students from './students'
 import student from './student'
 import update from './update'
+import msg from './msg'
 
 
 
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
     student,
     students,
     update,
+    msg,
 
 });
 

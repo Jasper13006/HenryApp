@@ -9,6 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import Consultar from './Consultar'
+import Tabla from './Tabla'
 
 
 
@@ -50,6 +52,7 @@ export default function Calificar() {
     const [errors, setErrors] = useState({});
     const [name, setName] = useState('');  
     const token = localStorage.getItem("token")  
+    const option=useSelector(state=>state.panel.data)
     
     const handleNameChange = (e) => {
         setName(e.target.value)            
@@ -65,7 +68,6 @@ export default function Calificar() {
             [e.target.name]: e.target.value
         }));       
     }
-    const option=useSelector(state=>state.panel.data)
 
     const validate = (state) => {
         let errors = {};
@@ -83,38 +85,54 @@ export default function Calificar() {
             method: 'POST',
             url: 'http://localhost:3001/user/email',
             data: {email: state.email}
-            }) 
-            console.log(user)
+            })         
         if (user.data.status == 400){   
-            Swal.fire('Error', 'usuario inexistente', 'error')}       
-        if (user.data.status == 200){       
+            Swal.fire('Error', 'usuario inexistente', 'error');
+            return}       
+        if (user.data.status == 200){
+            const data0 = { name: name}   
+            console.log(data0)    
             const data = {                
                 name: name,
                 qualification: state.qualification,
                 info: state.info                
             }
-            const nota = await axios({
+            const notarepetida = await axios({
+                method: 'POST',
+                url: `http://localhost:3001/user/nota-checkpoint/repetida/${user.data.usuario.id}`,
+                credentials: "include",
+                headers: { "auth-token": token },
+                data: data0
+            })            
+            if (notarepetida.data){
+                await axios({
+                    method: 'PUT',
+                    url: `http://localhost:3001/user/nota-checkpoint/${user.data.usuario.id}`,
+                    credentials: "include",
+                    headers: { "auth-token": token },
+                    data: data
+                    })                 
+            }else{                
+                await axios({
                 method: 'POST',
                 url: `http://localhost:3001/user/nota-checkpoint/${user.data.usuario.id}`,
                 credentials: "include",
                 headers: { "auth-token": token },
                 data: data
-            })
-        Swal.fire('Success', 'calificación creada', 'success')
-        setState({
-            email: '',
-            qualification: '',
-            info: '',
-        })
-              
-    }   
-}
-
+                })
+            }
+            Swal.fire('Success', 'calificación creada', 'success')
+            setState({
+                email: '',
+                qualification: '',
+                info: '',
+            })              
+        }   
+    }
 
     return (
         <div>
-            <Container component="main" maxWidth="xs" className={classes.main}>
-            
+            <Container component="main" maxWidth="xs" className={classes.main}>            
             <CssBaseline />
             {!option && <div className={classes.paper}>
                 <Avatar src='./henry.jpg' className={classes.avatar} >
@@ -188,7 +206,9 @@ export default function Calificar() {
                     </Button>                    
                 </form>
              </div>}       
-            </Container>            
+            </Container>     
+            {option===1 && <Consultar/>}
+            {option===2 && <Tabla/>  }           
         </div>
         
     );
