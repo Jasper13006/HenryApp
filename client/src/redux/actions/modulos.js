@@ -11,15 +11,8 @@ export function agregarClase(data){
             headers: {"auth-token": token},
             data: data,
         })
-        .then((response) => {
-            alert("OK")
-            Swal.fire({
-                icon: "success",
-                title: "Se ha agregado la clase!"
-            })
-        })
         .catch(error => {
-            alert(error.message)
+            console.log(error)
         })
     }
 }

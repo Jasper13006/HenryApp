@@ -8,6 +8,7 @@ import CohorteInfo from './CohorteInfo'
 import imagenTriste from '../triste.png'
 import { update } from '../../../redux/actions/update'
 
+//imports de material UI
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -74,9 +75,7 @@ export default function CohorteAdmin(){
     return (
         <div>
             <CardActions className={classes.cardExtern}>
-                <IconButton>
                     <AddOneCohorte/>
-                </IconButton>
             </CardActions>
             {cohortes && cohortes.length > 0 ? cohortes.map((cohorte) => (
             <Accordion className={classes.accordion}  key={cohorte.id}>
@@ -89,7 +88,7 @@ export default function CohorteAdmin(){
                     <Typography className={classes.heading} style={{ color: "black" }} >{cohorte.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails className={classes.cohortDetails}>
-                    <div className={classes.instructorName}>instructor: {cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}</div>
+                    <div className={classes.instructorName}>{cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}</div>
                     <div>
                         <CohorteInfo data={cohorte}/>
                     </div>
