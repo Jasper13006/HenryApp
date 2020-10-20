@@ -28,25 +28,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const rh = [
-    {name: 'Jeremias', lastName:'Koch', email: 'jeremias@soyhenry.com', gitHub:'jere8',linkedIn:'linkedIn',estado:'on'},
-    {name: 'Miguel', lastName:'Ventura', email: 'no', gitHub:'miguel_v',linkedIn:'linkedIn',estado:'off'},
-    {name: 'Raul', lastName:'Sánchez', email: 'raul@sanchez.com', gitHub:'no',linkedIn:'no',estado:'on'},
-    {name: 'María', lastName:'Bernstein', email: 'maria@ber.com', gitHub:'marber2',linkedIn:'linkedIn',estado:'on'},
-    {name: 'Jesus', lastName:'Jiménez', email: 'jisus@henry.com', gitHub:'jesus33',linkedIn:'no',estado:'no'},
-    {name: 'Rafael', lastName:'Vidal', email: 'rafa@soyhenry.com', gitHub:'no',linkedIn:'linkedIn',estado:'no'},
-    {name: 'Jorge', lastName:'González', email: 'jorge@gon.com', gitHub:'jgon4',linkedIn:'linkedIn',estado:'on'},
-    {name: 'Amanda', lastName:'Ramírez', email: 'no', gitHub:'no',linkedIn:'linkedIn',estado:'off'}
-]
-
-export default function UserConfig({token,id}){
+export default function UserConfig({token,id,user}){
     const classes= useStyles()
     const [privacy,setPrivacy] = useState(null)
     const [updater,setUpdater] = useState(0)
-    const [resultados,setResultados] = useState(null)
+    const [privacyData,setPrivacyData]=useState(null)
+    const [allPrivacy,setAllPrivacy] = useState(null)
     const [filter,setFilter] = useState(null)
-    // const usuarios = useSelector(state => state.students.data)
-    // const dispatch=useDispatch()
+    const usuarios = useSelector(state => state.students.data)
+    const dispatch=useDispatch()
 
     useEffect(()=>{
         axios({
@@ -75,16 +65,28 @@ export default function UserConfig({token,id}){
                 headers: {"auth-token": token},
             }).then(res=>res.data)
             .then(data=>{
-                console.log("respuesta: ",data)
                 setUpdater(updater+1)
             })
         }
-        
     },[])
 
-    // useEffect(()=> {
-    //     dispatch(getStudents())
-    // })
+    useEffect(()=> {
+        dispatch(getStudents())
+    },[])
+
+    useEffect(()=>{
+        axios({
+            method: 'POST',
+            url: `http://localhost:3001/user/get_all_privacy`,
+            credentials: "include",
+            headers: {"auth-token": token},
+        }).then(res=>res.data)
+        .then(data=>{
+            if(data){
+                setAllPrivacy(data.usersPrivacy)
+            }
+        })
+    },[])
 
     const handleChange=async(e)=>{
         setPrivacy({...privacy, [e.target.name] : e.target.value})
@@ -98,37 +100,70 @@ export default function UserConfig({token,id}){
         .then(data=>console.log(data))
     }
 
-    const handleFilter=()=>{
-
-    }
-    
-    const suprimir=(string)=>{
-        if(string==="no"){
-            return("---")
+    useEffect(()=>{
+        let obj = {}
+        if(allPrivacy){
+            for(let i of  allPrivacy){
+                let element={}
+                element={
+                    email: i.emailP,
+                    onLineStatus: i.onLineStatus,
+                    gitHub: i.gitHub,
+                    linkedIn: i.linkedIn
+                }
+                obj[i.user.id]=element
+            }
+            setPrivacyData(obj)
         }
-        return(string)
+    },[allPrivacy])
+
+    const isPartOf=(str1,str2)=>{
+        if(str1.toUpperCase().startsWith(str2.toUpperCase())){
+            return(true)
+        }
+        return(false)
     }
 
-    if(privacy){
-        console.log("privacy: ",privacy)
+    const handleFilter=(e)=>{
+        setFilter({...filter, [e.target.name] : e.target.value})
+    }
+
+    const accessControl=(userId,type)=>{
+        if(privacyData[userId]){
+            if(user.admin){
+                return(true) 
+            }
+            else if(user.instructor || user.pm){
+                if(privacyData[userId][type]==="cohorte" || privacyData[userId][type]==="todos"){
+                    return(true)
+                }
+            }
+            else if(user.student){
+                if(privacyData[userId][type]==="todos"){
+                    return(true)
+                } 
+            }
+            return(false)
+        }
+        return(true)
     }
 
     return(
         <Paper className={classes.root}>
             <Typography component="h6" variant="h6">Privacidad</Typography>
             {privacy &&
-            <Table className={classes.privacyTable}>
+            <Table className={classes.privacyTable} key="tabla1">
                 <TableBody >
                     <TableRow>
                         <TableCell>Quién puede ver mi correo electrónico</TableCell>
                         <TableCell>
                             <Select
                                 native
-                                name="email"
-                                value={privacy.email}
+                                name="emailP"
+                                value={privacy.emailP}
                                 onChange={handleChange}>
                                 <option value="henry">Solo el equipo de Henry</option>
-                                <option value="cohorte">Equipo de Henry y mis compañeros de cohorte</option>
+                                <option value="cohorte">Equipo de Henry y PM</option>
                                 <option value="todos">Toda la comunidad de Henry</option>
                             </Select>
                         </TableCell>
@@ -142,7 +177,7 @@ export default function UserConfig({token,id}){
                                 value={privacy.onLineStatus}
                                 onChange={handleChange}>
                                 <option value="henry">Solo el equipo de Henry</option>
-                                <option value="cohorte">Equipo de Henry y mis compañeros de cohorte</option>
+                                <option value="cohorte">Equipo de Henry y PM</option>
                                 <option value="todos">Toda la comunidad de Henry</option>
                             </Select>
                         </TableCell>
@@ -156,7 +191,7 @@ export default function UserConfig({token,id}){
                                 value={privacy.gitHub}
                                 onChange={handleChange}>
                                 <option value="henry">Solo con el equipo de Henry</option>
-                                <option value="cohorte">Equipo de Henry y mis compañeros de cohorte</option>
+                                <option value="cohorte">Equipo de Henry y PM</option>
                                 <option value="todos">A Toda la comunidad de Henry</option>
                             </Select>
                         </TableCell>
@@ -170,7 +205,7 @@ export default function UserConfig({token,id}){
                                 value={privacy.linkedIn}
                                 onChange={handleChange}>
                                 <option value="henry">Solo el equipo de Henry</option>
-                                <option value="cohorte">Equipo de Henry y mis compañeros de cohorte</option>
+                                <option value="cohorte">Equipo de Henry y PM</option>
                                 <option value="todos">Toda la comunidad de Henry</option>
                             </Select>
                         </TableCell>
@@ -179,7 +214,7 @@ export default function UserConfig({token,id}){
             </Table>}
             <br/><br/>
             <Typography component="h6" variant="h6">Búsqueda avanzada</Typography>
-            <Table size="small" className={classes.privacyTable}>
+            <Table size="small" className={classes.privacyTable} key="tabla2">
                 <TableHead>
                     <TableRow>
                         <TableCell>Nombre</TableCell>
@@ -190,20 +225,19 @@ export default function UserConfig({token,id}){
                 <TableBody>
                     <TableRow>
                         <TableCell>
-                            <TextField variant="outlined"></TextField>
+                            <TextField variant="outlined" onChange={handleFilter} name="nombre"></TextField>
                         </TableCell>
                         <TableCell>
-                            <TextField variant="outlined"></TextField>
+                            <TextField variant="outlined" onChange={handleFilter} name="apellido"></TextField>
                         </TableCell>
                         <TableCell>
-                            <TextField variant="outlined"></TextField>
+                            <TextField variant="outlined" onChange={handleFilter} name="cohorte"></TextField>
                         </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
-            <Typography className={classes.resultados}>8 resultados</Typography>
-            {rh &&
-            <Table size="small">
+            {usuarios &&
+            <Table size="small" key="tabla3">
             <TableHead>
                 <TableRow>
                     <TableCell className={classes.strong}>Nombre</TableCell>
@@ -215,33 +249,42 @@ export default function UserConfig({token,id}){
                 </TableRow>
             </TableHead>
             <TableBody>
-                {rh.map((result,index)=>
+                {(usuarios && filter) && usuarios.map((usuario,index)=>
+                <>
+                {(index && filter &&
+                (!filter.nombre ||isPartOf(usuario.user.name, filter.nombre)) &&
+                (!filter.apellido || isPartOf(usuario.user.lastName, filter.apellido)) &&
+                (!filter.cohorte || (usuario.cohorteId).toString()===filter.cohorte)
+                )?
                 <TableRow key={index}>
                     <TableCell>
-                        {result.name}
+                        {usuario.user.name}
                     </TableCell>
                     <TableCell>
-                        {result.lastName}
+                        {usuario.user.lastName}
                     </TableCell>
                     <TableCell>
-                        {suprimir(result.email)}
+                        {accessControl(usuario.user.id,"email") && (usuario.user.email)}
                     </TableCell>
                     <TableCell>
-                        {result.gitHub!=="no"?
-                        <Button variant="outlined">{result.gitHub}</Button>
-                        :"---"}
+                        {accessControl(usuario.user.id,"gitHub") &&
+                        <a href={`https://github.com/${usuario.user.gitHubId}`} target="_blank">
+                        <Button variant="outlined">{usuario.user.gitHubId}</Button></a>}
                     </TableCell>
                     <TableCell>
-                        <Button variant="outlined">Ir</Button>
+                        {accessControl(usuario.user.id,"linkedIn")&&
+                        <a href={usuario.user.googleId} target="_blank">
+                            <Button variant="outlined">Ir</Button></a>}
                     </TableCell>
                     <TableCell>
-                        {<Circle state={result.estado}/>}
+                        {accessControl(usuario.user.id,"onLineStatus") && <Circle state="on"/>}
                     </TableCell>
-                </TableRow>)}
+                    </TableRow>
+                    :null}
+                    </>)}
             </TableBody>
         </Table>
             }
-        </Paper>
-        
+        </Paper>  
     )
 }

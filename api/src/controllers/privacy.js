@@ -8,7 +8,7 @@ module.exports = {
     }
     try {
         const privacyStatus = await Privacy.create({
-          email: email,
+          emailP: email,
           onLineStatus: onLineStatus,
           gitHub: gitHub,
           linkedIn:linkedIn,
@@ -31,7 +31,8 @@ module.exports = {
             const userPrivacy = await Privacy.findOne({
               where:{
                   userId: userId
-              }
+              },
+              include: User
             })
             res.status(201).send({ userPrivacy: userPrivacy })
           } 
@@ -52,7 +53,7 @@ module.exports = {
                   userId: userId
               }
             })
-            userPrivacy.email = email || userPrivacy.email
+            userPrivacy.emailP = email || userPrivacy.emailP
             userPrivacy.onLineStatus = onLineStatus || userPrivacy.onLineStatus
             userPrivacy.gitHub = gitHub || userPrivacy.gitHub
             userPrivacy.linkedIn = linkedIn || userPrivacy.linkedIn
@@ -65,5 +66,16 @@ module.exports = {
             res.status(500).send('No se pudo actualizar la información')
           }
         },
+
+        async getAllPrivacy(req, res) {
+          try {
+              const usersPrivacy = await Privacy.findAll({include:User})
+              res.status(201).send({ usersPrivacy: usersPrivacy })
+            } 
+          catch (err) {
+              console.log(err)
+              res.status(500).send('No se pudo encontrar la información')
+            }
+          },
 }
 
