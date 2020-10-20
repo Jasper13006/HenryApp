@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import { Table, TableCell, TableHead, TableRow, TableBody } from '@material-ui/core'
 
-export default function Notas(){
-    const user = JSON.parse(localStorage.getItem("user"))
+export default function Notas(){   
     const id = localStorage.getItem("idUser")    
     const token = localStorage.getItem("token") 
     const [notas,setnotas] = useState('')

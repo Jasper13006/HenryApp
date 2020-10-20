@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import Consultar from './Consultar'
+import Tabla from './Tabla'
 
 
 
@@ -51,6 +52,7 @@ export default function Calificar() {
     const [errors, setErrors] = useState({});
     const [name, setName] = useState('');  
     const token = localStorage.getItem("token")  
+    const option=useSelector(state=>state.panel.data)
     
     const handleNameChange = (e) => {
         setName(e.target.value)            
@@ -66,7 +68,6 @@ export default function Calificar() {
             [e.target.name]: e.target.value
         }));       
     }
-    const option=useSelector(state=>state.panel.data)
 
     const validate = (state) => {
         let errors = {};
@@ -125,15 +126,13 @@ export default function Calificar() {
                 email: '',
                 qualification: '',
                 info: '',
-            })
-              
+            })              
         }   
     }
 
     return (
         <div>
-            <Container component="main" maxWidth="xs" className={classes.main}>
-            
+            <Container component="main" maxWidth="xs" className={classes.main}>            
             <CssBaseline />
             {!option && <div className={classes.paper}>
                 <Avatar src='./henry.jpg' className={classes.avatar} >
@@ -208,7 +207,8 @@ export default function Calificar() {
                 </form>
              </div>}       
             </Container>     
-            {option===1 && <Consultar/>  }       
+            {option===1 && <Consultar/>}
+            {option===2 && <Tabla/>  }           
         </div>
         
     );

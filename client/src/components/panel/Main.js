@@ -9,6 +9,8 @@ import Calificar from '../Notas/Calificar'
 import Invitacion from '../invitacion/Invitacion'
 import cohorteAdmin from '../Cohorte/admin/CohorteAdmin'
 import Calendar from '../Calendar/Calendar'
+import ToMsg from '../msg/ToMsg'
+import Msg from '../msg/Msg'
 
 
 const AppRouter = () => {
@@ -22,7 +24,10 @@ const AppRouter = () => {
             <Route exact path="/panel/pair_programming" component={Pair_programming} />
             <Route exact path="/panel/notas" component={Notas} />
             <Route exact path="/panel/invitacion" component={Invitacion} />
+            <Route exact path="/panel/mensaje_usuario" component={ToMsg}/>
+            <Route exact path="/panel/mensaje_directo" component={Msg}/>
             <Route exact path="/panel/calificar" component={Calificar} />
+
         </Switch>
     )
 }

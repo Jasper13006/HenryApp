@@ -109,6 +109,9 @@ export default function GitHubDetails({data, usuario, token}){
                 <Button onClick={handleDelete} color="primary" variant="outlined">
                     Eliminar Usuario de GitHub
                 </Button>
+                <Button onClick={handleClose} color="primary" variant="outlined">
+                    Cerrar
+                </Button>
             </DialogActions>
         </Dialog>
         </>}
