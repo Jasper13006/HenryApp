@@ -10,11 +10,16 @@ import SendIcon from '@material-ui/icons/Send';
 import Picker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
-import {addMsg,getMsg,editValidate} from '../../redux/actions/msg'
+import {addMsg,getMsg,editValidate} from '../../redux/actions/msg';
+import { Element,scroller } from 'react-scroll';
 
-/* EACF15
-15EA9D */
-
+ 
+const scrollType = {
+  duration: 500,
+  delay: 50,
+  smooth: true, // linear “easeInQuint” “easeOutCubic” 
+  offset: -10,
+};
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -86,8 +91,9 @@ const useStyles = makeStyles((theme) => ({
       padding:'20px',
       position: 'absolute',
       top: '10.6em',
-      overflowY:'auto',
-      scrollBehavior: 'smooth',      
+      overflowY:'scroll',
+      scrollBehavior: 'smooth',
+    
       
     },
 
@@ -147,6 +153,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
+
 export default function Msg(props) {
     const classes = useStyles();
     const [description,setDescription] = React.useState('')
@@ -158,6 +166,8 @@ export default function Msg(props) {
     const dispatch = useDispatch()
     const mensajes=useSelector(state=>state.msg.mensajes)
     const date = new Date()
+    
+    
 
     // abre y cierra la ventana de emojis
 
@@ -198,10 +208,12 @@ export default function Msg(props) {
     }
 
     useEffect(()=>{
-      if(!mensajes.length && chatId){        
+      if(!mensajes.length && chatId){      
         dispatch(getMsg(chatId,token))
         dispatch(editValidate())
+        
       }
+      scroller.scrollTo('4', scrollType);
     })
 
     // modificamos la fecha y la validamos
@@ -217,7 +229,7 @@ export default function Msg(props) {
     }
     return (    
     <div className={classes.root} >
-        <Box className={classes.boxMsg}>
+      <Box className={classes.boxMsg}>
           <Box className={classes.box} >
             <Avatar src={userTo.image} className={classes.small} />
             <Box>
@@ -233,38 +245,43 @@ export default function Msg(props) {
           <List component="nav" aria-label="main mailbox folders">
             {mensajes.map((msg,key,elements)=>(
                 <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
+
                   {!key && <Box className = {classes.boxDate} >
                     <Typography className={classes.name} variant="h5">
                         {changeDate(msg.updatedAt,true)}
                     </Typography>
                   </Box> }
+
                   {key && msg.updatedAt.split('T')[0] !== elements[key-1].updatedAt.split('T')[0] ? <Box className = {classes.boxDate}>
                     <Typography className={classes.name} variant="h5">
                       {changeDate(msg.updatedAt,true)}
                     </Typography>
-                  </Box> : null}
-                  <Box className={classes.boxItem} style = {msg.from.id !== userFrom.id ? {background:'linear-gradient(135deg, #ddffff 0%,#74abbe 100%)'} : null}>
-                    <ListItemIcon>
-                    <div className={classes.root}>
-                        <Avatar src={msg.from.image} className={classes.small} />
-                        </div>
-                    </ListItemIcon>
-                    <div >
-                      <Typography className={classes.name}>
-                        {msg.from.fullName}
-                      </Typography>
-                      <Typography style={{fontSize: '0.8em',color: 'darkgray'}}>
-                        {changeDate(msg.updatedAt,false)}
-                      </Typography>                     
-                      <ListItemText primary={msg.description} />
-                    </div> 
-                      
-                  </Box>                               
+                  </Box> : null} 
+                    <Box 
+                      className={classes.boxItem} 
+                      style = {msg.from.id !== userFrom.id ? {background:'linear-gradient(135deg, #ddffff 0%,#74abbe 100%)'} : null} 
+                                            
+                    >
+                      <ListItemIcon>
+                      <div className={classes.root}>
+                          <Avatar src={msg.from.image} className={classes.small} />
+                          </div>
+                      </ListItemIcon>
+                      <div >
+                        <Typography className={classes.name}>
+                          {msg.from.fullName}
+                        </Typography>
+                        <Typography style={{fontSize: '0.8em',color: 'darkgray'}}>
+                          {changeDate(msg.updatedAt,false)}
+                        </Typography>                     
+                        <ListItemText primary={msg.description} />
+                      </div>     
+                    </Box>                                                                                
                 </ListItem>
             ))}
-          </List>
-            
+          </List>    
         </Box>
+        
         {open && 
           <Box className={classes.boxEmoji}>
             <Picker onEmojiClick={onEmojiClick} className={classes.boxEmoji} disableSkinTonePicker='false'/>
@@ -283,9 +300,7 @@ export default function Msg(props) {
                   <SendIcon/>
               </IconButton>     
             </div>                    
-        </Box>
-        
-        
+        </Box> 
     </div>
     
     
