@@ -4,7 +4,7 @@ const isAdmin = require('../utils/isAdmin')
 const { getUsers, getOneUser, registerUser, loginUser, calificarCompaneros, forgotPassword, mailResetPassword,
   promoteUser, userEditProfile, getInstructors, getPms, getUserFeedback, getUserByMail } = require('../controllers/user')
 
-const {setPrivacy, getPrivacy,changePrivacy} = require('../controllers/privacy')
+const {setPrivacy, getPrivacy, changePrivacy, getAllPrivacy} = require('../controllers/privacy')
 const { calificarAlumno, getNotasByUserId,getNotaRepetida, editNota } = require('../controllers/checkpoints')
 
 
@@ -67,5 +67,7 @@ server.post('/set_privacy', setPrivacy)
 server.post('/get_privacy', getPrivacy)
 
 server.put('/change_privacy',changePrivacy)
+
+server.post('/get_all_privacy',getAllPrivacy)
 
 module.exports = server;

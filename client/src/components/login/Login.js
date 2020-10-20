@@ -164,6 +164,7 @@ export default function Login() {
                     name="email"                    
                     autoFocus
                     value={state.email}
+                    autoComplete='off'
                     />
                 {errors.email && (<p style={{ color: "red" }}>{errors.email}</p>)}
                 <InputTextField
@@ -176,6 +177,7 @@ export default function Login() {
                     type="password"
                     id="password"                    
                     value={state.password}
+                    autoComplete='off'
                     />
                 {errors.password && (<p style={{ color: "red" }}>{errors.password}</p>)}
                 <Button

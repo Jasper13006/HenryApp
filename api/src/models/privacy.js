@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     sequelize.define('privacy', {
-        email: {
+        emailP: {
             type: DataTypes.ENUM('henry','cohorte','todos'),
             allowNull: false,
             defaultValue: 'henry',

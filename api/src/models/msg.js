@@ -4,7 +4,15 @@ module.exports = (sequelize) => {
   sequelize.define("msg", {
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: false,
     },
+    
   });
+  sequelize.define('chat', {
+    check:{
+      type:DataTypes.BOOLEAN,
+      allowNull:false,
+      defaultValue:false
+    }
+  })
 };

@@ -73,7 +73,6 @@ export default function GitHubDialog({red,data,user,token}) {
     if(!value){
       return(false)
     }
-    console.log(value)
     let data={}
     if(red==="GitHub"){
       data = {

@@ -30,11 +30,10 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-<<<<<<< HEAD
-const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar,Msg } = sequelize.models;
-=======
-const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar, Privacy } = sequelize.models;
->>>>>>> f3bd13e370e0f4ef5b442196dd86c9487143cffc
+
+
+const { User, Feedback, Checkpoint, Cohorte, Grouppm, Modulo,Student,Groupp, Calendar, Privacy,Msg,Chat } = sequelize.models;
+
 
 // Aca vendrian las relaciones
 // Relaciones
@@ -64,6 +63,9 @@ Calendar.belongsTo(User)
 Calendar.belongsTo(Cohorte)
 
 
+Chat.belongsTo(User, { as: 'from' }) 
+Chat.belongsTo(User, { as: 'to' }) 
+Msg.belongsTo(Chat,{as:'chat'})
 Msg.belongsTo(User, { as: 'from' }) 
 Msg.belongsTo(User, { as: 'to' }) 
 

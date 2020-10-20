@@ -7,17 +7,17 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 // import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import Tab from '@material-ui/core/Tab';
+import {Tab,Badge} from '@material-ui/core/';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
-
+import Notifications from './Notifications'
 import { useDispatch } from 'react-redux';
 import { setActiveOptionPanel } from '../../redux/actions/panel'
 import Swal from 'sweetalert2'
@@ -134,12 +134,8 @@ function tabValue(index) {
               </Grid>
             </Hidden>
             <Grid item xs />
-            <Grid item>
-              <Tooltip title="Alerts • No alerts">
-                <IconButton color="inherit">
-                  <NotificationsIcon />
-                </IconButton>
-              </Tooltip>
+            <Grid item> 
+              <Notifications/>                           
             </Grid>
             <Grid item>
               <IconButton color="inherit" className={classes.iconButtonAvatar}>
