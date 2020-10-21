@@ -73,4 +73,5 @@ export const EDIT_CHAT = 'EDIT_CHAT'
 
 
 export const EDIT_VALIDATE = 'EDIT_VALIDATE'
+export const ADD_SOCKET ='ADD_SOCKET'
 

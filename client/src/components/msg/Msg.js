@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import socket from './Socket'
 import {
   fade,
   withStyles,
@@ -10,8 +11,9 @@ import SendIcon from '@material-ui/icons/Send';
 import Picker from 'emoji-picker-react';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
-import {addMsg,getMsg,editValidate} from '../../redux/actions/msg';
-import { Element,scroller } from 'react-scroll';
+import {addMsg,getMsg,editValidate,addSocket} from '../../redux/actions/msg';
+import store from '../../redux/store/index'
+
 
  
 const scrollType = {
@@ -132,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight:'30px'
     },
     name:{    
-      fontSize: '15px',
+      fontSize: '14px',
       fontWeight: 'bold'
     },
     boxDate:{
@@ -162,9 +164,11 @@ export default function Msg(props) {
     const userTo = JSON.parse(localStorage.getItem('toUser'))
     const userFrom = JSON.parse(localStorage.getItem('user'))
     const token = localStorage.getItem('token')
-    const chatId = JSON.parse(localStorage.getItem('chatId'))
+    const chat = JSON.parse(localStorage.getItem('chat'))
+    const chats = useSelector(state => state.msg.chats)
     const dispatch = useDispatch()
-    const mensajes=useSelector(state=>state.msg.mensajes)
+    /* const mensajes = useSelector(state => state.msg.mensajes) */
+    const [mensajes,setMensajes] = React.useState(store.getState().msg.mensajes) 
     const date = new Date()
     
     
@@ -197,10 +201,13 @@ export default function Msg(props) {
         description:description,
         toId:userTo.id,        
         to:userTo,
-        from:userFrom,        
+        from:userFrom,
+        updatedAt:date.toISOString()        
       }
       if(data.description){
         dispatch(addMsg(data,token))
+        socket.emit('mensaje',data)
+        
       }
       setDescription('')
       
@@ -208,14 +215,33 @@ export default function Msg(props) {
     }
 
     useEffect(()=>{
-      if(!mensajes.length && chatId){      
-        dispatch(getMsg(chatId,token))
-        dispatch(editValidate())
-        
-      }
-      scroller.scrollTo('4', scrollType);
-    })
+        if(!mensajes.length && chat){
+          dispatch(getMsg(chat.id,token))
+          dispatch(editValidate())
+        } 
+        store.subscribe(() => {
+          setMensajes(() => store.getState().msg.mensajes)
+        })        
+                  
+    },[])
 
+    // conexion en tiempo real con socket io
+    
+    useEffect(()=> {
+      console.log('hola')
+      socket.on('mensajes',mensaje => {
+        dispatch(addSocket(mensaje))
+        setMensajes([...mensajes,mensaje])
+        
+      })
+      return () => {socket.off()}
+    },[mensajes])
+
+    const divRef = React.useRef(null);
+    
+    useEffect(()=>{
+      divRef.current.scrollIntoView({behavior:'smooth'})
+    })
     // modificamos la fecha y la validamos
 
     const changeDate = (updatedAt,validate) => {
@@ -227,6 +253,7 @@ export default function Msg(props) {
       }
       return fecha.toTimeString().split('G')[0];  
     }
+
     return (    
     <div className={classes.root} >
       <Box className={classes.boxMsg}>
@@ -245,13 +272,11 @@ export default function Msg(props) {
           <List component="nav" aria-label="main mailbox folders">
             {mensajes.map((msg,key,elements)=>(
                 <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
-
                   {!key && <Box className = {classes.boxDate} >
                     <Typography className={classes.name} variant="h5">
                         {changeDate(msg.updatedAt,true)}
                     </Typography>
                   </Box> }
-
                   {key && msg.updatedAt.split('T')[0] !== elements[key-1].updatedAt.split('T')[0] ? <Box className = {classes.boxDate}>
                     <Typography className={classes.name} variant="h5">
                       {changeDate(msg.updatedAt,true)}
@@ -279,7 +304,8 @@ export default function Msg(props) {
                     </Box>                                                                                
                 </ListItem>
             ))}
-          </List>    
+          </List> 
+          <div ref={divRef}></div>   
         </Box>
         
         {open && 

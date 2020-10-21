@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import axios from 'axios'
-import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE} from '../consts/actionTypes'
+import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE, ADD_SOCKET} from '../consts/actionTypes'
+import socket from '../../components/msg/Socket'
 
 export function addMsg(data,token){
     
@@ -17,6 +18,7 @@ export function addMsg(data,token){
             })
             data['updatedAt'] = newMsg.data.updatedAt;
             data['chatBack'] = newMsg.data
+            /* socket.emit('mensaje',data) */
             return dispatch({
                 type: ADD_NEWMSG,
                 payload: data
@@ -25,6 +27,15 @@ export function addMsg(data,token){
         catch(err) {console.log(err)}
         
         
+    }
+}
+export function addSocket(data){
+    
+    return async function(dispatch){       
+        return dispatch({
+            type: ADD_SOCKET,
+            payload: data
+        })    
     }
 }
 
@@ -60,6 +71,7 @@ export function getMsg (chatId,token){
                     'auth-token':token
                 }
             });
+            
             return dispatch ({
                 type:GET_MSG,
                 payload:allMsg.data
