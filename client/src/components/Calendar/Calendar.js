@@ -256,6 +256,10 @@ const useStyles = makeStyles((theme) => ({
 
     const editevent = async (data) => {
       var datos = [];
+      let color = ''
+      let url = ''
+      console.log(data.event.url)
+
       await Swal.mixin({
         confirmButtonText: 'Sigueinte &rarr;',
         showCancelButton: true,
@@ -270,18 +274,46 @@ const useStyles = makeStyles((theme) => ({
             return !result && 'Elegi un titulo para tu evento'
           }
         },
+        // {
+        //   title: 'Tipo de evento',
+        //   input: 'radio',
+        //   inputValue: data.event.allDay ? 'Todo el dia' : 'Horario',
+        //   inputOptions: {
+        //     'Todo el dia': 'Todo el dia',
+        //     'Horario': 'Horario',
+        //   },
+        //   inputValidator: (result) => {
+        //     return !result && 'Debes seleccionar al menos una opcion'
+        //   }
+        // },
         {
-          title: 'Tipo de evento',
-          input: 'radio',
-          inputValue: data.event.allDay ? 'Todo el dia' : 'Horario',
-          inputOptions: {
-            'Todo el dia': 'Todo el dia',
-            'Horario': 'Horario',
-          },
-          inputValidator: (result) => {
-            return !result && 'Debes seleccionar al menos una opcion'
+          title: 'Ajustes del evento',
+          html: `
+          <h5>Color del evento<h5>
+          <select class="swal2-input" name="color" id="color">
+            <option value="#3788D8">Azul</option>
+            <option value="#F76300">Naranja</option>
+            <option value="red">Rojo</option>
+            <option value="green">Verde</option>
+            <option value="#58508D">Violeta</option>
+          </select>
+          <h5>Link (opcional)<h5>
+          <input class="swal2-input" type="text" id="url" value=${data.event.url}>
+          `,
+          didOpen: () => {
+                
+            var colorinput = Swal.getContent().querySelector('#color')
+            var urlinput = Swal.getContent().querySelector('#url')
+          
+            colorinput.addEventListener('change', () => {
+              color = colorinput.value
+            })
+
+            urlinput.addEventListener('change', () => {
+              url = urlinput.value
+            })
           }
-        },
+        }
       ]).then((result) => {
         datos = result
       })
@@ -292,7 +324,9 @@ const useStyles = makeStyles((theme) => ({
               eventId: data.event._def.publicId,
               title: datos.value[0],
               allDay: true,
-              cohorteId: cohorteId
+              cohorteId: cohorteId,
+              url: url,
+              color: color ? color : '#3788D8',
             }
             dispatch(modifyEvent(evento))
             setTimeout(() => {
@@ -302,10 +336,8 @@ const useStyles = makeStyles((theme) => ({
             const evento = {
               eventId: data.event._def.publicId,
               title: datos.value[0],
-              // startRecur: selectInfo.startStr,
-              // endRecur: selectInfo.endStr,
-              // startTime: timestart,
-              // endTime: timeend,
+              url: url,
+              color: color ? color : '#3788D8',
               allDay: false,
               cohorteId: cohorteId
             }
