@@ -140,9 +140,11 @@ function tabValue(index) {
             <Grid item>
               <IconButton color="inherit" className={classes.iconButtonAvatar}>
                 <Avatar src={user && user.image} alt="My Avatar" />
-
-                <ExitToAppOutlinedIcon onClick={() => handleLogOut()} />
-
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color="inherit">
+                <ExitToAppOutlinedIcon onClick={handleLogOut}/>
               </IconButton>
             </Grid>
           </Grid>

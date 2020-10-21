@@ -1,6 +1,10 @@
 import React, { useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { editCohort } from '../../../redux/actions/cohorte'
+import { purple } from '@material-ui/core/colors';
+import { update } from '../../../redux/actions/update'
+
+//imports de material UI
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core'
@@ -13,8 +17,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import { purple } from '@material-ui/core/colors';
-import { update } from '../../../redux/actions/update'
 
 
 const useStyles = makeStyles(() => ({
@@ -84,8 +86,8 @@ export default function EditCohort(data) {
     }
     return (
         <div>
-            <IconButton>
-                <EditIcon onClick={handleClickOpen}/>
+            <IconButton onClick={handleClickOpen}>
+                <EditIcon/>
             </IconButton>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <FormControl className={classes.inputContainer}>
