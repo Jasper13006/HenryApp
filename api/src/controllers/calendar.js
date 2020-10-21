@@ -2,9 +2,9 @@ const { Calendar } = require("../db.js");
 
 module.exports = {
   async createCalendar(req, res) {
-    const { title, start, startRecur, end, endRecur, startTime, endTime, allDay, cohorteId } = req.body
+    const { title, start, startRecur, end, endRecur, startTime, endTime, allDay, url, color, userId, cohorteId } = req.body
     if (allDay) {
-      if (!title || !start || !end || !allDay || !cohorteId) {
+      if (!title || !start || !end || !allDay || !color || !cohorteId) {
         res.status(400).send({ message: 'Faltan campos obligatorios', status: 400 })
       }
       try {
@@ -13,6 +13,9 @@ module.exports = {
           start: start,
           end: end,
           allDay: allDay,
+          url: url,
+          color: color,
+          userId: userId,
           cohorteId: cohorteId,
         })
         res.status(201).send({ createdEvent: createEvent })
@@ -32,6 +35,8 @@ module.exports = {
           startTime: startTime,
           endTime: endTime,
           allDay: false,
+          url: url,
+          userId: userId,
           cohorteId: cohorteId
         })
         res.status(201).send(createEvent)
@@ -91,7 +96,6 @@ module.exports = {
           evento.allDay = allDay || evento.allDay
           evento.save()
             .then(() => {
-              console.log(evento)
               res.status(204).send(evento)
             })
         })

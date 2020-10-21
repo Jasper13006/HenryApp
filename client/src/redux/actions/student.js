@@ -43,20 +43,21 @@ export function agregarEstudianteAGrupo(id, data) {
         })
 
             .then(res => {
+                console.log(res)
                 dispatch({
                     type: ADD_STUDENT_TO_GROUP,
                     payload: res.data
                 })
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Listo!',
-                    text: "Se ha agreado al estudiante correctamente",
-                })
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: '¡Listo!',
+                //     text: "Se ha agreado al estudiante correctamente",
+                // })
 
             })
             .catch(e => {
 
-                throw e.message;
+                alert(e.message);
             })
     }
 }

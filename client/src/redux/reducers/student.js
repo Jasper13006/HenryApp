@@ -15,10 +15,10 @@ export default function student(state = initialState, action) {
                 ...state,
                 data: action.payload
             }
-        
-        case STUDENT_BY_USER_ID: 
+
+        case STUDENT_BY_USER_ID:
             return {
-                ...state, 
+                ...state,
                 data: action.payload
             }
 
