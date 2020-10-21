@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { agregarGrupoPm } from '../../../redux/actions/pm';
+import { editGroupPm } from '../../../redux/actions/pm';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
+export default function EditPms({ cohorteId, handleCloseGeneral, openGeneral, idGroup }) {
 
     // const pms = useSelector(state => state.pm)
     const classes = useStyles();
@@ -58,11 +58,9 @@ export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
     const [pms, setPms] = useState()
     const [pm, setPm] = useState();
     const [state, setState] = useState({
-        name: "",
         PM1Id: "",
         PM2Id: "",
-        cohorteId: cohorteId,
-        submitted: false
+        cohorteId: cohorteId
     })
 
     const getPm = () => {
@@ -80,24 +78,8 @@ export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
         setOpenAlert(true);
     };
 
-    const handleCloseAlert = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
 
-        setOpen(false);
 
-    }
-
-    const success = () => {
-        return (
-            <Snackbar open={true} autoHideDuration={6000} onClose={handleCloseAlert}>
-                <Alert onClose={handleCloseAlert} severity="success">
-                    Se agregó el grupo correctamente
-            </Alert>
-            </Snackbar>
-        )
-    }
 
     const handleOpen = () => {
         setOpen(true)
@@ -118,40 +100,30 @@ export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
     }
 
 
-
+    console.log(cohorteId)
 
     const handleSubmit = (e) => {
         console.log(e.target.value);
-        dispatch(agregarGrupoPm(state))
-        handleCloseAll()
+        dispatch(editGroupPm(idGroup, state))
+        handleCloseGeneral()
 
     }
 
 
     return (
         <div>
-            <Button onClick={handleOpen} style={{ color: "black", backgroundColor: "yellow", }} aria-label="add" >
-                <h2 style={{ fontSize: "30px" }}>+</h2>
+            <Button onClick={handleOpen} aria-label="add" variant="outlined" styled={{}} >
+                <h2 style={{ fontSize: "20px", }}>Editar PMS</h2>
             </Button>
             {open && <form onSubmit={handleSubmit}>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Agregar un grupo de PM</DialogTitle>
+                    <DialogTitle style={{ backgroundColor: "yellow", color: "black" }} id="form-dialog-title" > Agregar un grupo de PM</DialogTitle>
 
                     <DialogContent>
                         <DialogContentText>
                             Por favor, llene todos los campos para poder crear un nuevo grupo de PM.
           </DialogContentText>
-                        <TextField
-                            onChange={handleInputChange}
-                            autoFocus
-                            name="name"
-                            margin="dense"
-                            type="text"
-                            id="name"
-                            label="Nombre del grupo"
-                            type="email"
-                            fullWidth
-                        />
+
 
 
 
@@ -191,7 +163,7 @@ export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
                             Cancelar
           </Button>
                         <Button type="submit" onClick={handleSubmit} color="primary">
-                            Crear grupo
+                            Listo
           </Button>
                     </DialogActions>
 

@@ -63,9 +63,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleAccordion() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const pmGroup = useSelector(state => state.pm.data && state.pm.data.gpm)
+    const pmGroup = useSelector(state => state.groupPm.data && state.groupPm.data.gpm)
     const students = useSelector(state => state.student.data)
     const option = useSelector(state => state.panel.data)
+    const test = useSelector(state => state)
     const user = JSON.parse(localStorage.getItem("user"))
     const [unique, setUnique] = useState()
     const [active, setActive] = useState(false)
@@ -73,6 +74,7 @@ export default function SimpleAccordion() {
 
     const token = localStorage.getItem("token")
 
+    console.log(test)
 
     useEffect(() => {
         dispatch(getStudent(user.id))
@@ -97,7 +99,7 @@ export default function SimpleAccordion() {
         setActive2(true)
     }
 
-
+    console.log(pmGroup)
     return (
 
         <div className={classes.root}>
