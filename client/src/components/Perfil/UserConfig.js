@@ -48,13 +48,16 @@ export default function UserConfig({token,id,user}){
         }).then(res=>res.data)
         .then(data=>{
             if(data){
+                // console.log(data)
+                // console.log("ue1")
                 setPrivacy(data.userPrivacy)
             }
         })
     },[updater])
 
     useEffect(()=>{
-        if(!privacy || privacy.userPrivacy===null){
+        // console.log(privacy)
+        if(!privacy){
             axios({
                 method: 'POST',
                 url:`http://localhost:3001/user/set_privacy`,
@@ -65,10 +68,11 @@ export default function UserConfig({token,id,user}){
                 headers: {"auth-token": token},
             }).then(res=>res.data)
             .then(data=>{
+                // console.log("ue2")
                 setUpdater(updater+1)
             })
         }
-    },[])
+    },[privacy])
 
     useEffect(()=> {
         dispatch(getStudents())
@@ -89,6 +93,7 @@ export default function UserConfig({token,id,user}){
     },[])
 
     const handleChange=async(e)=>{
+        e.preventDefault()
         setPrivacy({...privacy, [e.target.name] : e.target.value})
         axios({
             method: 'PUT',
@@ -106,7 +111,7 @@ export default function UserConfig({token,id,user}){
             for(let i of  allPrivacy){
                 let element={}
                 element={
-                    email: i.emailP,
+                    emailP: i.emailP,
                     onLineStatus: i.onLineStatus,
                     gitHub: i.gitHub,
                     linkedIn: i.linkedIn
@@ -128,25 +133,41 @@ export default function UserConfig({token,id,user}){
         setFilter({...filter, [e.target.name] : e.target.value})
     }
 
-    const accessControl=(userId,type)=>{
-        if(privacyData[userId]){
+    const accessControl= (userId,type)=>{
+        let priv = privacyData[userId]
+        if(priv){
+            // console.log("type: ",type, priv[type])
+            // console.log("userId: ", userId)
             if(user.admin){
+                // console.log("opcion 1")
                 return(true) 
             }
             else if(user.instructor || user.pm){
-                if(privacyData[userId][type]==="cohorte" || privacyData[userId][type]==="todos"){
+                // console.log("opcion 2")
+                if(priv[type]==="cohorte" || priv[type]==="todos"){
                     return(true)
                 }
             }
             else if(user.student){
-                if(privacyData[userId][type]==="todos"){
+                // console.log("opcion 3")
+                if(priv[type]==="todos"){
+                    // console.log("esto otro")
                     return(true)
                 } 
             }
             return(false)
         }
+        // console.log("final")
         return(true)
     }
+
+    // if(privacy){
+    //     console.log("privacy: ", privacy)
+    // }
+
+    // if(usuarios){
+    //     console.log("usuarios: ",usuarios)
+    // }
 
     return(
         <Paper className={classes.root}>
@@ -249,9 +270,12 @@ export default function UserConfig({token,id,user}){
                 </TableRow>
             </TableHead>
             <TableBody>
-                {(usuarios && filter) && usuarios.map((usuario,index)=>
+                {(usuarios && filter && privacyData) && usuarios.map((usuario,index)=>
                 <>
                 {(index && filter &&
+                !((filter.nombre==="" || !filter.nombre) &&
+                    (filter.apellido==="" || !filter.apellido) && 
+                    (filter.cohorte==="" || !filter.cohorte)) &&
                 (!filter.nombre ||isPartOf(usuario.user.name, filter.nombre)) &&
                 (!filter.apellido || isPartOf(usuario.user.lastName, filter.apellido)) &&
                 (!filter.cohorte || (usuario.cohorteId).toString()===filter.cohorte)
@@ -264,7 +288,7 @@ export default function UserConfig({token,id,user}){
                         {usuario.user.lastName}
                     </TableCell>
                     <TableCell>
-                        {accessControl(usuario.user.id,"email") && (usuario.user.email)}
+                        {accessControl(usuario.user.id,"emailP")?(usuario.user.email):null}
                     </TableCell>
                     <TableCell>
                         {accessControl(usuario.user.id,"gitHub") &&
@@ -274,7 +298,9 @@ export default function UserConfig({token,id,user}){
                     <TableCell>
                         {accessControl(usuario.user.id,"linkedIn")&&
                         <a href={usuario.user.googleId} target="_blank">
-                            <Button variant="outlined">Ir</Button></a>}
+                            <Button variant="outlined">
+                                {usuario.user.googleId && usuario.user.googleId!=="empty"?"Ir":""}
+                            </Button></a>}
                     </TableCell>
                     <TableCell>
                         {accessControl(usuario.user.id,"onLineStatus") && <Circle state="on"/>}

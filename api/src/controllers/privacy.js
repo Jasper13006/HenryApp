@@ -2,13 +2,22 @@ const { Privacy, User } = require("../db.js");
 
 module.exports = {
   async setPrivacy(req, res) {
-    const { email, onLineStatus,gitHub,linkedIn, userId } = req.body
+    const { emailP, onLineStatus,gitHub,linkedIn, userId } = req.body
     if (!userId) {
-        res.status(400).send({ message: 'No se ha identificado el usuario', status: 400 })
+        return res.status(400).send({ message: 'No se ha identificado el usuario', status: 400 })
+    }
+    let current = await Privacy.findOne({
+      where:{
+        userId: userId
+      }
+    })
+    if(current){
+      console.log(current)
+      return res.status(204).send(current)
     }
     try {
         const privacyStatus = await Privacy.create({
-          emailP: email,
+          emailP: emailP,
           onLineStatus: onLineStatus,
           gitHub: gitHub,
           linkedIn:linkedIn,
@@ -43,7 +52,7 @@ module.exports = {
         },
 
     async changePrivacy(req, res) {
-        const { userId, email, onLineStatus, gitHub, linkedIn} = req.body
+        const { userId, emailP, onLineStatus, gitHub, linkedIn} = req.body
         if (!userId) {
             res.status(400).send({ message: 'Faltan campos obligatorios', status: 400 })
         }
@@ -53,7 +62,7 @@ module.exports = {
                   userId: userId
               }
             })
-            userPrivacy.emailP = email || userPrivacy.emailP
+            userPrivacy.emailP = emailP || userPrivacy.emailP
             userPrivacy.onLineStatus = onLineStatus || userPrivacy.onLineStatus
             userPrivacy.gitHub = gitHub || userPrivacy.gitHub
             userPrivacy.linkedIn = linkedIn || userPrivacy.linkedIn
