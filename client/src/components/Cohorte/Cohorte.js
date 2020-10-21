@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Admin from './admin/Admin';
 import './Cohorte.css';
 
+//imports de material UI
 import Typography from '@material-ui/core/Typography';
 import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper';
@@ -102,7 +103,6 @@ export default function Cohorte(){
         dispatch(getCohorteUser(student[0].cohorteId))
         setDispatchActivo(true)
     }
-    console.log(modulos)
     return (
         <div className={classes.root}>
         {

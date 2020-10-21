@@ -2,7 +2,9 @@ import React, { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { traerUsuarios } from '../../../redux/actions/user'
 import { addUserToACohort } from '../../../redux/actions/cohorte'
+import { update } from '../../../redux/actions/update'
 
+//imports de material UI
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { IconButton } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -74,6 +76,7 @@ export default function AddStudent(data) {
     };
     
     const handleClose = () => {
+        setStudentsToAdd([])
         setOpen(false);
     };
     const handleToggle = (id) => {
@@ -87,6 +90,7 @@ export default function AddStudent(data) {
     const handleSubmit = () => {
         for(var i = 0; i < studentsToAdd.length; i++){
             dispatch(addUserToACohort(data.id, studentsToAdd[i]))
+            dispatch(update())
         }
         handleClose()
         Swal.fire({

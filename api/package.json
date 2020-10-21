@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon -L",
     "forever": "forever index.js",
-    "test": "mocha -w ./tests/**/*.spec.js"
+    "test": "mocha -w ./tests/**/*.spec.js",
+    "dev":"nodemon servidor"
   },
   "author": "Dev5",
   "license": "ISC",
@@ -27,11 +28,13 @@
     "faker": "^5.1.0",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
     "mongoose": "^5.10.7",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.13",
     "pg": "^8.3.0",
-    "sequelize": "^6.3.4"
+    "sequelize": "^6.3.4",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

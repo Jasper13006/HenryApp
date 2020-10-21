@@ -7,17 +7,17 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 // import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import Tab from '@material-ui/core/Tab';
+import {Tab,Badge} from '@material-ui/core/';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
-
+import Notifications from './Notifications'
 import { useDispatch } from 'react-redux';
 import { setActiveOptionPanel } from '../../redux/actions/panel'
 import Swal from 'sweetalert2'
@@ -55,23 +55,22 @@ const styles = (theme) => ({
 function Header(props) {
   const dispatch = useDispatch()
   const { classes, onDrawerToggle } = props;
-  const [user, setUser] = useState(null)
+  const user = JSON.parse(localStorage.getItem('user'))
   const [value, setValue] = useState(0)
 
   //En este objeto colocar los nombres de las opciones para cada ruta del panel
   const options={
 
-    "/panel/perfil":["Datos Personales","Cambiar contraseña"],
+    "/panel/perfil":["Datos Personales","Cambiar contraseña","Configuración"],
     "/panel/cohorte":["Cohorte","Alumnos"],
     "/panel/PM":["Anuncios","Chat"],
     "/panel/pair_programming":["Feedback","Evaluar"],
-    "/panel/notas":["Resumen de Notas","Ranking"],
+    "/panel/notas":["Resumen de Notas"],
     "/panel/invitacion":["Individual",'Hoja excel'],
+    "/panel/calificar":["Individual",'Consultar','Múltiple'],
   }
 
-  useEffect(() => {
-    setUser(store.getState().usuario.user)
-  }, [])
+
 
   const location = useLocation();
   const url = location.pathname;
@@ -133,19 +132,17 @@ function tabValue(index) {
               </Grid>
             </Hidden>
             <Grid item xs />
-            <Grid item>
-              <Tooltip title="Alerts • No alerts">
-                <IconButton color="inherit">
-                  <NotificationsIcon />
-                </IconButton>
-              </Tooltip>
+            <Grid item> 
+              <Notifications/>                           
             </Grid>
             <Grid item>
               <IconButton color="inherit" className={classes.iconButtonAvatar}>
                 <Avatar src={user && user.image} alt="My Avatar" />
-
-                <ExitToAppOutlinedIcon onClick={() => handleLogOut()} />
-
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color="inherit">
+                <ExitToAppOutlinedIcon onClick={handleLogOut}/>
               </IconButton>
             </Grid>
           </Grid>

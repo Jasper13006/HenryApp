@@ -11,13 +11,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import { Link, useLocation } from 'react-router-dom';
-import { useFormControl } from '@material-ui/core';
 import users from '../../redux/reducers/getUsers';
+import NavMsg from '../msg/NavMsg'
 
 
 const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
 const modules=["Módulo 1","Módulo 2","Módulo 3","Módulo 4"]
-const adminOptions=["perfil","cohorte","PM","invitacion"]
+const adminOptions=["perfil","cohorte","PM","calificar","invitacion"]
 
 
 const styles = (theme) => ({
@@ -117,6 +117,7 @@ function Navigator(props) {
                     </Link>
                 </ListItem>)
                 }
+                <NavMsg/>
         </List>
         </Drawer>
     );

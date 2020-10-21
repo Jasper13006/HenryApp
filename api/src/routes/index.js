@@ -18,6 +18,7 @@ const groupPpRouter = require ('./pP')
 const adminRoute = require('./createAdmin')
 // load each router on a route
 // i.e: router.use('/auth', authRouter);
+const msgRouter = require('./msg')
 
 
 router.use("/user", userRouter);
@@ -30,6 +31,7 @@ router.use("/cohorte", cohorteRouter);
 router.use("/groupPp", groupPpRouter);
 router.use("/invite", inviteRouter);
 router.use("/calendar", calendarRouter);
+router.use('/msg',msgRouter);
 
 module.exports = router;
 

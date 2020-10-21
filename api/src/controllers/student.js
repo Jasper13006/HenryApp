@@ -131,7 +131,6 @@ module.exports = {
         include: [
           {
             model: Cohorte,
-            attributes: ["name"],
           },
           {
             model: Grouppm,
@@ -178,7 +177,34 @@ module.exports = {
       console.log(error)
     }
   },
+  async modifyStudent(req, res) {
+    const { cohorteId } = req.body
+    const { studentId } = req.params
+    if(!cohorteId || !studentId){
+      return res.status(500)
+    }
+    console.log("este es el id del cohorte: ",cohorteId, "y este el id del student: ", studentId)
+    try{
+      const estudiante = await Student.findOne({
+        where: {id: studentId}
+      })
+      // console.log(estudiante)
+      if(!estudiante){
+        return res.status(404)
+      }
+      if(estudiante.cohorteId === cohorteId){
+        return res.status(500).json({message: "el estudiante ya es parte de ese cohorte"})
+      }
+      const studentModified = await estudiante.update({
+        cohorteId: cohorteId,
+        migraciones: estudiante.migraciones + 1
+      })
+      console.log(studentModified)
 
+      res.status(201).json({student: studentModified.id, migraciones: studentModified.migraciones, message: "Estudiante modificado"})
+    }catch{
+      return res.status(400).json({message: "verifica bien los datos y vuelve a intentarlo..."})
+    }
+  },
 }
-
 
