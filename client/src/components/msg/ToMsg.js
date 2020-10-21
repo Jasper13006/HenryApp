@@ -17,6 +17,7 @@ import {getMsg,deleteMsgs} from '../../redux/actions/msg'
 
 
 
+
 const BootstrapInput = withStyles((theme) => ({
   root: {
     'label + &': {
@@ -117,7 +118,7 @@ export default function ToMsg(props) {
         })
         if(validate){
             dispatch(deleteMsgs())
-            localStorage.removeItem('chatId');
+            localStorage.removeItem('chat');
         }
         localStorage.setItem('toUser', JSON.stringify(user));       
         props.history.push('/panel/mensaje_directo')

@@ -1,8 +1,7 @@
 import React from 'react';
-
+import socket from './Socket'
 import { makeStyles } from '@material-ui/core/styles';
 import {Accordion,List,Badge,Alert} from '@material-ui/core/';
-
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {useDispatch,useSelector} from 'react-redux'
 import {getChats,getMsg,editChat} from '../../redux/actions/msg'
 import { useHistory } from 'react-router-dom';
+import store from '../../redux/store/index'
 
 
 
@@ -71,7 +71,7 @@ export default function NavMsg(props) {
   const history = useHistory()
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const chats = useSelector(state => state.msg.chats);
+  const [chats,setChats] = React.useState([])
   const id = localStorage.getItem('idUser')
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
@@ -92,19 +92,29 @@ export default function NavMsg(props) {
     }else{
       localStorage.setItem('toUser', JSON.stringify(chat.from));
     }
-    localStorage.setItem('chatId',chat.id);
+    localStorage.setItem('chat',JSON.stringify(chat));
     dispatch(getMsg(chat.id,token))
     if(chat.from.id != id && !chat.check){
-      dispatch(editChat(chat.id,token))
-      
+      dispatch(editChat(chat.id,token))  
     }    
     history.push('/panel/mensaje_directo')
   }
 
   React.useEffect(() => {
     dispatch(getChats(token))
-    
+    store.subscribe(() => {
+      setChats(() => store.getState().msg.chats)
+    }) 
+      
   },[])
+
+  React.useEffect(()=> {
+    socket.on('getChats',chat => {
+      console.log(chat)
+      setChats(chat);
+    })
+    return () => {socket.off()}
+  },[chats])
 
   return (
     <div className={classes.root}>

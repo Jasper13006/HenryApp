@@ -555,6 +555,12 @@ server.post("/seed", async (req, res) => {
     "name": "Student",
     "lastName": "It78",
   })
+  const alum79 = await User.create({ //id: 87
+    "email": "jslugo235@gmail.com",
+    "password": 'Henry1234',
+    "name": "jhoan",
+    "lastName": "Lugo",
+  })
   /////////////// COHORTES ////////////////
   const cohorte1 = await Cohorte.create({
     "name": "webft01",
