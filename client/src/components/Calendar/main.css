@@ -48,6 +48,25 @@ b { /* used for event dates/times */
   flex-grow: 1;
   padding: 3em;
 }
+/* // Small devices (landscape phones, 576px and up) */
+@media (max-width: 1200px) { 
+  .side-bar {
+    display: none;
+  }
+ }
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {  }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {  }
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+  
+}
+
+
 
 .fc { /* the calendar root */
   max-width: 1100px;
@@ -60,4 +79,8 @@ b { /* used for event dates/times */
 
 .right-gap {
   margin-right: auto;
+}
+
+a {
+  color: black;
 }

@@ -121,7 +121,7 @@ function tabValue(index) {
             <Typography color="inherit" variant="h5" component="h1" >
               {url !== "/" ? formatString(url) : "Home"}
             </Typography>
-            <Hidden smUp>
+            <Hidden mdUp>
               <Grid item>
                 <IconButton
                   color="inherit"

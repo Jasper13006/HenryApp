@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
           confirmButtonText: 'Sigueinte &rarr;',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
-          progressSteps: ['1', '2', '3']
+          progressSteps: ['1', '2', '3'],
         }).queue([
           {
             title: 'Titulo del evento',
@@ -119,14 +119,15 @@ const useStyles = makeStyles((theme) => ({
             title: 'Ajustes del evento',
             html: `
             <h5>Color del evento<h5>
-            <select name="color" id="color">
-            <option value="blue" selected>Azul</option>
-              <option value="red">Rojo</option> 
+            <select class="swal2-input" name="color" id="color">
+              <option value="#3788D8" selected>Azul</option>
+              <option value="#F76300">Naranja</option>
+              <option value="red">Rojo</option>
               <option value="green">Verde</option>
-              <option value="yellow">Amarillo</option>
+              <option value="#58508D">Violeta</option>
             </select>
             <h5>Link (opcional)<h5>
-            <input type="text" id="url">
+            <input class="swal2-input" type="text" id="url">
             `,
             didOpen: () => {
                   
@@ -144,9 +145,6 @@ const useStyles = makeStyles((theme) => ({
           }
         ]).then((result) => {
           arrResult = result
-          console.log(result)
-          console.log(color)
-          console.log(url)
         })
 
           if (arrResult.value && arrResult.value.length !== 0) {
@@ -230,8 +228,7 @@ const useStyles = makeStyles((theme) => ({
       }
     }
 
-    const handleEditEvent = async (data) => {
-      console.log(data)
+    const handleDragEvent = async (data) => {
       if (data.event.allDay) {
         const evento = {
           eventId: data.event._def.publicId,
@@ -336,7 +333,10 @@ const useStyles = makeStyles((theme) => ({
              cancelButton: 'order-1 right-gap',
              confirmButton: 'order-2',
              denyButton: 'order-3',
-           }
+           },
+           html: clickInfo.event.url ? `
+           <a href=${clickInfo.event.url} target="_blank">Ir al link del evento</a>
+           ` : null
           }).then((result) => {
             if (result.isConfirmed) {
               editevent(clickInfo)
@@ -348,7 +348,7 @@ const useStyles = makeStyles((theme) => ({
              dispatch(update())
            }, 100)
          })
-      } else {
+      } else if (clickInfo.event.url){
         window.open(clickInfo.event.url);
       }
     }
@@ -383,7 +383,7 @@ const useStyles = makeStyles((theme) => ({
           }
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
-              {/* <li>Arrastra, suelta y cambia el tamaño de los eventos</li> */}
+              <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
               <li>Hace click en un evento para eliminarlo</li>
             </ul>
           </div>
@@ -406,7 +406,9 @@ const useStyles = makeStyles((theme) => ({
 
     return (
       <div className='demo-app'>
+        <div className='side-bar'>
         {renderSidebar()}
+        </div>
         <div className='demo-app-main'>
           <FullCalendar
             locale={esLocale}
@@ -431,7 +433,7 @@ const useStyles = makeStyles((theme) => ({
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-            eventChange={handleEditEvent}
+            eventChange={handleDragEvent}
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
             eventRemove={function(){}}

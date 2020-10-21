@@ -137,7 +137,7 @@ const styles = {
         minHeight: '100vh',
     },
     drawer: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: drawerWidth,
             flexShrink: 0,
         },
@@ -179,7 +179,7 @@ function Paperbase(props) {
                             onClose={handleDrawerToggle}
                         />
                     </Hidden>
-                    <Hidden xsDown implementation="css">
+                    <Hidden smDown implementation="css">
                         <Navigator PaperProps={{ style: { width: drawerWidth, backgroundColor: "#2e2e2e" } }} />
                     </Hidden>
                 </nav>

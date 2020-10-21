@@ -52,7 +52,7 @@ export const INITIAL_EVENTS = [
     url: 'http://google.com.ar',
   },
   {
-    title: "Free Pizza",
+    title: "PREUEBA",
     allday: "false",
     borderColor: "#5173DA",
     color: "#99ABEA",
@@ -60,7 +60,8 @@ export const INITIAL_EVENTS = [
     description: "Fake description for the Free Pizza",
     start: "2020-10-15T16:30:28",
     end: "2020-10-15T17:30:28",
-    url: "some url"
+    url: "http://google.com.ar",
+    textDecoration: 'none'
 },
 {
     title: "CSS Meetup",
