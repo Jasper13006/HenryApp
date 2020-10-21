@@ -1,4 +1,4 @@
-const { Cohorte, User,  Student,Grouppm } = require("../db.js");
+const { Cohorte, User, Student, Grouppm } = require("../db.js");
 const grouppm = require("../models/grouppm.js");
 const student = require("./student.js");
 
@@ -38,7 +38,7 @@ module.exports = {
   async getCohortes(req, res) {
     try {
       const cohortes = await Cohorte.findAll({
-        order:[['id','ASC']]
+        order: [['id', 'ASC']]
       })
       if (cohortes && cohortes.length === 0) {
         return res.status(404).send({ message: "No hay cohortes" });
@@ -89,44 +89,45 @@ module.exports = {
     }
   },
 
-  async getGourpmbyCohorte(req, res) {  
+  async getGourpmbyCohorte(req, res) {
     try {
       let result = []
       const grouppms = await Grouppm.findAll({
         where: {
           cohorteId: req.params.id,
         },
-        include: [         
-          { model: User, attributes: ["name", "lastName", "id"],as: 'PM1' },
-          { model: User, as: 'PM2', attributes: ["name", "lastName", "id"]},          
+        include: [
+          { model: User, attributes: ["name", "lastName", "id"], as: 'PM1' },
+          { model: User, as: 'PM2', attributes: ["name", "lastName", "id"] },
         ],
+        order: [['id', 'ASC']],
         attributes: ["name", "id"]
       })
-      if(!grouppms) return  res.send({ message: 'no hay grupos de pms en este cohorte',status:400 })
+      if (!grouppms) return res.send({ message: 'no hay grupos de pms en este cohorte', status: 400 })
       for (let index = 0; index < grouppms.length; index++) {
         const student = await Student.findAll({
-          where:{
-            grouppmId:grouppms[index].id,
-            cohorteId:req.params.id,
-          },          
-          include:[{
-            model:User,
+          where: {
+            grouppmId: grouppms[index].id,
+            cohorteId: req.params.id,
+          },
+          include: [{
+            model: User,
             attributes: ["name", "lastName", "id"]
           }],
-          attributes: ["cohorteId", "id","grouppmId"]
+          attributes: ["cohorteId", "id", "grouppmId"]
         })
-        result.push({groupPm:grouppms[index],students:student})
+        result.push({ groupPm: grouppms[index], students: student })
       }
       return res.send(result)
-    }catch(error) {
-       console.log(error)      
-    }      
+    } catch (error) {
+      console.log(error)
+    }
   },
-  
-  async modifyCohort(req, res){
+
+  async modifyCohort(req, res) {
     const { id } = req.params
     const { name, date, instructorId } = req.body
-    if(!name && !date && !instructorId) return res.status(400).json({message: "para modificar un cohorte debes integrar el campo que quieres que cambie"})
+    if (!name && !date && !instructorId) return res.status(400).json({ message: "para modificar un cohorte debes integrar el campo que quieres que cambie" })
     try {
       const cohort = await Cohorte.findOne({
         where: {
@@ -134,13 +135,13 @@ module.exports = {
         }
       })
       console.log(cohort)
-        cohort.name = name || cohort.name
-        cohort.date = date || cohort.date
-        cohort.instructorId = instructorId || cohort.instructorId
-        cohort.save()
-        return  res.status(201).json(cohort)
-    }catch{
-      return res.status(401).json({message: "No se pudo encontrar el cohorte que quiere modificar"})
+      cohort.name = name || cohort.name
+      cohort.date = date || cohort.date
+      cohort.instructorId = instructorId || cohort.instructorId
+      cohort.save()
+      return res.status(201).json(cohort)
+    } catch {
+      return res.status(401).json({ message: "No se pudo encontrar el cohorte que quiere modificar" })
     }
   }
 }

@@ -74,7 +74,7 @@ export default function CustomizedMenus() {
         }else{
         localStorage.setItem('toUser', JSON.stringify(chat.from));
         }
-        localStorage.setItem('chatId',chat.id);
+        localStorage.setItem('chat',JSON.stringify(chat));
         dispatch(getMsg(chat.id,token))
         setAnchorEl(null);
         if(chat.from.id != id && !chat.check){

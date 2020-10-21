@@ -555,6 +555,12 @@ server.post("/seed", async (req, res) => {
     "name": "Student",
     "lastName": "It78",
   })
+  const alum79 = await User.create({ //id: 87
+    "email": "jslugo235@gmail.com",
+    "password": 'Henry1234',
+    "name": "jhoan",
+    "lastName": "Lugo",
+  })
   /////////////// COHORTES ////////////////
   const cohorte1 = await Cohorte.create({
     "name": "webft01",
@@ -1183,38 +1189,38 @@ server.post("/seed", async (req, res) => {
     "linkVideos": "https://vimeo.com/soyhenry/review/458619858/bd6cf5a429?sort=lastUserActionEventDate&direction=desc",
     "cohorteId": 1
   })
-  await Calendar.create({
-    "title": "Evento dia",
-    "start": "2020-10-01",
-    "end": "2020-10-01",
-    "allDay": true,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento largo",
-    "start": "2020-10-07",
-    "end": "2020-10-10",
-    "allDay": true,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento horario recurrente",
-    "startRecur": "2020-10-09",
-    "endRecur": "2020-10-09",
-    "startTime": "09:00",
-    "endTime": "12:30",
-    "allDay": false,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento horario recurrente",
-    "startRecur": "2020-10-16",
-    "endRecur": "2020-10-16",
-    "startTime": "09:00",
-    "endTime": "12:30",
-    "allDay": false,
-    "cohorteId": 1,
-  })
+  // await Calendar.create({
+  //   "title": "Evento dia",
+  //   "start": "2020-10-01",
+  //   "end": "2020-10-01",
+  //   "allDay": true,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento largo",
+  //   "start": "2020-10-07",
+  //   "end": "2020-10-10",
+  //   "allDay": true,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento horario recurrente",
+  //   "startRecur": "2020-10-09",
+  //   "endRecur": "2020-10-09",
+  //   "startTime": "09:00",
+  //   "endTime": "12:30",
+  //   "allDay": false,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento horario recurrente",
+  //   "startRecur": "2020-10-16",
+  //   "endRecur": "2020-10-16",
+  //   "startTime": "09:00",
+  //   "endTime": "12:30",
+  //   "allDay": false,
+  //   "cohorteId": 1,
+  // })
   res.status(200).send('seed finalizado exitosamente!!')
  })
 

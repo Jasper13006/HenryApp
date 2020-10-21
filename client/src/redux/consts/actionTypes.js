@@ -46,6 +46,7 @@ export const GET_PM = "GET_PM";
 export const GET_GROUP_PM = "GET_GROUP_PM";
 export const GET_GROUP_PM_COHORTE = "GET_GROUP_PM_COHORTE";
 export const ADD_GROUP_PM = "ADD_GROUP_PM";
+export const EDIT_PMS = "EDIT_PMS"
 
 /* ------------------------------------------------------------------------------- /
 / STUDENT /
@@ -73,4 +74,5 @@ export const EDIT_CHAT = 'EDIT_CHAT'
 
 
 export const EDIT_VALIDATE = 'EDIT_VALIDATE'
+export const ADD_SOCKET ='ADD_SOCKET'
 

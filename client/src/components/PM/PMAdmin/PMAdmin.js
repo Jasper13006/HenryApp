@@ -64,7 +64,7 @@ export default function ComplexGrid() {
                 {cohorte.name}
 
             </Button>
-                <Dialog fullScreen={true} fullWidth={true} open={open} onClose={() => handleClose} TransitionComponent={Transition}>
+                <Dialog fullScreen={false} fullWidth={true} open={open} onClose={() => handleClose} TransitionComponent={Transition}>
                     {open && <PmGroup cohorteId={id} handleClose={handleClose} handleClickOpen={handleClickOpen} />}
                 </ Dialog>
 
@@ -74,4 +74,3 @@ export default function ComplexGrid() {
         </div>
     );
 }
-

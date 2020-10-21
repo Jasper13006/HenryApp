@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@material-ui/core'
-import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE} from '../consts/actionTypes'
+import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE,ADD_SOCKET} from '../consts/actionTypes'
 
 const initialState = {
     mensajes:[],
@@ -32,6 +32,11 @@ export default function msg (state = initialState,action){
                 ...state,
                 mensajes:state.mensajes.concat(action.payload),
                 chats:filterOrDelete(action.payload,state.chats)
+            };
+        case ADD_SOCKET:
+            return{
+                ...state,
+                mensajes:state.mensajes.concat(action.payload)
             };
         case GET_CHATS:
             return{

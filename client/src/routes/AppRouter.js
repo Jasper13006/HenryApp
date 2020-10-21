@@ -10,6 +10,7 @@ import { PublicRoute } from './PublicRoute';
 import axios from 'axios';
 import ForgetPass from '../components/login/ForgetPass';
 import ResetPass from '../components/login/ResetPass'
+import socket from '../components/msg/Socket';
 
 
 const AppRouter = () => {
@@ -17,6 +18,7 @@ const AppRouter = () => {
     const token = localStorage.getItem("token")
 
     useEffect(() => {
+        socket.emit('conectado','hola desde cliente')
         if(!token){
             const fectData = async () => {
                 const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }

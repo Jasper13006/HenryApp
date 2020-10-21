@@ -12,12 +12,15 @@ import usuarios from './getUsers'
 import students from './students'
 import student from './student'
 import update from './update'
+import groupPm from './groupPm.js'
 import msg from './msg'
+
 
 
 
 const rootReducer = combineReducers({
     usuario,
+    groupPm,
     panel,
     login,
     getCohorteUser,
@@ -31,7 +34,6 @@ const rootReducer = combineReducers({
     students,
     update,
     msg,
-
 });
 
 export default rootReducer;
