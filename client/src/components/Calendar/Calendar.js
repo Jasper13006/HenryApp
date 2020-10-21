@@ -18,6 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
+import {INITIAL_EVENTS, createEventId} from './event-utils'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -53,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
       }
       dispatch(getCohortes())
       if(cohorteId) {
-        console.log('entro al if de cohorteId')
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
         .then(res => res.json())
         .then(data => {
@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
       .then(data => {
         setGetEvents(data)
       })
-      console.log(student[0].cohorteId)
       setCohorteId(student[0].cohorteId)
     }
   }, [student])
@@ -87,6 +86,8 @@ const useStyles = makeStyles((theme) => ({
       calendarApi.unselect() // clear date selection
       let timestart = ''
       let timeend = ''
+      let color = ''
+      let url = ''
       let arrResult =  []
 
       if(cohorteId){
@@ -94,12 +95,11 @@ const useStyles = makeStyles((theme) => ({
           confirmButtonText: 'Sigueinte &rarr;',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
-          progressSteps: ['1', '2']
+          progressSteps: ['1', '2', '3'],
         }).queue([
           {
             title: 'Titulo del evento',
             input: 'text',
-            // inputValue: {}
             inputValidator: (result) => {
               return !result && 'Elegi un titulo para tu evento'
             }
@@ -115,6 +115,34 @@ const useStyles = makeStyles((theme) => ({
               return !result && 'Debes seleccionar al menos una opcion'
             }
           },
+          {
+            title: 'Ajustes del evento',
+            html: `
+            <h5>Color del evento<h5>
+            <select class="swal2-input" name="color" id="color">
+              <option value="#3788D8" selected>Azul</option>
+              <option value="#F76300">Naranja</option>
+              <option value="red">Rojo</option>
+              <option value="green">Verde</option>
+              <option value="#58508D">Violeta</option>
+            </select>
+            <h5>Link (opcional)<h5>
+            <input class="swal2-input" type="text" id="url">
+            `,
+            didOpen: () => {
+                  
+              var colorinput = Swal.getContent().querySelector('#color')
+              var urlinput = Swal.getContent().querySelector('#url')
+            
+              colorinput.addEventListener('change', () => {
+                color = colorinput.value
+              })
+
+              urlinput.addEventListener('change', () => {
+                url = urlinput.value
+              })
+            }
+          }
         ]).then((result) => {
           arrResult = result
         })
@@ -161,28 +189,34 @@ const useStyles = makeStyles((theme) => ({
                 start: selectInfo.startStr,
                 end: selectInfo.endStr,
                 allDay: true,
+                url: url,
+                color: color ? color : '#3788D8',
+                userId: user.id,
                 cohorteId: cohorteId
               }
-              createEvent(evento)
+              dispatch(createEvent(evento))
               // setUpdate(update + 1)
               setTimeout(() => {
                 dispatch(update())
               }, 100)
           } else {
-            const evento = {
-              title: arrResult.value[0],
-              startRecur: selectInfo.startStr,
-              endRecur: selectInfo.endStr,
-              startTime: timestart,
-              endTime: timeend,
-              allDay: false,
-              cohorteId: cohorteId
+            if (timestart && timeend) {
+              const evento = {
+                title: arrResult.value[0],
+                startRecur: selectInfo.startStr,
+                endRecur: selectInfo.endStr,
+                startTime: timestart,
+                endTime: timeend,
+                allDay: false,
+                url: url,
+                userId: user.id,
+                cohorteId: cohorteId
+              }
+              dispatch(createEvent(evento))
+              setTimeout(() => {
+                dispatch(update())
+              }, 100)
             }
-            dispatch(createEvent(evento))
-            // setUpdate(update + 1)
-            setTimeout(() => {
-              dispatch(update())
-            }, 100)
           }
         }
       } else {
@@ -194,15 +228,13 @@ const useStyles = makeStyles((theme) => ({
       }
     }
 
-    const handleEditEvent = async (data) => {
-      console.log(data)
+    const handleDragEvent = async (data) => {
       if (data.event.allDay) {
         const evento = {
           eventId: data.event._def.publicId,
           start: data.event.startStr,
           end: data.event.endStr,
         }
-        console.log(evento)
         await dispatch(modifyEvent(evento))
         setTimeout(() => {
           dispatch(update())
@@ -221,38 +253,106 @@ const useStyles = makeStyles((theme) => ({
         }, 100)
       }
     }
+
+    const editevent = async (data) => {
+      var datos = [];
+      await Swal.mixin({
+        confirmButtonText: 'Sigueinte &rarr;',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        progressSteps: ['1', '2']
+      }).queue([
+        {
+          title: 'Titulo del evento',
+          input: 'text',
+          inputValue: data.event.title,
+          inputValidator: (result) => {
+            return !result && 'Elegi un titulo para tu evento'
+          }
+        },
+        {
+          title: 'Tipo de evento',
+          input: 'radio',
+          inputValue: data.event.allDay ? 'Todo el dia' : 'Horario',
+          inputOptions: {
+            'Todo el dia': 'Todo el dia',
+            'Horario': 'Horario',
+          },
+          inputValidator: (result) => {
+            return !result && 'Debes seleccionar al menos una opcion'
+          }
+        },
+      ]).then((result) => {
+        datos = result
+      })
+
+      if (datos.value && datos.value.length > 0) {
+        if (datos.value[1] === 'Todo el dia') {
+            const evento = {
+              eventId: data.event._def.publicId,
+              title: datos.value[0],
+              allDay: true,
+              cohorteId: cohorteId
+            }
+            dispatch(modifyEvent(evento))
+            setTimeout(() => {
+              dispatch(update())
+            }, 100)
+        } else {
+            const evento = {
+              eventId: data.event._def.publicId,
+              title: datos.value[0],
+              // startRecur: selectInfo.startStr,
+              // endRecur: selectInfo.endStr,
+              // startTime: timestart,
+              // endTime: timeend,
+              allDay: false,
+              cohorteId: cohorteId
+            }
+            console.log(evento)
+            dispatch(modifyEvent(evento))
+            setTimeout(() => {
+              dispatch(update())
+            }, 100)
+        }
+      }
+    }
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
+      clickInfo.jsEvent.preventDefault();
       if (!student) {
         await Swal.fire({
            title: 'Que deseas hacer con este evento?',
            showDenyButton: true,
-           // showCancelButton: true,
-           confirmButtonText: `Cancelar`,
+           showCancelButton: true,
+           confirmButtonText: `Editar`,
            denyButtonText: `Eliminar`,
+           cancelButtonText: 'Cancelar',
            customClass: {
              cancelButton: 'order-1 right-gap',
              confirmButton: 'order-2',
              denyButton: 'order-3',
-           }
-         }).then((result) => {
-           if (result.isConfirmed) {
-             // console.log(clickInfo)
-             // handleEditEvent(clickInfo)
-           } else if (result.isDenied) {
+           },
+           html: clickInfo.event.url ? `
+           <a href=${clickInfo.event.url} target="_blank">Ir al link del evento</a>
+           ` : null
+          }).then((result) => {
+            if (result.isConfirmed) {
+              editevent(clickInfo)
+          } else if (result.isDenied) {
              Swal.fire('Evento eliminado', '', 'error')
              dispatch(deleteEvent(clickInfo.event._def.publicId))
            }
-           // setUpdate(update + 1)
            setTimeout(() => {
              dispatch(update())
            }, 100)
          })
+      } else if (clickInfo.event.url){
+        window.open(clickInfo.event.url);
       }
     }
   
-    //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
     const handleEvents = (events) => {
       setCurrentEvents(events)
     }
@@ -283,7 +383,7 @@ const useStyles = makeStyles((theme) => ({
           }
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
-              {/* <li>Arrastra, suelta y cambia el tamaño de los eventos</li> */}
+              <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
               <li>Hace click en un evento para eliminarlo</li>
             </ul>
           </div>
@@ -306,11 +406,13 @@ const useStyles = makeStyles((theme) => ({
 
     return (
       <div className='demo-app'>
+        <div className='side-bar'>
         {renderSidebar()}
+        </div>
         <div className='demo-app-main'>
           <FullCalendar
             locale={esLocale}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, bootstrapPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
@@ -325,12 +427,13 @@ const useStyles = makeStyles((theme) => ({
             events={getEvents && getEvents}
             weekends={weekendsVisible}
             nowIndicator={true}
-            // initialEvents={INITIAL_EVENTS} alternatively, use the `events` setting to fetch from a feed
+            navLinks={true}
+            // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-            eventChange={handleEditEvent}
+            eventChange={handleDragEvent}
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
             eventRemove={function(){}}
