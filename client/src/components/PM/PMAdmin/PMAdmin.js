@@ -60,15 +60,11 @@ export default function ComplexGrid() {
     return (
         <div className={classes.root}>
 
-            {cohortes && cohortes.map((cohorte) => (<div key={cohorte.id}><Button onClick={() => handleClickOpen(cohorte.id)} style={{ fontSize: "30px", height: "150px", width: "270px", marginTop: "20px", fontFamily: "-moz-initial" }} variant="contained" color="primary" disableElevation>
-                {cohorte.name}
+            {cohortes && cohortes.map((cohorte) => (
 
-            </Button>
-                <Dialog fullScreen={false} fullWidth={true} open={open} onClose={() => handleClose} TransitionComponent={Transition}>
-                    {open && <PmGroup cohorteId={id} handleClose={handleClose} handleClickOpen={handleClickOpen} />}
-                </ Dialog>
+                <PmGroup handleCloseGeneral={handleClose} cohorteId={cohorte.id} cohorteName={cohorte.name} />
 
-            </div>
+
             ))
             }
         </div>

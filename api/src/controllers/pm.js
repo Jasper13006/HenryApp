@@ -2,8 +2,8 @@ const { Cohorte, User, Grouppm, Student } = require("../db.js");
 
 
 module.exports = {
-  
-   //////////////////////
+
+  //////////////////////
   //// crea el grupo PM
   /////////////////////
 
@@ -11,7 +11,7 @@ module.exports = {
     const { name, PM1Id, PM2Id, cohorteId } = req.body;
     const usuario = req.user
     const user = await User.findByPk(usuario.id)
-    if (!user.admin &&  !user.instructor) return res.status(403).send({ message: "Sin autorización", status: 400 })
+    if (!user.admin && !user.instructor) return res.status(403).send({ message: "Sin autorización", status: 400 })
 
     if (!name || !PM1Id || !PM2Id || !cohorteId) {
       return res.status(400).send({ message: "Faltan campos obligatorios", status: 400 });
@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  
+
   /////////////////////////////////////////////////
   //// Agregar estudiante a los pms y pps o editarlos
   ///////////////////////////////////////////
@@ -66,7 +66,7 @@ module.exports = {
     const { id } = req.params
     const usuario = req.user
     const user = await User.findByPk(usuario.id)
-    if (!user.admin &&  !user.instructor) return res.status(403).send({ message: "Sin autorización", status: 400 })
+    if (!user.admin && !user.instructor) return res.status(403).send({ message: "Sin autorización", status: 400 })
     try {
 
       const gpm = await Grouppm.findOne({
@@ -105,13 +105,13 @@ module.exports = {
     if (PM1Id) {
       const PM1 = await User.findByPk(PM1Id)
       if (!PM1.pm) {
-        return res.status(400).send({ message: "PM1 no es un PM", status: 400 });
+        return res.status(400).send({ message: "PM1 no es un PM" });
       }
     }
     if (PM2Id) {
       const PM2 = await User.findByPk(PM2Id)
       if (!PM2.pm) {
-        return res.status(400).send({ message: "PM2 no es un PM", status: 400 });
+        return res.status(400).send({ message: "PM2 no es un PM" });
       }
     }
     try {
@@ -128,5 +128,5 @@ module.exports = {
       return res.status(500).send(err)
     }
   },
-  
+
 }

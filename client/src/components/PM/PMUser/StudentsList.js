@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ComplexGrid({ id }) {
     const classes = useStyles();
-    const students = useSelector(state => state.pm.data && state.pm.data.students)
+    const students = useSelector(state => state.groupPm.data && state.groupPm.data.students)
     const dispatch = useDispatch();
 
     useEffect(() => {
