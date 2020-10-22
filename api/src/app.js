@@ -11,9 +11,13 @@ const { generateUsers } = require("./controllers/createUsers");
 server.name = "API";
 
 
+
 createUsers.generateUsers()
 
 // createUsers.generateUsers(1450)
+
+createUsers.generateUsers(1000)
+
 server.use(fileUpload({ useTempFiles: true }));
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));
@@ -39,6 +43,7 @@ server.post("/seed", async (req, res) => {
     "lastName": "Rojas",
     "admin": true,
     "instructor": true,
+    "student": false,
   })
   const instructor = await User.create({ //id: 3
     "email": "emi@soyhenry.com",
@@ -46,6 +51,7 @@ server.post("/seed", async (req, res) => {
     "name": "Emi",
     "lastName": "Chequer",
     "instructor": true,
+    "student": false,
   })
   const instructor2 = await User.create({ //id: 4
     "email": "oliver@soyhenry.com",
@@ -53,6 +59,7 @@ server.post("/seed", async (req, res) => {
     "name": "Oliver",
     "lastName": "Balfour",
     "instructor": true,
+    "student": false,
   })
   const pm1 = await User.create({ //id: 5
     "email": "maria@soyhenry.com",
@@ -1192,38 +1199,38 @@ server.post("/seed", async (req, res) => {
     "linkVideos": "https://vimeo.com/soyhenry/review/458619858/bd6cf5a429?sort=lastUserActionEventDate&direction=desc",
     "cohorteId": 1
   })
-  await Calendar.create({
-    "title": "Evento dia",
-    "start": "2020-10-01",
-    "end": "2020-10-01",
-    "allDay": true,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento largo",
-    "start": "2020-10-07",
-    "end": "2020-10-10",
-    "allDay": true,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento horario recurrente",
-    "startRecur": "2020-10-09",
-    "endRecur": "2020-10-09",
-    "startTime": "09:00",
-    "endTime": "12:30",
-    "allDay": false,
-    "cohorteId": 1,
-  })
-  await Calendar.create({
-    "title": "Evento horario recurrente",
-    "startRecur": "2020-10-16",
-    "endRecur": "2020-10-16",
-    "startTime": "09:00",
-    "endTime": "12:30",
-    "allDay": false,
-    "cohorteId": 1,
-  })
+  // await Calendar.create({
+  //   "title": "Evento dia",
+  //   "start": "2020-10-01",
+  //   "end": "2020-10-01",
+  //   "allDay": true,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento largo",
+  //   "start": "2020-10-07",
+  //   "end": "2020-10-10",
+  //   "allDay": true,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento horario recurrente",
+  //   "startRecur": "2020-10-09",
+  //   "endRecur": "2020-10-09",
+  //   "startTime": "09:00",
+  //   "endTime": "12:30",
+  //   "allDay": false,
+  //   "cohorteId": 1,
+  // })
+  // await Calendar.create({
+  //   "title": "Evento horario recurrente",
+  //   "startRecur": "2020-10-16",
+  //   "endRecur": "2020-10-16",
+  //   "startTime": "09:00",
+  //   "endTime": "12:30",
+  //   "allDay": false,
+  //   "cohorteId": 1,
+  // })
   res.status(200).send('seed finalizado exitosamente!!')
 })
 
