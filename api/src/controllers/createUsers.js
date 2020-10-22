@@ -1,5 +1,5 @@
 const faker = require("faker");
-const { User } = require('../db.js')
+const { User, Student } = require('../db.js')
 module.exports = {
     async generateUsers(numberId) {
         let users = [];
@@ -24,7 +24,11 @@ module.exports = {
                 image: image,
                 // admin: true,
             })
-            console.log(user)
+
+            const newStudent = await Student.create({ userId: idUser, cohorteId: '3' })
+
+            console.log('usuario: ', user)
+            console.log('NuevoEstudiante: ', newStudent)
             users.push({
                 name: name,
                 lastName: lastName,
