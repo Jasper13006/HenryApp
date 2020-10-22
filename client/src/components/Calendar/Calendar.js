@@ -7,7 +7,6 @@ import listPlugin from '@fullcalendar/list';
 import Swal from 'sweetalert2'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
-import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {createEvent, deleteEvent, modifyEvent} from '../../redux/actions/calendar'
 import { getCohortes } from '../../redux/actions/cohorte'
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +17,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
-import {INITIAL_EVENTS, createEventId} from './event-utils'
+import { INITIAL_EVENTS } from './event-utils'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -37,13 +36,12 @@ const useStyles = makeStyles((theme) => ({
 
   export default function Calendar () {
     const [weekendsVisible, setWeekendsVisible] = useState(true)
-    const [currentEvents, setCurrentEvents] = useState([]) //VARIABLE PARA GUARDAR TODOS LOS EVENTOS
+    const [currentEvents, setCurrentEvents] = useState([])
     const [getEvents, setGetEvents] = useState()
     const dispatch = useDispatch()
     const classes = useStyles();
     const cohortes = useSelector(state => state.cohortes.data)
     const [cohorteId, setCohorteId] = useState()
-    // const [update, setUpdate] = useState(0)
     const refresh = useSelector(state => state.update)
     const user = JSON.parse(localStorage.getItem("user"))
     const student = useSelector(state => state.student.data)
@@ -120,7 +118,8 @@ const useStyles = makeStyles((theme) => ({
             html: `
             <h5>Color del evento<h5>
             <select class="swal2-input" name="color" id="color">
-              <option value="#3788D8" selected>Azul</option>
+              <option value="" selected disabled hidden>Seleccione un color</option>
+              <option value="#3788D8">Azul</option>
               <option value="#F76300">Naranja</option>
               <option value="red">Rojo</option>
               <option value="green">Verde</option>
@@ -258,7 +257,6 @@ const useStyles = makeStyles((theme) => ({
       var datos = [];
       let color = ''
       let url = ''
-      console.log(data.event.url)
 
       await Swal.mixin({
         confirmButtonText: 'Sigueinte &rarr;',
@@ -291,6 +289,7 @@ const useStyles = makeStyles((theme) => ({
           html: `
           <h5>Color del evento<h5>
           <select class="swal2-input" name="color" id="color">
+            <option value="" selected disabled hidden>Seleccione un color</option>
             <option value="#3788D8">Azul</option>
             <option value="#F76300">Naranja</option>
             <option value="red">Rojo</option>
@@ -319,39 +318,52 @@ const useStyles = makeStyles((theme) => ({
       })
 
       if (datos.value && datos.value.length > 0) {
-        if (datos.value[1] === 'Todo el dia') {
-            const evento = {
-              eventId: data.event._def.publicId,
-              title: datos.value[0],
-              allDay: true,
-              cohorteId: cohorteId,
-              url: url,
-              color: color ? color : '#3788D8',
-            }
-            dispatch(modifyEvent(evento))
-            setTimeout(() => {
-              dispatch(update())
-            }, 100)
-        } else {
-            const evento = {
-              eventId: data.event._def.publicId,
-              title: datos.value[0],
-              url: url,
-              color: color ? color : '#3788D8',
-              allDay: false,
-              cohorteId: cohorteId
-            }
-            console.log(evento)
-            dispatch(modifyEvent(evento))
-            setTimeout(() => {
-              dispatch(update())
-            }, 100)
+        const evento = {
+          eventId: data.event._def.publicId,
+          title: datos.value[0],
+          url: url,
+          color: color,
         }
+        dispatch(modifyEvent(evento))
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
       }
+
+      // if (datos.value && datos.value.length > 0) {
+      //   if (datos.value[1] === 'Todo el dia') {
+      //     console.log(color)
+      //       const evento = {
+      //         eventId: data.event._def.publicId,
+      //         title: datos.value[0],
+      //         allDay: true,
+      //         cohorteId: cohorteId,
+      //         url: url,
+      //         color: color,
+      //       }
+      //       dispatch(modifyEvent(evento))
+      //       setTimeout(() => {
+      //         dispatch(update())
+      //       }, 100)
+      //   } else {
+      //       const evento = {
+      //         eventId: data.event._def.publicId,
+      //         title: datos.value[0],
+      //         url: url,
+      //         color: color ? color : '#3788D8',
+      //         allDay: false,
+      //         cohorteId: cohorteId
+      //       }
+      //       console.log(evento)
+      //       dispatch(modifyEvent(evento))
+      //       setTimeout(() => {
+      //         dispatch(update())
+      //       }, 100)
+      //   }
+      // }
     }
   
     const handleEventClick = async (clickInfo) => {
-      console.log(clickInfo)
       clickInfo.jsEvent.preventDefault();
       if (!student) {
         await Swal.fire({
@@ -373,7 +385,7 @@ const useStyles = makeStyles((theme) => ({
             if (result.isConfirmed) {
               editevent(clickInfo)
           } else if (result.isDenied) {
-             Swal.fire('Evento eliminado', '', 'error')
+            //  Swal.fire('Evento eliminado', '', 'error')
              dispatch(deleteEvent(clickInfo.event._def.publicId))
            }
            setTimeout(() => {
@@ -404,11 +416,10 @@ const useStyles = makeStyles((theme) => ({
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={cohorteId}
-              // defaultValue={student ? student[0].cohorteId : null}
               onChange={handleChangeCohorteId}
             >
-              {cohortes && cohortes.map((el, i) => (
-                <MenuItem value={el.id}>{el.name}</MenuItem>
+              {cohortes && cohortes.map(el => (
+                <MenuItem value={el.id} key={el.id}>{el.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -456,11 +467,11 @@ const useStyles = makeStyles((theme) => ({
             selectable={student ? false : true}
             selectMirror={false}
             dayMaxEvents={true}
-            events={getEvents && getEvents}
+            // events={getEvents && getEvents}
             weekends={weekendsVisible}
             nowIndicator={true}
             navLinks={true}
-            // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
@@ -486,8 +497,8 @@ function renderEventContent(eventInfo) {
 }
 function renderSidebarEvent(event) {
   return (
-    <li key={event.id}>
-      <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}{!event.allDay ? ' -' + ' ' + formatDate(event.start, {hour: '2-digit', minute: '2-digit'}) : null}:</b>
+    <li>
+      <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}{!event.allDay ? ' - ' + formatDate(event.start, {hour: '2-digit', minute: '2-digit'}) : null}:</b>
       <i>{event.title}</i>
     </li>
   )
