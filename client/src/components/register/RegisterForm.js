@@ -98,6 +98,7 @@ export default function RegisterForm() {
                         value={values.name}
                         onChange={handleInputChange}
                         error={errors.name}
+                        autoComplete='off'
                     />
                     <Controls.Input
                         name="lastName"
@@ -106,6 +107,7 @@ export default function RegisterForm() {
                         onChange={handleInputChange}
                         error={errors.lastName}
                         type='text'
+                        autoComplete='off'
                     />
                     {/* <Controls.Input
                         label="Email"
@@ -120,6 +122,7 @@ export default function RegisterForm() {
                         value={values.password}
                         onChange={handleInputChange}
                         error={errors.password}
+                        autoComplete='off'
                     />
                     <Controls.Select
                         name="country"

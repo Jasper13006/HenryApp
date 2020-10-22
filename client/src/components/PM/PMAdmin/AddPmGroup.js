@@ -14,13 +14,30 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios'
 import MenuItem from '@material-ui/core/MenuItem';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import { update } from '../../../redux/actions/update'
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -31,11 +48,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FormDialog({ handleCloseAdd, open, cohorteId }) {
+export default function FormDialog({ cohorteId, handleCloseAll, openGeneral }) {
 
     // const pms = useSelector(state => state.pm)
     const classes = useStyles();
     const dispatch = useDispatch()
+    const [openAlert, setOpenAlert] = useState(false);
+    const [open, setOpen] = useState(false)
     const [pms, setPms] = useState()
     const [pm, setPm] = useState();
     const [state, setState] = useState({
@@ -57,9 +76,36 @@ export default function FormDialog({ handleCloseAdd, open, cohorteId }) {
         getPm()
     }, [])
 
+    const handleClickAlert = () => {
+        setOpenAlert(true);
+    };
 
-    console.log(cohorteId)
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
+        setOpen(false);
+
+    }
+
+    const success = () => {
+        return (
+            <Snackbar open={true} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity="success">
+                    Se agregó el grupo correctamente
+            </Alert>
+            </Snackbar>
+        )
+    }
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
 
     const handleInputChange = (e) => {
         setState({
@@ -75,78 +121,82 @@ export default function FormDialog({ handleCloseAdd, open, cohorteId }) {
 
 
     const handleSubmit = (e) => {
-        e.preventDefault();
         console.log(e.target.value);
         dispatch(agregarGrupoPm(state))
-        setState({ submitted: true })
-        handleCloseAdd()
+        handleCloseAll()
+
     }
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Dialog open={open} onClose={handleCloseAdd} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Agregar un grupo de PM</DialogTitle>
+        <div>
+            <Button onClick={handleOpen} style={{ color: "black", backgroundColor: "yellow", }} aria-label="add" >
+                <h2 style={{ fontSize: "30px" }}>+</h2>
+            </Button>
+            {open && <form onSubmit={handleSubmit}>
+                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Agregar un grupo de PM</DialogTitle>
 
-                <DialogContent>
-                    <DialogContentText>
-                        Por favor, llene todos los campos para poder crear un nuevo grupo de PM.
+                    <DialogContent>
+                        <DialogContentText>
+                            Por favor, llene todos los campos para poder crear un nuevo grupo de PM.
           </DialogContentText>
-                    <TextField
-                        onChange={handleInputChange}
-                        autoFocus
-                        name="name"
-                        margin="dense"
-                        type="text"
-                        id="name"
-                        label="Nombre del grupo"
-                        type="email"
-                        fullWidth
-                    />
-
-
-
-                    <FormControl className={classes.formControl} onChange={handleInputChange}>
-                        <InputLabel id="demo-simple-select-label">PM1</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="PM1Id"
-                            name="PM1Id"
-                            value={pm}
+                        <TextField
                             onChange={handleInputChange}
-                        >
-                            {pms && pms.map((pm) => (<MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
-                            ))}
+                            autoFocus
+                            name="name"
+                            margin="dense"
+                            type="text"
+                            id="name"
+                            label="Nombre del grupo"
+                            type="email"
+                            fullWidth
+                        />
 
-                        </Select>
-                    </FormControl>
 
-                    <FormControl className={classes.formControl} onChange={handleInputChange}>
-                        <InputLabel id="demo-simple-select-label">PM2</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="PM2Id"
-                            name="PM2Id"
-                            value={pm}
-                            onChange={handleInputChange}
-                        >
-                            {pms && pms.map((pm) => (<MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
-                            ))}
 
-                        </Select>
-                    </FormControl>
+                        <FormControl className={classes.formControl} onChange={handleInputChange}>
+                            <InputLabel id="demo-simple-select-label">PM1</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="PM1Id"
+                                name="PM1Id"
+                                value={pm}
+                                onChange={handleInputChange}
+                            >
+                                {pms && pms.map((pm) => (<MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
+                                ))}
 
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAdd} color="primary">
-                        Cancelar
+                            </Select>
+                        </FormControl>
+
+                        <FormControl className={classes.formControl} onChange={handleInputChange}>
+                            <InputLabel id="demo-simple-select-label">PM2</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="PM2Id"
+                                name="PM2Id"
+                                value={pm}
+                                onChange={handleInputChange}
+                            >
+                                {pms && pms.map((pm) => (<MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
+                                ))}
+
+                            </Select>
+                        </FormControl>
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            Cancelar
           </Button>
-                    <Button type="submit" onClick={handleSubmit} color="primary">
-                        Crear grupo
+                        <Button type="submit" onClick={handleSubmit} color="primary">
+                            Crear grupo
           </Button>
-                </DialogActions>
+                    </DialogActions>
 
-            </Dialog>
-        </form >
+                </Dialog>
+            </form >}
+        </div>
     );
 }

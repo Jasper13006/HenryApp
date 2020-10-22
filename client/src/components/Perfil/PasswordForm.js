@@ -12,9 +12,11 @@ const useStyles = makeStyles(() => ({
         width:'40%',
         display:'flex',
         flexDirection:'row',
+        marginTop:'20px',
         margin:'auto',
         padding:'10px',
         borderRadius:'0px',
+        
     },
     passwordForm:{
         margin:'auto',

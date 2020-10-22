@@ -22,3 +22,5 @@ export const INITIAL_EVENTS = [
 export function createEventId() {
   return String(eventGuid++)
 }
+
+// https://api.github.com/users/tomasbarcojo

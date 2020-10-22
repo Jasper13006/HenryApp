@@ -4,8 +4,11 @@ import { getInstructors } from '../../../redux/actions/user'
 import EditCohort from './EditCohort'
 import AddStudent from './AddStudent'
 import AddOneCohorte from './AddCohort'
+import CohorteInfo from './CohorteInfo'
 import imagenTriste from '../triste.png'
+import { update } from '../../../redux/actions/update'
 
+//imports de material UI
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -30,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(1),
         backgroundColor: "rgba(177,34,143,1) 0%",
-        fontFamily: 'Raleway'
+        fontFamily: 'Raleway',
+        width: "200px"
     },
     heading: {
         display: "flex",
@@ -67,12 +71,11 @@ export default function CohorteAdmin(){
         dispatch(getInstructors())
     }, [])
 
+
     return (
         <div>
             <CardActions className={classes.cardExtern}>
-                <IconButton>
                     <AddOneCohorte/>
-                </IconButton>
             </CardActions>
             {cohortes && cohortes.length > 0 ? cohortes.map((cohorte) => (
             <Accordion className={classes.accordion}  key={cohorte.id}>
@@ -82,11 +85,12 @@ export default function CohorteAdmin(){
                     id="panel1a-header"
                 >
                     <img style={{ height: "80px", borderRadius: "50%" }} src="https://i.pinimg.com/originals/f9/63/a6/f963a62eff1cd6f5b2903b1f3452b7b8.jpg" alt="perfil" />
-                    <Typography className={classes.heading} style={{ color: "black" }} >{cohorte && cohorte.name}</Typography>
+                    <Typography className={classes.heading} style={{ color: "black" }} >{cohorte.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails className={classes.cohortDetails}>
-                    <div className={classes.instructorName}>
-                        instructor: {cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}
+                    <div className={classes.instructorName}>{cohorte && instructores && encontrarInstructor(cohorte.instructorId, instructores)}</div>
+                    <div>
+                        <CohorteInfo data={cohorte}/>
                     </div>
                     <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                         <EditCohort instructores={instructores} data={cohorte}/>

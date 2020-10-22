@@ -11,6 +11,7 @@ server.post('/create', authenticate, createModulo)
 // Editar modulo
 server.put("/:id", authenticate, editModulos)
 
+//Get de los modulos de un cohorte
 server.get('/:id', authenticate, getVideosByCohorteId)
 
 module.exports = server;

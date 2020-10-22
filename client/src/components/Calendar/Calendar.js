@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import FullCalendar, { formatDate, renderMicroColGroup } from '@fullcalendar/react'
+import FullCalendar, { formatDate } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list';
 import Swal from 'sweetalert2'
-import { INITIAL_EVENTS, createEventId } from './event-utils'
 import './main.css'
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import {createEvent, deleteEvent} from '../../redux/actions/calendar'
+import {createEvent, deleteEvent, modifyEvent} from '../../redux/actions/calendar'
 import { getCohortes } from '../../redux/actions/cohorte'
 import { useDispatch, useSelector } from "react-redux";
 import FormControl from '@material-ui/core/FormControl';
@@ -17,6 +16,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
+import { update } from '../../redux/actions/update'
+import { getStudent } from '../../redux/actions/user'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -41,18 +42,37 @@ const useStyles = makeStyles((theme) => ({
     const classes = useStyles();
     const cohortes = useSelector(state => state.cohortes.data)
     const [cohorteId, setCohorteId] = useState()
-    const [update, setUpdate] = useState(0)
+    // const [update, setUpdate] = useState(0)
+    const refresh = useSelector(state => state.update)
+    const user = JSON.parse(localStorage.getItem("user"))
+    const student = useSelector(state => state.student.data)
 
     useEffect(() => {
+      if(!user.admin) {
+        dispatch(getStudent(user.id))
+      }
       dispatch(getCohortes())
       if(cohorteId) {
+        console.log('entro al if de cohorteId')
         fetch(`http://localhost:3001/calendar/${cohorteId}`)
         .then(res => res.json())
         .then(data => {
           setGetEvents(data)
         })
       }
-  }, [cohorteId, update])
+  }, [cohorteId, refresh])
+
+  useEffect(() => {
+    if(student) {
+      fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
+      .then(res => res.json())
+      .then(data => {
+        setGetEvents(data)
+      })
+      console.log(student[0].cohorteId)
+      setCohorteId(student[0].cohorteId)
+    }
+  }, [student])
 
     const handleChangeCohorteId = (event) => {
       setCohorteId(event.target.value);
@@ -68,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
       let timestart = ''
       let timeend = ''
       let arrResult =  []
-      console.log(selectInfo)
 
       if(cohorteId){
         await Swal.mixin({
@@ -81,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
             title: 'Titulo del evento',
             input: 'text',
             // inputValue: {}
+            inputValidator: (result) => {
+              return !result && 'Elegi un titulo para tu evento'
+            }
           },
           {
             title: 'Tipo de evento',
@@ -141,9 +163,11 @@ const useStyles = makeStyles((theme) => ({
                 allDay: true,
                 cohorteId: cohorteId
               }
-              const aux = dispatch(createEvent(evento))
-              console.log(aux)
-              setUpdate(update + 1)
+              createEvent(evento)
+              // setUpdate(update + 1)
+              setTimeout(() => {
+                dispatch(update())
+              }, 100)
           } else {
             const evento = {
               title: arrResult.value[0],
@@ -155,7 +179,10 @@ const useStyles = makeStyles((theme) => ({
               cohorteId: cohorteId
             }
             dispatch(createEvent(evento))
-            setUpdate(update + 1)
+            // setUpdate(update + 1)
+            setTimeout(() => {
+              dispatch(update())
+            }, 100)
           }
         }
       } else {
@@ -168,34 +195,61 @@ const useStyles = makeStyles((theme) => ({
     }
 
     const handleEditEvent = async (data) => {
-      let editEvent = {
-        
+      console.log(data)
+      if (data.event.allDay) {
+        const evento = {
+          eventId: data.event._def.publicId,
+          start: data.event.startStr,
+          end: data.event.endStr,
+        }
+        console.log(evento)
+        await dispatch(modifyEvent(evento))
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
+      } else {
+        const evento = {
+          eventId: data.event._def.publicId,
+          startRecur: data.event.startStr,
+          endRecur: data.event.endStr,
+          startTime: data.event.startStr.split('T')[1],
+          endTime: data.event.endStr.split('T')[1],
+        }
+        await dispatch(modifyEvent(evento))
+        setTimeout(() => {
+          dispatch(update())
+        }, 100)
       }
     }
   
     const handleEventClick = async (clickInfo) => {
       console.log(clickInfo)
-     await Swal.fire({
-        title: 'Que deseas hacer con este evento?',
-        showDenyButton: true,
-        // showCancelButton: true,
-        confirmButtonText: `Cancelar`,
-        denyButtonText: `Eliminar`,
-        customClass: {
-          cancelButton: 'order-1 right-gap',
-          confirmButton: 'order-2',
-          denyButton: 'order-3',
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // console.log(clickInfo)
-          // handleEditEvent(clickInfo)
-        } else if (result.isDenied) {
-          Swal.fire('Evento eliminado', '', 'error')
-          dispatch(deleteEvent(clickInfo.event._def.publicId))
-        }
-        setUpdate(update + 1)
-      })
+      if (!student) {
+        await Swal.fire({
+           title: 'Que deseas hacer con este evento?',
+           showDenyButton: true,
+           // showCancelButton: true,
+           confirmButtonText: `Cancelar`,
+           denyButtonText: `Eliminar`,
+           customClass: {
+             cancelButton: 'order-1 right-gap',
+             confirmButton: 'order-2',
+             denyButton: 'order-3',
+           }
+         }).then((result) => {
+           if (result.isConfirmed) {
+             // console.log(clickInfo)
+             // handleEditEvent(clickInfo)
+           } else if (result.isDenied) {
+             Swal.fire('Evento eliminado', '', 'error')
+             dispatch(deleteEvent(clickInfo.event._def.publicId))
+           }
+           // setUpdate(update + 1)
+           setTimeout(() => {
+             dispatch(update())
+           }, 100)
+         })
+      }
     }
   
     //esta funcion se llama cada vez que un evento es creado, eliminado o modificado
@@ -207,35 +261,38 @@ const useStyles = makeStyles((theme) => ({
       return (
         <div className='demo-app-sidebar'>
           <div className='demo-app-sidebar-section'>
-          <FormControl className={classes.formControl} fullWidth>
+            {student ?
+            <div style={{display: 'flex'}}>
+            <h6>Perteneces al cohorte: {student[0].cohorte.name}</h6>
+          </div>
+            :
+            <FormControl className={classes.formControl} fullWidth>
             <InputLabel className={classes.inputlabel}>Seleccione un cohorte</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={cohorteId}
+              // defaultValue={student ? student[0].cohorteId : null}
               onChange={handleChangeCohorteId}
-              // variant='outlined'
             >
               {cohortes && cohortes.map((el, i) => (
                 <MenuItem value={el.id}>{el.name}</MenuItem>
               ))}
             </Select>
-      </FormControl>
+          </FormControl>
+          }
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
-              <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
+              {/* <li>Arrastra, suelta y cambia el tamaño de los eventos</li> */}
               <li>Hace click en un evento para eliminarlo</li>
             </ul>
           </div>
           <div className='demo-app-sidebar-section'>
-            <label>
               <input
                 type='checkbox'
                 checked={weekendsVisible}
                 onChange={handleWeekendsToggle}
-              ></input>
-               Alternar dias de fin de semana
-            </label>
+              ></input> <label>Alternar dias de fin de semana</label>
           </div>
           <div className='demo-app-sidebar-section'>
             <h2>Todos los eventos ({currentEvents.length})</h2>
@@ -260,21 +317,22 @@ const useStyles = makeStyles((theme) => ({
               right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             }}
             initialView='dayGridMonth'
-            
-            editable={false}
-            selectable={true}
-            selectMirror={true}
+            eventDisplay='auto'
+            editable={student ? false : true}
+            selectable={student ? false : true}
+            selectMirror={false}
             dayMaxEvents={true}
             events={getEvents && getEvents}
             weekends={weekendsVisible}
+            nowIndicator={true}
             // initialEvents={INITIAL_EVENTS} alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+            eventChange={handleEditEvent}
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
-            eventChange={function(){}}
             eventRemove={function(){}}
             */
           />
@@ -292,7 +350,6 @@ function renderEventContent(eventInfo) {
   )
 }
 function renderSidebarEvent(event) {
-  console.log(event)
   return (
     <li key={event.id}>
       <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}{!event.allDay ? ' -' + ' ' + formatDate(event.start, {hour: '2-digit', minute: '2-digit'}) : null}:</b>
