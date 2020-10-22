@@ -12,11 +12,11 @@ io.on('connection',socket => {
     });
     socket.on('mensaje',(data) => {
         socket.broadcast.emit('mensajes',data)
-        /* io.emit('mensajes',data) */
-    })
+    });
     
-    socket.on('sendChats',(chats)=>{
-        io.emit('getChats',chats)
+    socket.on('sendChat',(chat)=>{
+        console.log(chat)
+        socket.broadcast.emit('notification',chat)
     })
 })
 

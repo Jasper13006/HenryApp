@@ -13,6 +13,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
 import {addMsg,getMsg,editValidate,addSocket} from '../../redux/actions/msg';
 import store from '../../redux/store/index'
+import {DebounceInput} from 'react-debounce-input';
 
 
  
@@ -167,9 +168,11 @@ export default function Msg(props) {
     const chat = JSON.parse(localStorage.getItem('chat'))
     const chats = useSelector(state => state.msg.chats)
     const dispatch = useDispatch()
+    const [quantity,setQuantity] = React.useState(0)
     /* const mensajes = useSelector(state => state.msg.mensajes) */
     const [mensajes,setMensajes] = React.useState(store.getState().msg.mensajes) 
     const date = new Date()
+
     
     
 
@@ -188,7 +191,8 @@ export default function Msg(props) {
     // setea el texto al mensaje 
 
     const handleChange = event => {
-      event.preventDefault()
+     /*  event.preventDefault() */
+      console.log(event.target.value)
       setDescription(event.target.value); 
     };
 
@@ -207,6 +211,8 @@ export default function Msg(props) {
       if(data.description){
         dispatch(addMsg(data,token))
         socket.emit('mensaje',data)
+        socket.emit('sendChat',chat)
+        
         
       }
       setDescription('')
@@ -215,6 +221,7 @@ export default function Msg(props) {
     }
 
     useEffect(()=>{
+        
         if(!mensajes.length && chat){
           dispatch(getMsg(chat.id,token))
           dispatch(editValidate())
@@ -228,7 +235,6 @@ export default function Msg(props) {
     // conexion en tiempo real con socket io
     
     useEffect(()=> {
-      console.log('hola')
       socket.on('mensajes',mensaje => {
         dispatch(addSocket(mensaje))
         setMensajes([...mensajes,mensaje])
@@ -236,6 +242,8 @@ export default function Msg(props) {
       })
       return () => {socket.off()}
     },[mensajes])
+
+    
 
     const divRef = React.useRef(null);
     
@@ -270,7 +278,7 @@ export default function Msg(props) {
             
           </Box>
           <List component="nav" aria-label="main mailbox folders">
-            {mensajes.map((msg,key,elements)=>(
+            {mensajes.length ? mensajes.map((msg,key,elements)=>(
                 <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
                   {!key && <Box className = {classes.boxDate} >
                     <Typography className={classes.name} variant="h5">
@@ -303,7 +311,7 @@ export default function Msg(props) {
                       </div>     
                     </Box>                                                                                
                 </ListItem>
-            ))}
+            )):null}
           </List> 
           <div ref={divRef}></div>   
         </Box>
@@ -315,7 +323,7 @@ export default function Msg(props) {
         <Box className={classes.boxInput}>
             <form onSubmit={handleSendMsg}>                         
                 <FormControl className={classes.input}>
-                    <BootstrapInput placeholder="Escribe tu mensaje" id="bootstrap-input" value={description} autoComplete='off' onChange={handleChange} />
+                  <DebounceInput element={BootstrapInput} placeholder="Escribe tu mensaje" id="bootstrap-input" debounceTimeout={300} value={description} autoComplete='off' onChange={handleChange}/>
                 </FormControl>                   
             </form>
             <div style={{marginLeft:'auto'}}>

@@ -67,6 +67,8 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
+socket.emit('conectado','hola desde cliente')
+
 export default function NavMsg(props) {
   const history = useHistory()
   const classes = useStyles();
@@ -108,13 +110,6 @@ export default function NavMsg(props) {
       
   },[])
 
-  React.useEffect(()=> {
-    socket.on('getChats',chat => {
-      console.log(chat)
-      setChats(chat);
-    })
-    return () => {socket.off()}
-  },[chats])
 
   return (
     <div className={classes.root}>
@@ -144,8 +139,7 @@ export default function NavMsg(props) {
                 <span style={{fontSize: '0.85em'}}>
                   {chat.from.id == id ? chat.to.fullName : chat.from.fullName}
                 </span>
-              </ListItemText>
-              {chat.from.id != id && !chat.check && <Badge badgeContent={1} color="secondary" style={{position:'initial'}}/>}                   
+              </ListItemText>                
             </ListItem>                
           ))} 
           </List>

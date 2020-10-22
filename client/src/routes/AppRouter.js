@@ -18,7 +18,7 @@ const AppRouter = () => {
     const token = localStorage.getItem("token")
 
     useEffect(() => {
-        socket.emit('conectado','hola desde cliente')
+        
         if(!token){
             const fectData = async () => {
                 const admin = { name: "Admin", lastName: "Admin", email: "admin@admin.com", password: "Henry1234", admin: true }
