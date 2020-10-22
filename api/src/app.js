@@ -10,7 +10,7 @@ const createUsers = require('./controllers/createUsers');
 const { generateUsers } = require("./controllers/createUsers");
 server.name = "API";
 
-// createUsers.generateUsers(1450)
+createUsers.generateUsers(1000)
 server.use(fileUpload({ useTempFiles: true }));
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));
@@ -36,6 +36,7 @@ server.post("/seed", async (req, res) => {
     "lastName": "Rojas",
     "admin": true,
     "instructor": true,
+    "student": false,
   })
   const instructor = await User.create({ //id: 3
     "email": "emi@soyhenry.com",
@@ -43,6 +44,7 @@ server.post("/seed", async (req, res) => {
     "name": "Emi",
     "lastName": "Chequer",
     "instructor": true,
+    "student": false,
   })
   const instructor2 = await User.create({ //id: 4
     "email": "oliver@soyhenry.com",
@@ -50,6 +52,7 @@ server.post("/seed", async (req, res) => {
     "name": "Oliver",
     "lastName": "Balfour",
     "instructor": true,
+    "student": false,
   })
   const pm1 = await User.create({ //id: 5
     "email": "maria@soyhenry.com",
@@ -1222,7 +1225,7 @@ server.post("/seed", async (req, res) => {
   //   "cohorteId": 1,
   // })
   res.status(200).send('seed finalizado exitosamente!!')
- })
+})
 
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

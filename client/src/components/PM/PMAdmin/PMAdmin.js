@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ComplexGrid() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const cohortes = useSelector(state => state.getCohorteUser.data)
+    const cohortes = useSelector(state => state.cohortes.data)
+    const test = useSelector(state => state)
     const [open, setOpen] = React.useState(false);
     const option = useSelector(state => state.panel.data)
     const user = JSON.parse(localStorage.getItem("user"))
@@ -45,7 +46,7 @@ export default function ComplexGrid() {
         dispatch(getCohortes())
     }, []);
 
-
+    console.log(test)
 
     const handleClickOpen = (id) => {
         setId(id)
@@ -60,15 +61,12 @@ export default function ComplexGrid() {
     return (
         <div className={classes.root}>
 
-            {cohortes && cohortes.map((cohorte) => (<div key={cohorte.id}><Button onClick={() => handleClickOpen(cohorte.id)} style={{ fontSize: "30px", height: "150px", width: "270px", marginTop: "20px", fontFamily: "-moz-initial" }} variant="contained" color="primary" disableElevation>
-                {cohorte.name}
+            {cohortes && cohortes.map((cohorte) => (
+                <div>
 
-            </Button>
-                <Dialog fullScreen={false} fullWidth={true} open={open} onClose={() => handleClose} TransitionComponent={Transition}>
-                    {open && <PmGroup cohorteId={id} handleClose={handleClose} handleClickOpen={handleClickOpen} />}
-                </ Dialog>
+                    <PmGroup cohorteName={cohorte.name} cohorteId={cohorte.id} handleClose={handleClose} handleClickOpen={handleClickOpen} />
 
-            </div>
+                </div>
             ))
             }
         </div>
