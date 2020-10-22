@@ -17,7 +17,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
-import { INITIAL_EVENTS } from './event-utils'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -58,18 +57,18 @@ const useStyles = makeStyles((theme) => ({
           setGetEvents(data)
         })
       }
-  }, [cohorteId, refresh])
+    }, [cohorteId, refresh])
 
-  useEffect(() => {
-    if(student) {
-      fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
-      .then(res => res.json())
-      .then(data => {
-        setGetEvents(data)
-      })
-      setCohorteId(student[0].cohorteId)
-    }
-  }, [student])
+    useEffect(() => {
+      if(student) {
+        fetch(`http://localhost:3001/calendar/${student[0].cohorteId}`)
+        .then(res => res.json())
+        .then(data => {
+          setGetEvents(data)
+        })
+        setCohorteId(student[0].cohorteId)
+      }
+    }, [student])
 
     const handleChangeCohorteId = (event) => {
       setCohorteId(event.target.value);
@@ -80,8 +79,9 @@ const useStyles = makeStyles((theme) => ({
     }
   
     const handleDateSelect = async (selectInfo) => {
+      console.log(selectInfo)
       let calendarApi = selectInfo.view.calendar
-      calendarApi.unselect() // clear date selection
+      calendarApi.unselect()
       let timestart = ''
       let timeend = ''
       let color = ''
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
           confirmButtonText: 'Sigueinte &rarr;',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
-          progressSteps: ['1', '2', '3'],
+          progressSteps: ['1', '2', '3', '4'],
         }).queue([
           {
             title: 'Titulo del evento',
@@ -103,6 +103,14 @@ const useStyles = makeStyles((theme) => ({
             }
           },
           {
+            showClass: {
+              popup: 'swal2-noanimation',
+              backdrop: 'swal2-noanimation'
+            },
+            hideClass: {
+              popup: '',
+              backdrop: ''
+            },
             title: 'Tipo de evento',
             input: 'radio',
             inputOptions: {
@@ -113,118 +121,168 @@ const useStyles = makeStyles((theme) => ({
               return !result && 'Debes seleccionar al menos una opcion'
             }
           },
-          {
-            title: 'Ajustes del evento',
-            html: `
-            <h5>Color del evento<h5>
-            <select class="swal2-input" name="color" id="color">
-              <option value="" selected disabled hidden>Seleccione un color</option>
-              <option value="#3788D8">Azul</option>
-              <option value="#F76300">Naranja</option>
-              <option value="red">Rojo</option>
-              <option value="green">Verde</option>
-              <option value="#58508D">Violeta</option>
-            </select>
-            <h5>Link (opcional)<h5>
-            <input class="swal2-input" type="text" id="url">
-            `,
-            didOpen: () => {
-                  
-              var colorinput = Swal.getContent().querySelector('#color')
-              var urlinput = Swal.getContent().querySelector('#url')
-            
-              colorinput.addEventListener('change', () => {
-                color = colorinput.value
-              })
-
-              urlinput.addEventListener('change', () => {
-                url = urlinput.value
-              })
-            }
-          }
         ]).then((result) => {
           arrResult = result
+          console.log(result)
         })
 
-          if (arrResult.value && arrResult.value.length !== 0) {
+          if (arrResult.value && arrResult.value.length > 0) {
             if (arrResult.value[1] === 'Horario'){
 
-              await Swal.fire({
-                title: 'Selecciona el horario de tu nuevo evento',
-                html: `
-                <h5>Comienzo: </h5>
-                  <input
-                    type="time"
-                    class="swal2-input"
-                    id="startTime">
-                    <h5>Fin: </h5>
+              await Swal.mixin({
+                confirmButtonText: 'Sigueinte &rarr;',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                progressSteps: ['1', '2', '3', '4'],
+              }).queue([
+                {
+                  currentProgressStep: '2',
+                  showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                  },
+                  hideClass: {
+                    popup: '',
+                    backdrop: ''
+                  },
+                  title: 'Ajustes del evento',
+                  html: `
+                  <h5>Link (opcional)<h5>
+                  <input class="swal2-input" type="text" id="url">
+                  `,
+                  didOpen: () => {
+                    var urlinput = Swal.getContent().querySelector('#url')
+
+                    urlinput.addEventListener('change', () => {
+                      url = urlinput.value
+                    })
+                  }
+                },
+                {
+                  currentProgressStep: '3',
+                  showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                  },
+                  title: 'Selecciona el horario de tu nuevo evento',
+                  html: `
+                  <h5>Comienzo: </h5>
                     <input
-                    type="time"
-                    id="endTime"
-                    class="swal2-input"
-                    >`,
-                confirmButtonText: 'Crear evento',
-                didOpen: () => {
+                      type="time"
+                      class="swal2-input"
+                      id="startTime">
+                      <h5>Fin: </h5>
+                      <input
+                      type="time"
+                      id="endTime"
+                      class="swal2-input"
+                      >`,
+                  confirmButtonText: 'Crear evento',
+                  didOpen: () => {
+                    
+                    const startTime = Swal.getContent().querySelector('#startTime')
+                    const endTime = Swal.getContent().querySelector('#endTime')
                   
-                  const startTime = Swal.getContent().querySelector('#startTime')
-                  const endTime = Swal.getContent().querySelector('#endTime')
-                
-                  startTime.addEventListener('change', () => {
-                    timestart = startTime.value
-                  })
+                    startTime.addEventListener('change', () => {
+                      timestart = startTime.value
+                    })
 
-                  endTime.addEventListener('change', () => {
-                    timeend = endTime.value
-                  })
+                    endTime.addEventListener('change', () => {
+                      timeend = endTime.value
+                    })
+                  }
                 }
-              })
+
+              ])
+            } else {
+              
+              await Swal.mixin({
+                confirmButtonText: 'Sigueinte &rarr;',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                progressSteps: ['1', '2', '3'],
+              }).queue([
+                {
+                  currentProgressStep: '2',
+                  showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                  },
+                  title: 'Ajustes del evento',
+                  html: `
+                  <h5>Color del evento<h5>
+                  <select class="swal2-input" name="color" id="color">
+                    <option value="" selected disabled hidden>Seleccione un color</option>
+                    <option value="#3788D8">Azul</option>
+                    <option value="#F76300">Naranja</option>
+                    <option value="red">Rojo</option>
+                    <option value="green">Verde</option>
+                    <option value="#58508D">Violeta</option>
+                  </select>
+                  <h5>Link (opcional)<h5>
+                  <input class="swal2-input" type="text" id="url">
+                  `,
+                  didOpen: () => {
+                        
+                    var colorinput = Swal.getContent().querySelector('#color')
+                    var urlinput = Swal.getContent().querySelector('#url')
+                  
+                    colorinput.addEventListener('change', () => {
+                      color = colorinput.value
+                    })
+
+                    urlinput.addEventListener('change', () => {
+                      url = urlinput.value
+                    })
+                  }
+                },
+              ])
             }
           }
 
-        if (arrResult.value && arrResult.value.length > 0) {
-          if (arrResult.value[1] === 'Todo el dia') {
-              const evento = {
-                title: arrResult.value[0],
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: true,
-                url: url,
-                color: color ? color : '#3788D8',
-                userId: user.id,
-                cohorteId: cohorteId
+          if (arrResult.value && arrResult.value.length > 0) {
+            if (arrResult.value[1] === 'Todo el dia') {
+                const evento = {
+                  title: arrResult.value[0],
+                  start: selectInfo.startStr,
+                  end: selectInfo.endStr,
+                  allDay: true,
+                  url: url,
+                  color: color ? color : '#3788D8',
+                  userId: user.id,
+                  cohorteId: cohorteId
+                }
+                dispatch(createEvent(evento))
+                setTimeout(() => {
+                  dispatch(update())
+                }, 100)
+            } else {
+              if (timestart && timeend) {
+                const evento = {
+                  title: arrResult.value[0],
+                  startRecur: selectInfo.startStr,
+                  endRecur: selectInfo.endStr,
+                  startTime: timestart,
+                  endTime: timeend,
+                  allDay: false,
+                  url: url,
+                  userId: user.id,
+                  cohorteId: cohorteId
+                }
+                dispatch(createEvent(evento))
+                setTimeout(() => {
+                  dispatch(update())
+                }, 100)
               }
-              dispatch(createEvent(evento))
-              // setUpdate(update + 1)
-              setTimeout(() => {
-                dispatch(update())
-              }, 100)
-          } else {
-            if (timestart && timeend) {
-              const evento = {
-                title: arrResult.value[0],
-                startRecur: selectInfo.startStr,
-                endRecur: selectInfo.endStr,
-                startTime: timestart,
-                endTime: timeend,
-                allDay: false,
-                url: url,
-                userId: user.id,
-                cohorteId: cohorteId
-              }
-              dispatch(createEvent(evento))
-              setTimeout(() => {
-                dispatch(update())
-              }, 100)
             }
           }
+        } else {
+          Swal.fire(
+                'Seleccione el cohorte donde desee crear el evento',
+                '',
+                'info'
+              )
         }
-      } else {
-        Swal.fire(
-              'Seleccione el cohorte donde desee crear el evento',
-              '',
-              'info'
-            )
-      }
     }
 
     const handleDragEvent = async (data) => {
@@ -272,18 +330,6 @@ const useStyles = makeStyles((theme) => ({
             return !result && 'Elegi un titulo para tu evento'
           }
         },
-        // {
-        //   title: 'Tipo de evento',
-        //   input: 'radio',
-        //   inputValue: data.event.allDay ? 'Todo el dia' : 'Horario',
-        //   inputOptions: {
-        //     'Todo el dia': 'Todo el dia',
-        //     'Horario': 'Horario',
-        //   },
-        //   inputValidator: (result) => {
-        //     return !result && 'Debes seleccionar al menos una opcion'
-        //   }
-        // },
         {
           title: 'Ajustes del evento',
           html: `
@@ -329,38 +375,6 @@ const useStyles = makeStyles((theme) => ({
           dispatch(update())
         }, 100)
       }
-
-      // if (datos.value && datos.value.length > 0) {
-      //   if (datos.value[1] === 'Todo el dia') {
-      //     console.log(color)
-      //       const evento = {
-      //         eventId: data.event._def.publicId,
-      //         title: datos.value[0],
-      //         allDay: true,
-      //         cohorteId: cohorteId,
-      //         url: url,
-      //         color: color,
-      //       }
-      //       dispatch(modifyEvent(evento))
-      //       setTimeout(() => {
-      //         dispatch(update())
-      //       }, 100)
-      //   } else {
-      //       const evento = {
-      //         eventId: data.event._def.publicId,
-      //         title: datos.value[0],
-      //         url: url,
-      //         color: color ? color : '#3788D8',
-      //         allDay: false,
-      //         cohorteId: cohorteId
-      //       }
-      //       console.log(evento)
-      //       dispatch(modifyEvent(evento))
-      //       setTimeout(() => {
-      //         dispatch(update())
-      //       }, 100)
-      //   }
-      // }
     }
   
     const handleEventClick = async (clickInfo) => {
@@ -477,10 +491,6 @@ const useStyles = makeStyles((theme) => ({
             eventClick={handleEventClick}
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
             eventChange={handleDragEvent}
-            /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventRemove={function(){}}
-            */
           />
         </div>
       </div>
