@@ -44,12 +44,14 @@ export const INITIAL_EVENTS = [
   },
   {
     groupId: '91',
-    title: 'Repeating Event',
+    title: 'COLOR RED FLAQUITO',
     start: '2020-10-09T16:00:00',
+    end: '2020-10-09T18:00:00',
     textColor: 'red',
     borderColor: 'red',
     backgroundColor: 'red',
     url: 'http://google.com.ar',
+    display: 'auto'
   },
   {
     title: "PREUEBA",

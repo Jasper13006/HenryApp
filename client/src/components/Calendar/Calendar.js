@@ -467,11 +467,11 @@ const useStyles = makeStyles((theme) => ({
             selectable={student ? false : true}
             selectMirror={false}
             dayMaxEvents={true}
-            // events={getEvents && getEvents}
+            events={getEvents && getEvents}
             weekends={weekendsVisible}
             nowIndicator={true}
             navLinks={true}
-            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+            // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
             select={handleDateSelect}
             eventContent={renderEventContent} // custom render function
             eventClick={handleEventClick}
