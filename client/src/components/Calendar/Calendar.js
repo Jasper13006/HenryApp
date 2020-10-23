@@ -123,7 +123,6 @@ const useStyles = makeStyles((theme) => ({
           },
         ]).then((result) => {
           arrResult = result
-          console.log(result)
         })
 
           if (arrResult.value && arrResult.value.length > 0) {
@@ -332,8 +331,8 @@ const useStyles = makeStyles((theme) => ({
         },
         {
           title: 'Ajustes del evento',
-          html: `
-          <h5>Color del evento<h5>
+          html: data.event.allDay ? 
+          `<h5>Color del evento<h5>
           <select class="swal2-input" name="color" id="color">
             <option value="" selected disabled hidden>Seleccione un color</option>
             <option value="#3788D8">Azul</option>
@@ -343,16 +342,21 @@ const useStyles = makeStyles((theme) => ({
             <option value="#58508D">Violeta</option>
           </select>
           <h5>Link (opcional)<h5>
-          <input class="swal2-input" type="text" id="url" value=${data.event.url}>
-          `,
+          <input class="swal2-input" type="text" id="url" value=${data.event.url}>`
+          :
+          `</select>
+          <h5>Link (opcional)<h5>
+          <input class="swal2-input" type="text" id="url" value=${data.event.url}>`,
           didOpen: () => {
                 
             var colorinput = Swal.getContent().querySelector('#color')
             var urlinput = Swal.getContent().querySelector('#url')
           
-            colorinput.addEventListener('change', () => {
-              color = colorinput.value
-            })
+            if (data.event.allDay) {
+              colorinput.addEventListener('change', () => {
+                color = colorinput.value
+              })
+            }
 
             urlinput.addEventListener('change', () => {
               url = urlinput.value
