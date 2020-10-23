@@ -17,6 +17,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { update } from '../../redux/actions/update'
 import { getStudent } from '../../redux/actions/user'
+import DialogEvent from './DialogEvent'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -28,9 +29,13 @@ const useStyles = makeStyles((theme) => ({
   },
   inputlabel: {
     marginLeft: '5px',
-    // color: 'black',
     fontSize: '130%',
   },
+  buttonEvent: {
+    marginLeft: '5px',
+    fontSize: '110%',
+    marginTop: '7px'
+  }
 }));
 
   export default function Calendar () {
@@ -442,6 +447,7 @@ const useStyles = makeStyles((theme) => ({
             </Select>
           </FormControl>
           }
+            <DialogEvent />
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
               <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
