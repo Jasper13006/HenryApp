@@ -3,7 +3,7 @@ const { User, Student } = require('../db.js')
 module.exports = {
     async generateUsers(numberId) {
         let users = [];
-        for (let id = 1; id <= 1; id++) {
+        for (let id = 1; id <= 150; id++) {
             const name = faker.name.firstName();
             const lastName = faker.name.lastName();
             const email = faker.internet.email();
