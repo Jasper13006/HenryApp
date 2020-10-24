@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlertDialogSlide({ handleClose, id, cohorteId }) {
 
-    const students = useSelector(state => state.student.data)
+    const students = useSelector(state => state.studentsByGroupPM.data)
     const [openDialog, setOpenDialog] = React.useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -43,7 +43,9 @@ export default function AlertDialogSlide({ handleClose, id, cohorteId }) {
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
-        dispatch(traerAlumnosPorGrupo(id))
+        if (students) {
+            dispatch(traerAlumnosPorGrupo(id))
+        }
     };
 
     const handleCloseDialog = () => {
