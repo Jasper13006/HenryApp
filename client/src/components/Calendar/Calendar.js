@@ -328,6 +328,14 @@ const useStyles = makeStyles((theme) => ({
       }).queue([
         {
           title: 'Titulo del evento',
+          showClass: {
+            popup: 'swal2-noanimation',
+            backdrop: 'swal2-noanimation'
+          },
+          hideClass: {
+            popup: '',
+            backdrop: ''
+          },
           input: 'text',
           inputValue: data.event.title,
           inputValidator: (result) => {
@@ -336,6 +344,10 @@ const useStyles = makeStyles((theme) => ({
         },
         {
           title: 'Ajustes del evento',
+          showClass: {
+            popup: 'swal2-noanimation',
+            backdrop: 'swal2-noanimation'
+          },
           html: data.event.allDay ? 
           `<h5>Color del evento<h5>
           <select class="swal2-input" name="color" id="color">
