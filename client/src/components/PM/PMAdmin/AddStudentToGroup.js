@@ -129,7 +129,8 @@ export default function FormDialog({ id, cohorteId, handleCloseGeneral, openGene
                             Selecciona estudiantes para agregarlos al grupo
           </DialogContentText>
                         <FormControl className={classes.formControl}>
-                            {allStudents && allStudents.map((student) => (
+
+                            {allStudents && allStudents.filter((e) => e.grouppmId === null).map((student) => (
                                 <ListItem className={classes.listItem} >
                                     <ListItemText primary={student.user.name + " " + student.user.lastName} />
 

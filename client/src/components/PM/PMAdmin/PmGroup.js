@@ -58,12 +58,6 @@ export default function FullScreenDialog(data) {
     const [openAdd, setOpenAdd] = useState(false);
     const [id, setId] = useState();
 
-    const handleOpenThis = (id) => {
-        setId(id)
-        setOpen(true)
-    }
-
-
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -76,14 +70,14 @@ export default function FullScreenDialog(data) {
 
 
 
-
+    console.log(data.cohorteId)
     return (
         <div>
             <Button onClick={handleClickOpen} style={{ fontSize: "30px", height: "150px", width: "270px", marginTop: "20px", fontFamily: "-moz-initial" }} variant="contained" color="primary" disableElevation>
                 {data.cohorteName}
             </Button>
-            <Dialog fullScreen={true} fullWidth={true} open={open} onClose={handleClose} TransitionComponent={Transition}>
 
+            {open && <Dialog fullScreen={true} fullWidth={true} open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton onClick={handleClose} edge="start" color="inherit" aria-label="close">
@@ -118,7 +112,7 @@ export default function FullScreenDialog(data) {
 
 
                 </div>
-            </Dialog>
+            </Dialog>}
         </div >
     );
 }
