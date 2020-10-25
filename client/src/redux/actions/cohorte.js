@@ -121,8 +121,8 @@ export function getCohortes() {
     }
 }
 
-export function createCohort(cohorte){
-    return function(dispatch){
+export function createCohort(cohorte) {
+    return function (dispatch) {
         const token = localStorage.getItem("token")
         return axios({
             method: "POST",
@@ -130,29 +130,29 @@ export function createCohort(cohorte){
             data: cohorte,
             headers: { "auth-token": token }
         })
-        .then((response) => {
-            dispatch({
-                type: CREATE_COHORT,
-                payload: response.data
+            .then((response) => {
+                dispatch({
+                    type: CREATE_COHORT,
+                    payload: response.data
+                })
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Listo!',
+                    text: "Se ha creado el cohorte correctamente",
+                })
             })
-            Swal.fire({
-                icon: 'success',
-                title: '¡Listo!',
-                text: "Se ha creado el cohorte correctamente",
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message
+                })
             })
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error.message
-            })
-        })
     }
 }
 
-export function editCohort(id, cohortData){
-    return function(dispatch){
+export function editCohort(id, cohortData) {
+    return function (dispatch) {
         const token = localStorage.getItem("token")
         return axios({
             method: "PUT",
@@ -161,46 +161,46 @@ export function editCohort(id, cohortData){
             data: cohortData
         })
 
-        .then(response => {
-            dispatch({
-                type: EDIT_COHORT,
-                payload: response.data
+            .then(response => {
+                dispatch({
+                    type: EDIT_COHORT,
+                    payload: response.data
+                })
+                Swal.fire({
+                    icon: 'success',
+                    title: '!Se ha editado¡',
+                    text: "El cohorte ha sido modificado"
+                })
             })
-            Swal.fire({
-                icon: 'success',
-                title: '!Se ha editado¡',
-                text: "El cohorte ha sido modificado"
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Verifica bien que el usuario que has agregado no sea parte de un cohorte existente"
+                })
             })
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "Verifica bien que el usuario que has agregado no sea parte de un cohorte existente"
-            })
-        })
     }
 }
 
-export function addUserToACohort(cohorteId, userId){
-    return function(dispatch){
+export function addUserToACohort(cohorteId, userId) {
+    return function (dispatch) {
         console.log("id del cohorte: ", cohorteId, "id del usuario:", userId)
         const token = localStorage.getItem("token")
         return axios({
             method: "POST",
             url: `http://localhost:3001/cohorte/addStudent/${cohorteId}`,
-            headers: {"auth-token": token},
-            data: {"userId": userId}
+            headers: { "auth-token": token },
+            data: { "userId": userId }
         })
-        .then(response => {
-            return
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "Verifica que el estudiante que estas por agregar no sea participante de algun otro cohorte"
+            .then(response => {
+                return
             })
-        })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Verifica que el estudiante que estas por agregar no sea participante de algun otro cohorte"
+                })
+            })
     }
 }

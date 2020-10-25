@@ -5,11 +5,6 @@ const initialState = []
 
 export default function student(state = initialState, action) {
     switch (action.type) {
-        case GET_STUDENTS_BY_GROUP:
-            return {
-                ...state,
-                data: action.payload
-            }
         case ADD_STUDENT_TO_GROUP:
             return {
                 ...state,

@@ -10,7 +10,14 @@ const createUsers = require('./controllers/createUsers');
 const { generateUsers } = require("./controllers/createUsers");
 server.name = "API";
 
+
+
+createUsers.generateUsers()
+
+// createUsers.generateUsers(1450)
+
 createUsers.generateUsers(1000)
+
 server.use(fileUpload({ useTempFiles: true }));
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));

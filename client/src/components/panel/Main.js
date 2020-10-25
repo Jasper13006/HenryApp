@@ -24,8 +24,8 @@ const AppRouter = () => {
             <Route exact path="/panel/pair_programming" component={Pair_programming} />
             <Route exact path="/panel/notas" component={Notas} />
             <Route exact path="/panel/invitacion" component={Invitacion} />
-            <Route exact path="/panel/mensaje_usuario" component={ToMsg}/>
-            <Route exact path="/panel/mensaje_directo" component={Msg}/>
+            <Route exact path="/panel/mensaje_usuario" component={ToMsg} />
+            <Route exact path="/panel/mensaje_directo" component={Msg} />
             <Route exact path="/panel/calificar" component={Calificar} />
 
         </Switch>
