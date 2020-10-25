@@ -447,12 +447,14 @@ const useStyles = makeStyles((theme) => ({
             </Select>
           </FormControl>
           }
-            <DialogEvent />
+          {student ? null
+          : 
             <ul>
               <li>Hace click en una fecha para crear un nuevo evento</li>
               <li>Arrastra, suelta y cambia el tamaño de los eventos</li>
               <li>Hace click en un evento para eliminarlo</li>
             </ul>
+          }
           </div>
           <div className='demo-app-sidebar-section'>
               <input
