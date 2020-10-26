@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
-import {makeStyles,Button, MenuItem, Select, Typography} from '@material-ui/core/';
+import {makeStyles,Button} from '@material-ui/core/';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 
@@ -34,10 +34,8 @@ export default function Table({data, name}) {
     });    
     const [control,setControl] = useState (false)
     const [datos,setDatos] = useState ('')
-    const [verTabla,setVerTabla] = useState (false)
-   // const [name, setName] = useState('');
-    const token = localStorage.getItem("token") 
-    //const [nota, setNota] = useState(''); 
+    const [verTabla,setVerTabla] = useState (false)   
+    const token = localStorage.getItem("token")   
     
     async function sendQualification (dato){        
         if(dato.qualification === "Sin Calificar") return   
@@ -72,13 +70,6 @@ export default function Table({data, name}) {
             })
         }        
     }   
-
-    function sleep(miliseconds) {
-        var currentTime = new Date().getTime();
-     
-        while (currentTime + miliseconds >= new Date().getTime()) {
-        }
-     }
     
     useEffect(() => {    
         const data00 = { name: name}   
@@ -93,8 +84,7 @@ export default function Table({data, name}) {
                     headers: { "auth-token": token },
                     data: data00
                  })
-                 .then(res=>{nota = res})
-                
+                 .then(res=>{nota = res})                
                 if (!nota.data){                        
                 datos.push({name:d.user.name + ' ' + d.user.lastName,
                             email:d.user.email,
@@ -122,10 +112,7 @@ export default function Table({data, name}) {
      const handleTabla = () => {
          setVerTabla(true)            
     }  
-    
-    // const handleNameChange = (e) => {
-    //     setName(e.target.value)            
-    // }
+  
     const handleSubmit = (data) => {        
         if(data.length){           
             data.map((dato)=>{ 
@@ -194,18 +181,7 @@ export default function Table({data, name}) {
             />
             <div style={{display: "flex", justifyContent: "space-evenly", flexDirection: "column",
                          height: '200px', marginTop:'50px'}}>
-            {/* <Typography><strong>Seleccionar instancia</strong></Typography>
-            <Select
-                label="Instancia"                        
-                value={name}
-                onChange={handleNameChange}
-                >
-                <MenuItem value={'check1'}>Check1</MenuItem>
-                <MenuItem value={'check2'}>Check2</MenuItem>
-                <MenuItem value={'check3'}>Check3</MenuItem>
-                <MenuItem value={'check4'}>Check4</MenuItem>
-                <MenuItem value={'henrylab'}>Henrylab</MenuItem>
-            </Select>   */}
+          
             <Button
                 onClick={() => handleSubmit(state.data)}
                 //fullWidth
