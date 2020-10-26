@@ -79,7 +79,7 @@ module.exports = {
   },
 
   async modifyEvent(req, res) {
-    const { eventId, title, start, startRecur, end, endRecur, startTime, endTime, allDay } = req.body
+    const { eventId, title, start, startRecur, end, endRecur, startTime, endTime, url, color, allDay } = req.body
     try {
       if (!eventId) {
         return res.status(400).send({ message: "para modificar un evento debes especificar el id" })
@@ -94,6 +94,8 @@ module.exports = {
           evento.startTime = startTime || evento.startTime
           evento.endTime = endTime || evento.endTime
           evento.allDay = allDay || evento.allDay
+          evento.url = url || evento.url
+          evento.color = color || evento.color
           evento.save()
             .then(() => {
               res.status(204).send(evento)

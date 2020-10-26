@@ -10,7 +10,7 @@ export const INITIAL_EVENTS = [
     end: todayStr,
     allDay:true,
     color: 'red',
-    textColor: 'black'
+    textColor: 'green'
   },
   {
     id: createEventId(),
@@ -20,9 +20,9 @@ export const INITIAL_EVENTS = [
     startTime: '12:00',
     endTime: '18:00',
     allDay: false,
-    color: 'red',
+    color: 'black',
     url: 'http://google.com.ar',
-    textColor: 'black'
+    textColor: 'green'
   },
   {
     id: createEventId(),
@@ -30,8 +30,8 @@ export const INITIAL_EVENTS = [
     start  : '2020-10-25T12:30:00',
     end: '2020-10-25T14:30:00',
     allDay:false,
-    color: 'red',
-    textColor: 'black',
+    color: 'black',
+    textColor: 'green',
     url: 'http://google.com.ar',
   },
   {
@@ -44,24 +44,25 @@ export const INITIAL_EVENTS = [
   },
   {
     groupId: '91',
-    title: 'Repeating Event',
+    title: 'COLOR RED FLAQUITO',
     start: '2020-10-09T16:00:00',
+    end: '2020-10-09T18:00:00',
     textColor: 'red',
     borderColor: 'red',
     backgroundColor: 'red',
     url: 'http://google.com.ar',
+    display: 'auto'
   },
   {
     title: "PREUEBA",
     allday: "false",
     borderColor: "#5173DA",
     color: "#99ABEA",
-    textColor: "#000000",
+    textColor: "green",
     description: "Fake description for the Free Pizza",
     start: "2020-10-15T16:30:28",
     end: "2020-10-15T17:30:28",
     url: "http://google.com.ar",
-    textDecoration: 'none'
 },
 {
     title: "CSS Meetup",
