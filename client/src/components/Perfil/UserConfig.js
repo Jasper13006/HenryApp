@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudents } from '../../redux/actions/user'
 import Circle from './Circle'
+import RoleChange from './RoleChange'
+import {traerUsuarios} from '../../redux/actions/user'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -34,8 +36,10 @@ export default function UserConfig({token,id,user}){
     const [updater,setUpdater] = useState(0)
     const [privacyData,setPrivacyData]=useState(null)
     const [allPrivacy,setAllPrivacy] = useState(null)
+    const [cohortes,setCohortes] = useState(null)
     const [filter,setFilter] = useState(null)
-    const usuarios = useSelector(state => state.students.data)
+    const usuarios = useSelector(state => state.usuarios.data)
+    const estudiantes = useSelector(state=>state.students.data)
     const dispatch=useDispatch()
 
     useEffect(()=>{
@@ -48,15 +52,13 @@ export default function UserConfig({token,id,user}){
         }).then(res=>res.data)
         .then(data=>{
             if(data){
-                // console.log(data)
-                // console.log("ue1")
                 setPrivacy(data.userPrivacy)
             }
         })
+        dispatch(traerUsuarios())
     },[updater])
 
     useEffect(()=>{
-        // console.log(privacy)
         if(!privacy){
             axios({
                 method: 'POST',
@@ -68,7 +70,6 @@ export default function UserConfig({token,id,user}){
                 headers: {"auth-token": token},
             }).then(res=>res.data)
             .then(data=>{
-                // console.log("ue2")
                 setUpdater(updater+1)
             })
         }
@@ -122,6 +123,16 @@ export default function UserConfig({token,id,user}){
         }
     },[allPrivacy])
 
+    useEffect(()=>{
+        if(estudiantes){
+            let coh = {}
+            for(let i of estudiantes){
+                coh[i.user.id]=i.cohorteId
+            }
+            setCohortes(coh)
+        }
+    },[estudiantes])
+
     const isPartOf=(str1,str2)=>{
         if(str1.toUpperCase().startsWith(str2.toUpperCase())){
             return(true)
@@ -136,39 +147,37 @@ export default function UserConfig({token,id,user}){
     const accessControl= (userId,type)=>{
         let priv = privacyData[userId]
         if(priv){
-            // console.log("type: ",type, priv[type])
-            // console.log("userId: ", userId)
             if(user.admin){
-                // console.log("opcion 1")
                 return(true) 
             }
             else if(user.instructor || user.pm){
-                // console.log("opcion 2")
                 if(priv[type]==="cohorte" || priv[type]==="todos"){
                     return(true)
                 }
             }
             else if(user.student){
-                // console.log("opcion 3")
                 if(priv[type]==="todos"){
-                    // console.log("esto otro")
                     return(true)
                 } 
             }
             return(false)
         }
-        // console.log("final")
         return(true)
     }
 
-    // if(privacy){
-    //     console.log("privacy: ", privacy)
-    // }
+    const role=(usuario)=>{
+        console.log(usuario)
+        return("gato")
+    }
 
-    // if(usuarios){
-    //     console.log("usuarios: ",usuarios)
-    // }
+    const findCohorte=(id)=>{
+        if(id in cohortes){
+            return (cohortes[id]).toString()
+        }
+        return(null)
+    }
 
+    
     return(
         <Paper className={classes.root}>
             <Typography component="h6" variant="h6">Privacidad</Typography>
@@ -267,6 +276,8 @@ export default function UserConfig({token,id,user}){
                     <TableCell className={classes.strong}>GitHub</TableCell>
                     <TableCell className={classes.strong}>LinkedIn</TableCell>
                     <TableCell className={classes.strong}>Estado</TableCell>
+                    {user.admin &&
+                    <TableCell>Rol</TableCell>}
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -276,35 +287,40 @@ export default function UserConfig({token,id,user}){
                 !((filter.nombre==="" || !filter.nombre) &&
                     (filter.apellido==="" || !filter.apellido) && 
                     (filter.cohorte==="" || !filter.cohorte)) &&
-                (!filter.nombre ||isPartOf(usuario.user.name, filter.nombre)) &&
-                (!filter.apellido || isPartOf(usuario.user.lastName, filter.apellido)) &&
-                (!filter.cohorte || (usuario.cohorteId).toString()===filter.cohorte)
+                (!filter.nombre ||isPartOf(usuario.name, filter.nombre)) &&
+                (!filter.apellido || isPartOf(usuario.lastName, filter.apellido)) 
+                &&
+                (!filter.cohorte || findCohorte(usuario.id)===filter.cohorte)
                 )?
                 <TableRow key={index}>
                     <TableCell>
-                        {usuario.user.name}
+                        {usuario.name}
                     </TableCell>
                     <TableCell>
-                        {usuario.user.lastName}
+                        {usuario.lastName}
                     </TableCell>
                     <TableCell>
-                        {accessControl(usuario.user.id,"emailP")?(usuario.user.email):null}
+                        {accessControl(usuario.id,"emailP")?(usuario.email):null}
                     </TableCell>
                     <TableCell>
-                        {accessControl(usuario.user.id,"gitHub") &&
-                        <a href={`https://github.com/${usuario.user.gitHubId}`} target="_blank">
-                        <Button variant="outlined">{usuario.user.gitHubId}</Button></a>}
+                        {accessControl(usuario.id,"gitHub") &&
+                        <a href={`https://github.com/${usuario.gitHubId}`} target="_blank">
+                        <Button variant="outlined">{usuario.gitHubId}</Button></a>}
                     </TableCell>
                     <TableCell>
-                        {accessControl(usuario.user.id,"linkedIn")&&
-                        <a href={usuario.user.googleId} target="_blank">
+                        {accessControl(usuario.id,"linkedIn")&&
+                        <a href={usuario.googleId} target="_blank">
                             <Button variant="outlined">
-                                {usuario.user.googleId && usuario.user.googleId!=="empty"?"Ir":""}
+                                {usuario.googleId && usuario.googleId!=="empty"?"Ir":""}
                             </Button></a>}
                     </TableCell>
                     <TableCell>
-                        {accessControl(usuario.user.id,"onLineStatus") && <Circle state="on"/>}
+                        {accessControl(usuario.id,"onLineStatus") && <Circle state="on"/>}
                     </TableCell>
+                    {(user.admin && usuario) &&
+                    <TableCell>
+                        <RoleChange user={usuario} token={token}/>
+                    </TableCell>}
                     </TableRow>
                     :null}
                     </>)}
