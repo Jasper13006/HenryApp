@@ -1,4 +1,5 @@
 import React,{useEffect, useState} from 'react';
+import { useHistory } from "react-router-dom";
 import MaterialTable from 'material-table';
 import {makeStyles,Button} from '@material-ui/core/';
 import Swal from 'sweetalert2'
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Table({data, name}) {
     const classes = useStyles();   
+    const history = useHistory()
     const [state, setState] = React.useState({
         columns: [
         { title: 'Name', field: 'name' , editable: "never"},
@@ -120,6 +122,7 @@ export default function Table({data, name}) {
             })
         }
         Swal.fire('Success', 'calificaciones actualizadas', 'success')
+        history.push('/panel')
    }
  
     return (
