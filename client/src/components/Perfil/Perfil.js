@@ -7,15 +7,14 @@ import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import ImageDialog from './ImageDialog'
 import LocationDialog from './LocationDialog'
-import DeleteIcon from '@material-ui/icons/Delete';
 import SocialNetworkDialog from './SocialNetworkDialog'
 import PasswordForm from './PasswordForm'
-import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import GitHubDetails from './GitHubDetails'
 import LinkedInDetails from './LinkedInDetails'
 import Switch from '@material-ui/core/Switch'
 import UserConfig from './UserConfig'
+import {traerUsuarios} from '../../redux/actions/user'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -69,7 +68,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Perfil() {
-    const classes = useStyles();
+    const classes = useStyles()
+    const dispatch=useDispatch()
     const [usuario, setUsuario] = useState(null)
     const option = useSelector(state => state.panel.data)
     const update = useSelector(state => state.update)
@@ -91,6 +91,7 @@ export default function Perfil() {
             }
         }
         fetchData()
+        dispatch(traerUsuarios())
 
     }, [update])
 
