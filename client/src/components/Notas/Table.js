@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Table({data}) {
+export default function Table({data, name}) {
     const classes = useStyles();   
     const [state, setState] = React.useState({
         columns: [
@@ -33,8 +33,11 @@ export default function Table({data}) {
         data:[]
     });    
     const [control,setControl] = useState (false)
-    const [name, setName] = useState('');
-    const token = localStorage.getItem("token")  
+    const [datos,setDatos] = useState ('')
+    const [verTabla,setVerTabla] = useState (false)
+   // const [name, setName] = useState('');
+    const token = localStorage.getItem("token") 
+    //const [nota, setNota] = useState(''); 
     
     async function sendQualification (dato){        
         if(dato.qualification === "Sin Calificar") return   
@@ -69,29 +72,60 @@ export default function Table({data}) {
             })
         }        
     }   
+
+    function sleep(miliseconds) {
+        var currentTime = new Date().getTime();
+     
+        while (currentTime + miliseconds >= new Date().getTime()) {
+        }
+     }
     
-    useEffect(() => {        
+    useEffect(() => {    
+        const data00 = { name: name}   
         if(!state.data.length && !control){
-            let datos = []
-            data && data.map((d)=>{   
+            var datos = []
+            var nota = ''
+            data && data.map(async(d)=>{  
+                 await axios({
+                    method: 'POST',
+                    url: `http://localhost:3001/user/nota-checkpoint/repetida/${d.userId}`,
+                    credentials: "include",
+                    headers: { "auth-token": token },
+                    data: data00
+                 })
+                 .then(res=>{nota = res})
+                
+                if (!nota.data){                        
                 datos.push({name:d.user.name + ' ' + d.user.lastName,
                             email:d.user.email,
                             qualification: 'Sin Calificar',
                             info:'Sin Comentarios',
                             userId: d.userId
-                        })                              
+                        })
+                }else{
+                    datos.push({name:d.user.name + ' ' + d.user.lastName,
+                    email:d.user.email,
+                    qualification: nota.data[0].qualification,
+                    info: nota.data[0].info,
+                    userId: d.userId
+                })
+                }                              
             })
+            setDatos(datos)
             setControl(true)
             setState({
                 ...state,
                 data:datos
            })
        }
-    }, [])      
+    })    
+     const handleTabla = () => {
+         setVerTabla(true)            
+    }  
     
-    const handleNameChange = (e) => {
-        setName(e.target.value)            
-    }
+    // const handleNameChange = (e) => {
+    //     setName(e.target.value)            
+    // }
     const handleSubmit = (data) => {        
         if(data.length){           
             data.map((dato)=>{ 
@@ -102,7 +136,15 @@ export default function Table({data}) {
    }
  
     return (
-        <div className={classes.table}>           
+        <div>
+             {!verTabla &&<Button
+                onClick={handleTabla}
+                //fullWidth
+                variant="contained"
+                className={classes.submit}
+                //disabled={!name}
+            >Ver tabla</Button>}
+        {verTabla && <div className={classes.table}>                 
             <MaterialTable            
             title="Tabla de Estudiantes"
             columns={state.columns}
@@ -152,7 +194,7 @@ export default function Table({data}) {
             />
             <div style={{display: "flex", justifyContent: "space-evenly", flexDirection: "column",
                          height: '200px', marginTop:'50px'}}>
-            <Typography><strong>Seleccionar instancia</strong></Typography>
+            {/* <Typography><strong>Seleccionar instancia</strong></Typography>
             <Select
                 label="Instancia"                        
                 value={name}
@@ -163,17 +205,18 @@ export default function Table({data}) {
                 <MenuItem value={'check3'}>Check3</MenuItem>
                 <MenuItem value={'check4'}>Check4</MenuItem>
                 <MenuItem value={'henrylab'}>Henrylab</MenuItem>
-            </Select>  
+            </Select>   */}
             <Button
                 onClick={() => handleSubmit(state.data)}
                 //fullWidth
                 variant="contained"
                 className={classes.submit}
-                disabled={!name}
+                //disabled={!name}
             >
             Enviar
             </Button> 
             </div>                         
+        </div>}
         </div>
         
     );

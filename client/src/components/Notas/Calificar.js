@@ -91,7 +91,6 @@ export default function Calificar() {
             return}       
         if (user.data.status == 200){
             const data0 = { name: name}   
-            console.log(data0)    
             const data = {                
                 name: name,
                 qualification: state.qualification,

@@ -8,6 +8,7 @@ export default function Notas(){
     const [cohortes,setCohortes] = useState('')
     const [cohortesel,setCohortesel] = useState('')  
     const [students,setStudents] = useState('')
+    const [name, setName] = useState('');
 
     useEffect(() => {        
         axios({
@@ -30,8 +31,12 @@ export default function Notas(){
             .catch(err=> console.log(err));                                  
     }, [cohortesel])   
 
-    const handleNameChange = (e) => {
+    const handleCohorChange = (e) => {
         setCohortesel(e.target.value)                   
+    }
+
+    const handleNameChange = (e) => {
+        setName(e.target.value)            
     }
 
     return (        
@@ -39,13 +44,27 @@ export default function Notas(){
             <h1>Tabla</h1>            
             {!students &&
             <div>
-            <Typography>Seleccionar Cohorte</Typography>             
-            <Select label="Cohorte" onChange={handleNameChange} value={cohortesel}>
+            <Typography><strong>Seleccionar instancia</strong></Typography>
+            <Select
+                label="Instancia"                        
+                value={name}
+                onChange={handleNameChange}
+                >
+                <MenuItem value={'check1'}>Check1</MenuItem>
+                <MenuItem value={'check2'}>Check2</MenuItem>
+                <MenuItem value={'check3'}>Check3</MenuItem>
+                <MenuItem value={'check4'}>Check4</MenuItem>
+                <MenuItem value={'henrylab'}>Henrylab</MenuItem>
+            </Select>  
+            {name && <div>
+            <Typography><strong>Seleccionar Cohorte</strong></Typography>             
+            <Select label="Cohorte" onChange={handleCohorChange} value={cohortesel}>
                 {cohortes && cohortes.map((c)=>
                 <MenuItem value={c.id}>{c.name}</MenuItem>)}                   
-            </Select> 
+            </Select>
+                </div>} 
                 </div>}           
-            {students.length >0 && <Table data={students}/>}            
+            {students.length >0 && <Table data={students} name={name}/>}            
         </div>
     )
 }

@@ -58,7 +58,7 @@ module.exports = {
           if (notas && notas.length === 0) {
             return res.send(false);
           }
-          res.status(200).send(true);
+          res.status(200).send(notas);
         })
     } catch (error) {
       console.log(error)
