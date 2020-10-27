@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react';
+import { useHistory } from "react-router-dom";
 import MaterialTable from 'material-table';
-import {makeStyles,Button, MenuItem, Select, Typography} from '@material-ui/core/';
+import {makeStyles,Button} from '@material-ui/core/';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 
@@ -21,8 +22,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Table({data}) {
+export default function Table({data, name}) {
     const classes = useStyles();   
+    const history = useHistory()
     const [state, setState] = React.useState({
         columns: [
         { title: 'Name', field: 'name' , editable: "never"},
@@ -33,8 +35,9 @@ export default function Table({data}) {
         data:[]
     });    
     const [control,setControl] = useState (false)
-    const [name, setName] = useState('');
-    const token = localStorage.getItem("token")  
+    const [datos,setDatos] = useState ('')
+    const [verTabla,setVerTabla] = useState (false)   
+    const token = localStorage.getItem("token")   
     
     async function sendQualification (dato){        
         if(dato.qualification === "Sin Calificar") return   
@@ -70,28 +73,48 @@ export default function Table({data}) {
         }        
     }   
     
-    useEffect(() => {        
+    useEffect(() => {    
+        const data00 = { name: name}   
         if(!state.data.length && !control){
-            let datos = []
-            data && data.map((d)=>{   
+            var datos = []
+            var nota = ''
+            data && data.map(async(d)=>{  
+                 await axios({
+                    method: 'POST',
+                    url: `http://localhost:3001/user/nota-checkpoint/repetida/${d.userId}`,
+                    credentials: "include",
+                    headers: { "auth-token": token },
+                    data: data00
+                 })
+                 .then(res=>{nota = res})                
+                if (!nota.data){                        
                 datos.push({name:d.user.name + ' ' + d.user.lastName,
                             email:d.user.email,
                             qualification: 'Sin Calificar',
                             info:'Sin Comentarios',
                             userId: d.userId
-                        })                              
+                        })
+                }else{
+                    datos.push({name:d.user.name + ' ' + d.user.lastName,
+                    email:d.user.email,
+                    qualification: nota.data[0].qualification,
+                    info: nota.data[0].info,
+                    userId: d.userId
+                })
+                }                              
             })
+            setDatos(datos)
             setControl(true)
             setState({
                 ...state,
                 data:datos
            })
        }
-    }, [])      
-    
-    const handleNameChange = (e) => {
-        setName(e.target.value)            
-    }
+    })    
+     const handleTabla = () => {
+         setVerTabla(true)            
+    }  
+  
     const handleSubmit = (data) => {        
         if(data.length){           
             data.map((dato)=>{ 
@@ -99,10 +122,19 @@ export default function Table({data}) {
             })
         }
         Swal.fire('Success', 'calificaciones actualizadas', 'success')
+        history.push('/panel')
    }
  
     return (
-        <div className={classes.table}>           
+        <div>
+             {!verTabla &&<Button
+                onClick={handleTabla}
+                //fullWidth
+                variant="contained"
+                className={classes.submit}
+                //disabled={!name}
+            >Ver tabla</Button>}
+        {verTabla && <div className={classes.table}>                 
             <MaterialTable            
             title="Tabla de Estudiantes"
             columns={state.columns}
@@ -152,28 +184,18 @@ export default function Table({data}) {
             />
             <div style={{display: "flex", justifyContent: "space-evenly", flexDirection: "column",
                          height: '200px', marginTop:'50px'}}>
-            <Typography><strong>Seleccionar instancia</strong></Typography>
-            <Select
-                label="Instancia"                        
-                value={name}
-                onChange={handleNameChange}
-                >
-                <MenuItem value={'check1'}>Check1</MenuItem>
-                <MenuItem value={'check2'}>Check2</MenuItem>
-                <MenuItem value={'check3'}>Check3</MenuItem>
-                <MenuItem value={'check4'}>Check4</MenuItem>
-                <MenuItem value={'henrylab'}>Henrylab</MenuItem>
-            </Select>  
+          
             <Button
                 onClick={() => handleSubmit(state.data)}
                 //fullWidth
                 variant="contained"
                 className={classes.submit}
-                disabled={!name}
+                //disabled={!name}
             >
             Enviar
             </Button> 
             </div>                         
+        </div>}
         </div>
         
     );
