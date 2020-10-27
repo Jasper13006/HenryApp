@@ -6,17 +6,17 @@ const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const { User, Cohorte, Grouppm, Student, Groupp, Checkpoint, Calendar, Modulo } = require("./db.js")
 const server = express();
-const createUsers = require('./controllers/createUsers');
-const { generateUsers } = require("./controllers/createUsers");
+//const createUsers = require('./controllers/createUsers');
+//const { generateUsers } = require("./controllers/createUsers");
 server.name = "API";
 
 
 
-createUsers.generateUsers()
+//createUsers.generateUsers()
 
 // createUsers.generateUsers(1450)
 
-createUsers.generateUsers(1000)
+//createUsers.generateUsers(1000)
 
 server.use(fileUpload({ useTempFiles: true }));
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
@@ -1199,40 +1199,492 @@ server.post("/seed", async (req, res) => {
     "linkVideos": "https://vimeo.com/soyhenry/review/458619858/bd6cf5a429?sort=lastUserActionEventDate&direction=desc",
     "cohorteId": 1
   })
-  // await Calendar.create({
-  //   "title": "Evento dia",
-  //   "start": "2020-10-01",
-  //   "end": "2020-10-01",
-  //   "allDay": true,
-  //   "cohorteId": 1,
-  // })
-  // await Calendar.create({
-  //   "title": "Evento largo",
-  //   "start": "2020-10-07",
-  //   "end": "2020-10-10",
-  //   "allDay": true,
-  //   "cohorteId": 1,
-  // })
-  // await Calendar.create({
-  //   "title": "Evento horario recurrente",
-  //   "startRecur": "2020-10-09",
-  //   "endRecur": "2020-10-09",
-  //   "startTime": "09:00",
-  //   "endTime": "12:30",
-  //   "allDay": false,
-  //   "cohorteId": 1,
-  // })
-  // await Calendar.create({
-  //   "title": "Evento horario recurrente",
-  //   "startRecur": "2020-10-16",
-  //   "endRecur": "2020-10-16",
-  //   "startTime": "09:00",
-  //   "endTime": "12:30",
-  //   "allDay": false,
-  //   "cohorteId": 1,
-  // })
+  // calendar
+  // cohorte 1
+  await Calendar.create({
+    "title": "Check Prep 0",    
+    "startRecur": "2020-10-02",
+    "endRecur": "2020-10-03",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Intro to CS",    
+    "startRecur": "2020-10-05",
+    "endRecur": "2020-10-06",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Deepdive JS I",    
+    "startRecur": "2020-10-06",
+    "endRecur": "2020-10-07",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Deepdive JS II",    
+    "startRecur": "2020-10-07",
+    "endRecur": "2020-10-08",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Estructura de datos I",    
+    "startRecur": "2020-10-08",
+    "endRecur": "2020-10-09",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Estructura de datos II",    
+    "startRecur": "2020-10-09",
+    "endRecur": "2020-10-10",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+
+  await Calendar.create({
+    "title": "Algoritmos I",    
+    "startRecur": "2020-10-12",
+    "endRecur": "2020-10-13",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Algoritmos II",    
+    "startRecur": "2020-10-13",
+    "endRecur": "2020-10-14",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-10-14",
+    "endRecur": "2020-10-15",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-10-15",
+    "endRecur": "2020-10-16",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Check M1",    
+    "startRecur": "2020-10-16",
+    "endRecur": "2020-10-17",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+
+  await Calendar.create({
+    "title": "DOM",    
+    "startRecur": "2020-10-19",
+    "endRecur": "2020-10-20",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "CSS Avanzado",    
+    "startRecur": "2020-10-20",
+    "endRecur": "2020-10-21",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "ES6",    
+    "startRecur": "2020-10-21",
+    "endRecur": "2020-10-22",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "AJAX",    
+    "startRecur": "2020-10-22",
+    "endRecur": "2020-10-23",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Modulos/Bundlers",    
+    "startRecur": "2020-10-23",
+    "endRecur": "2020-10-24",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+
+  await Calendar.create({
+    "title": "React Intro",    
+    "startRecur": "2020-10-26",
+    "endRecur": "2020-10-27",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "React Estilos",    
+    "startRecur": "2020-10-27",
+    "endRecur": "2020-10-28",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "React Estados",    
+    "startRecur": "2020-10-28",
+    "endRecur": "2020-10-29",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "React Routing",    
+    "startRecur": "2020-10-29",
+    "endRecur": "2020-10-30",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "React Form",    
+    "startRecur": "2020-10-30",
+    "endRecur": "2020-10-31",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+
+  await Calendar.create({
+    "title": "Redux Intro",    
+    "startRecur": "2020-11-02",
+    "endRecur": "2020-11-03",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "React Redux",    
+    "startRecur": "2020-11-03",
+    "endRecur": "2020-11-04",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Hooks",    
+    "startRecur": "2020-11-04",
+    "endRecur": "2020-11-05",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-11-05",
+    "endRecur": "2020-11-06",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+  await Calendar.create({
+    "title": "Check M2",    
+    "startRecur": "2020-11-06",
+    "endRecur": "2020-11-07",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 1,
+  })
+
+  /// cohorte 2
+
+  await Calendar.create({
+    "title": "Check Prep 0",    
+    "startRecur": "2020-11-06",
+    "endRecur": "2020-11-07",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Intro to CS",    
+    "startRecur": "2020-11-09",
+    "endRecur": "2020-11-10",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Deepdive JS I",    
+    "startRecur": "2020-11-10",
+    "endRecur": "2020-11-11",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Deepdive JS II",    
+    "startRecur": "2020-11-11",
+    "endRecur": "2020-11-12",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Estructura de datos I",    
+    "startRecur": "2020-11-12",
+    "endRecur": "2020-11-13",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Estructura de datos II",    
+    "startRecur": "2020-11-13",
+    "endRecur": "2020-11-14",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+
+  await Calendar.create({
+    "title": "Algoritmos I",    
+    "startRecur": "2020-11-16",
+    "endRecur": "2020-11-17",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Algoritmos II",    
+    "startRecur": "2020-11-17",
+    "endRecur": "2020-11-18",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-11-18",
+    "endRecur": "2020-11-19",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-11-19",
+    "endRecur": "2020-11-20",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Check M1",    
+    "startRecur": "2020-11-20",
+    "endRecur": "2020-11-21",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+
+  await Calendar.create({
+    "title": "DOM",    
+    "startRecur": "2020-11-23",
+    "endRecur": "2020-11-24",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "CSS Avanzado",    
+    "startRecur": "2020-11-24",
+    "endRecur": "2020-11-25",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "ES6",    
+    "startRecur": "2020-11-25",
+    "endRecur": "2020-11-26",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "AJAX",    
+    "startRecur": "2020-11-26",
+    "endRecur": "2020-11-27",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Modulos/Bundlers",    
+    "startRecur": "2020-11-27",
+    "endRecur": "2020-11-28",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+
+  await Calendar.create({
+    "title": "React Intro",    
+    "startRecur": "2020-11-30",
+    "endRecur": "2020-12-01",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "React Estilos",    
+    "startRecur": "2020-12-01",
+    "endRecur": "2020-12-02",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "React Estados",    
+    "startRecur": "2020-12-02",
+    "endRecur": "2020-12-03",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "React Routing",    
+    "startRecur": "2020-12-03",
+    "endRecur": "2020-12-04",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "React Form",    
+    "startRecur": "2020-12-04",
+    "endRecur": "2020-12-05",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+
+  await Calendar.create({
+    "title": "Redux Intro",    
+    "startRecur": "2020-12-07",
+    "endRecur": "2020-12-08",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "React Redux",    
+    "startRecur": "2020-12-08",
+    "endRecur": "2020-12-09",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Hooks",    
+    "startRecur": "2020-12-09",
+    "endRecur": "2020-12-10",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Repaso",    
+    "startRecur": "2020-12-10",
+    "endRecur": "2020-12-11",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+  await Calendar.create({
+    "title": "Check M2",    
+    "startRecur": "2020-12-11",
+    "endRecur": "2020-12-12",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "allDay": false,
+    "cohorteId": 2,
+  })
+
   res.status(200).send('seed finalizado exitosamente!!')
 })
+
+
 
 // Error catching endware.
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
