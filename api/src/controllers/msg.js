@@ -22,7 +22,6 @@ module.exports = {
                     
                 }   
             })
-            console.log(chat)
             if(chat){
                 chat.fromId = fromId;
                 chat.toId = toId;

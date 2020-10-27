@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import store from '../../redux/store/index'
+import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
@@ -136,9 +136,11 @@ function tabValue(index) {
               <Notifications/>                           
             </Grid>
             <Grid item>
-              <IconButton color="inherit" className={classes.iconButtonAvatar}>
-                <Avatar src={user && user.image} alt="My Avatar" />
-              </IconButton>
+              <Link to='/panel/perfil'>
+                <IconButton color="inherit" className={classes.iconButtonAvatar}>
+                  <Avatar src={user.image} alt="My Avatar" style={{position:'inherit'}}/>
+                </IconButton>
+              </Link>              
             </Grid>
             <Grid item>
               <IconButton color="inherit">

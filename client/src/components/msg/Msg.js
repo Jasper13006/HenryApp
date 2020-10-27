@@ -13,6 +13,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import {useDispatch,useSelector} from 'react-redux'
 import {addMsg,getMsg,editValidate,addSocket} from '../../redux/actions/msg';
 import store from '../../redux/store/index'
+import {DebounceInput} from 'react-debounce-input';
 
 
  
@@ -123,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     boxEmoji:{
       width: '225px',
       height: '283px',
-      marginLeft: '46em',
+      marginLeft: '20em',
       marginTop: '4.3em',
       position:'absolute'
     },
@@ -165,11 +166,10 @@ export default function Msg(props) {
     const userFrom = JSON.parse(localStorage.getItem('user'))
     const token = localStorage.getItem('token')
     const chat = JSON.parse(localStorage.getItem('chat'))
-    const chats = useSelector(state => state.msg.chats)
     const dispatch = useDispatch()
-    /* const mensajes = useSelector(state => state.msg.mensajes) */
     const [mensajes,setMensajes] = React.useState(store.getState().msg.mensajes) 
     const date = new Date()
+
     
     
 
@@ -187,8 +187,7 @@ export default function Msg(props) {
 
     // setea el texto al mensaje 
 
-    const handleChange = event => {
-      event.preventDefault()
+    const handleChange = event => {    
       setDescription(event.target.value); 
     };
 
@@ -207,14 +206,12 @@ export default function Msg(props) {
       if(data.description){
         dispatch(addMsg(data,token))
         socket.emit('mensaje',data)
-        
       }
       setDescription('')
-      
-
     }
 
     useEffect(()=>{
+        
         if(!mensajes.length && chat){
           dispatch(getMsg(chat.id,token))
           dispatch(editValidate())
@@ -228,14 +225,16 @@ export default function Msg(props) {
     // conexion en tiempo real con socket io
     
     useEffect(()=> {
-      console.log('hola')
       socket.on('mensajes',mensaje => {
-        dispatch(addSocket(mensaje))
-        setMensajes([...mensajes,mensaje])
-        
+        if(mensaje.from.id == userTo.id && mensaje.to.id === userFrom.id){
+          dispatch(addSocket(mensaje))          
+          setMensajes([...mensajes,mensaje])
+        }         
       })
       return () => {socket.off()}
     },[mensajes])
+
+    
 
     const divRef = React.useRef(null);
     
@@ -270,7 +269,7 @@ export default function Msg(props) {
             
           </Box>
           <List component="nav" aria-label="main mailbox folders">
-            {mensajes.map((msg,key,elements)=>(
+            {mensajes.length ? mensajes.map((msg,key,elements)=>(
                 <ListItem key={key} style={{display:'flex',flexDirection:'Column'}} >
                   {!key && <Box className = {classes.boxDate} >
                     <Typography className={classes.name} variant="h5">
@@ -303,7 +302,7 @@ export default function Msg(props) {
                       </div>     
                     </Box>                                                                                
                 </ListItem>
-            ))}
+            )):null}
           </List> 
           <div ref={divRef}></div>   
         </Box>
@@ -315,7 +314,7 @@ export default function Msg(props) {
         <Box className={classes.boxInput}>
             <form onSubmit={handleSendMsg}>                         
                 <FormControl className={classes.input}>
-                    <BootstrapInput placeholder="Escribe tu mensaje" id="bootstrap-input" value={description} autoComplete='off' onChange={handleChange} />
+                  <DebounceInput element={BootstrapInput} placeholder="Escribe tu mensaje" id="bootstrap-input" debounceTimeout={300} value={description} autoComplete='off' onChange={handleChange}/>
                 </FormControl>                   
             </form>
             <div style={{marginLeft:'auto'}}>

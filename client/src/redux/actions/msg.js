@@ -1,6 +1,6 @@
 import Axios from 'axios'
 import axios from 'axios'
-import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE, ADD_SOCKET} from '../consts/actionTypes'
+import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE, ADD_MSGSOCKET, ADD_CHATSOCKET,ADD_CHATNOT,REMOVE_CHATNOT} from '../consts/actionTypes'
 import socket from '../../components/msg/Socket'
 
 export function addMsg(data,token){
@@ -18,7 +18,8 @@ export function addMsg(data,token){
             })
             data['updatedAt'] = newMsg.data.updatedAt;
             data['chatBack'] = newMsg.data
-            /* socket.emit('mensaje',data) */
+            localStorage.setItem('chat',JSON.stringify({from:data.from,to:data.to,id:data.chatBack.id}));
+            socket.emit('sendChat',{from:data.from,to:data.to,id:data.chatBack.id}) 
             return dispatch({
                 type: ADD_NEWMSG,
                 payload: data
@@ -33,7 +34,7 @@ export function addSocket(data){
     
     return async function(dispatch){       
         return dispatch({
-            type: ADD_SOCKET,
+            type: ADD_MSGSOCKET,
             payload: data
         })    
     }
@@ -113,6 +114,33 @@ export function editValidate (){
     return function (dispatch){
         return dispatch({
             type:EDIT_VALIDATE
+        })
+    }
+}
+
+export function addChatSocket (chat) {
+    return function (dispatch){
+        return dispatch({
+            type:ADD_CHATSOCKET,
+            payload:chat
+        })
+    }
+}
+
+export function addChatNot (chat) {
+    return function (dispatch){
+        return dispatch({
+            type:ADD_CHATNOT,
+            payload:chat
+        })
+    }
+}
+
+export function removeChatNot (chat){
+    return function(dispatch){
+        return dispatch({
+            type:REMOVE_CHATNOT,
+            payload:chat
         })
     }
 }
