@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     boxEmoji:{
       width: '225px',
       height: '283px',
-      marginLeft: '46em',
+      marginLeft: '20em',
       marginTop: '4.3em',
       position:'absolute'
     },
@@ -166,10 +166,7 @@ export default function Msg(props) {
     const userFrom = JSON.parse(localStorage.getItem('user'))
     const token = localStorage.getItem('token')
     const chat = JSON.parse(localStorage.getItem('chat'))
-    const chats = useSelector(state => state.msg.chats)
     const dispatch = useDispatch()
-    const [quantity,setQuantity] = React.useState(0)
-    /* const mensajes = useSelector(state => state.msg.mensajes) */
     const [mensajes,setMensajes] = React.useState(store.getState().msg.mensajes) 
     const date = new Date()
 
@@ -190,9 +187,7 @@ export default function Msg(props) {
 
     // setea el texto al mensaje 
 
-    const handleChange = event => {
-     /*  event.preventDefault() */
-      console.log(event.target.value)
+    const handleChange = event => {    
       setDescription(event.target.value); 
     };
 
@@ -211,13 +206,8 @@ export default function Msg(props) {
       if(data.description){
         dispatch(addMsg(data,token))
         socket.emit('mensaje',data)
-        socket.emit('sendChat',chat)
-        
-        
       }
       setDescription('')
-      
-
     }
 
     useEffect(()=>{
@@ -236,9 +226,10 @@ export default function Msg(props) {
     
     useEffect(()=> {
       socket.on('mensajes',mensaje => {
-        dispatch(addSocket(mensaje))
-        setMensajes([...mensajes,mensaje])
-        
+        if(mensaje.from.id == userTo.id && mensaje.to.id === userFrom.id){
+          dispatch(addSocket(mensaje))          
+          setMensajes([...mensajes,mensaje])
+        }         
       })
       return () => {socket.off()}
     },[mensajes])

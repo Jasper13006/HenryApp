@@ -6,9 +6,10 @@ import {MenuItem,Badge,IconButton} from '@material-ui/core/';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {useDispatch,useSelector} from 'react-redux'
 import MessageIcon from '@material-ui/icons/Message';
-import {getMsg,editChat,editValidate,getChats} from '../../redux/actions/msg'
+import {getMsg,editChat,addChatNot,removeChatNot} from '../../redux/actions/msg'
 import { useHistory } from 'react-router-dom';
 import socket from '../msg/Socket'
+import store from '../../redux/store/index'
 
 
 const StyledMenu = withStyles({
@@ -45,10 +46,10 @@ export default function CustomizedMenus() {
     const [anchorEl, setAnchorEl] = useState(null);
     const id = localStorage.getItem('idUser')
     const token = localStorage.getItem('token')
-    const validate = useSelector(state => state.msg.validate)
-    const [chatSocket,setChatSocket] = useState([])
+    const [chatsNotification,setChatNotification] = useState(store.getState().msg.chatsNotification)
 
     const handleClick = (event) => {
+
         setAnchorEl(event.currentTarget);
     };
 
@@ -57,48 +58,49 @@ export default function CustomizedMenus() {
     };
 
     React.useEffect(() => {
-        
-      /* if(chats.length && validate){ */
+      if(!chatsNotification.length && chats){
         chats.map((chat) => {
-            if(chat.from.id != id && !chat.check){
-              setChatSocket([...chatSocket,chat])
-            }
+          if(!chat.check && chat.from.id != id){
+            setChatNotification([...chatsNotification,chat])
+          }
         })
-        
-      /*   dispatch(editValidate())
-      }   */          
-    },[chats])
+        store.subscribe(() =>{
+          setChatNotification(() => store.getState().msg.chatsNotification)
+        })
+      }   
+    })
 
     /// conexion con socket
 
-    useEffect(() => {
-      socket.on('notification', chat => {
-        console.log(chat)
-        const filt = chatSocket.filter(chatS => chatS.id == chat.id) 
-        console.log(filt) 
+    React.useEffect(() => {
+      
+      socket.on('notification', chat => {        
+        /* const filt = chats.filter(chatS => chatS.id == chat.id)         
         if(!filt.length){
-          setChatSocket([...chatSocket,chat])
-        }         
+          dispatch(addChatSocket(chat))
+          setChats([...chats,chat])
+          
+        } */   
+        dispatch(addChatNot(chat)) 
+        setChatNotification([...chatsNotification,chat])     
       })
       return () => {socket.off()}
     })
 
-
     const handeSend = chat => {
-        
-
-        var i = chatSocket.indexOf( chat );
-        chatSocket.splice( i, 1 );
-
+        /* var i = chatsNotification.indexOf( chat );
+        chatsNotification.splice( i, 1 ); */
+        dispatch(removeChatNot(chat))
         if(chat.from.id == id) {
           localStorage.setItem('toUser', JSON.stringify(chat.to));
         }else{
           localStorage.setItem('toUser', JSON.stringify(chat.from));
         }
+
         localStorage.setItem('chat',JSON.stringify(chat));
         dispatch(getMsg(chat.id,token))
         setAnchorEl(null);
-        if(chat.from.id != id && !chat.check){
+        if(!chat.check){
           dispatch(editChat(chat.id,token))
         }
         history.push('/panel/mensaje_directo')
@@ -108,7 +110,7 @@ export default function CustomizedMenus() {
   return (
     <div>
         <IconButton aria-label="show 11 new notifications" color="inherit" onClick={handleClick}>
-          <Badge badgeContent={chatSocket.length} color="secondary">
+          <Badge badgeContent={chatsNotification.length} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -119,15 +121,15 @@ export default function CustomizedMenus() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
         >
-            {chatSocket.length  ? chatSocket.map((chat,key)=> (
+            {chatsNotification.map((chat,key)=> (
                 <StyledMenuItem onClick = {() => handeSend(chat)} key={key}>
                     <span style={{fontSize: '0.85em'}}>
                         <MessageIcon/>
                         {chat.from.id == id ? chat.to.fullName : chat.from.fullName}
                     </span>
                 </StyledMenuItem>
-            )) : null}
-          {!chatSocket.length ? <StyledMenuItem>
+            ))}
+          {!chatsNotification.length ? <StyledMenuItem>
                 <span style={{fontSize: '0.85em'}}>
                     <MessageIcon/>
                     No tienes mensajes nuevos

@@ -1,9 +1,10 @@
 import { ThemeProvider } from '@material-ui/core'
-import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE,ADD_SOCKET} from '../consts/actionTypes'
+import {ADD_NEWMSG,GET_CHATS,GET_MSG,DELETE_MSGS, EDIT_CHAT,EDIT_VALIDATE,ADD_MSGSOCKET,ADD_CHATNOT, ADD_CHATSOCKET,REMOVE_CHATNOT} from '../consts/actionTypes'
 
 const initialState = {
     mensajes:[],
     chats:[],
+    chatsNotification:[],
     validate:true
 }
 
@@ -33,10 +34,10 @@ export default function msg (state = initialState,action){
                 mensajes:state.mensajes.concat(action.payload),
                 chats:filterOrDelete(action.payload,state.chats)
             };
-        case ADD_SOCKET:
+        case ADD_MSGSOCKET:
             return{
                 ...state,
-                mensajes:state.mensajes.concat(action.payload)
+                mensajes:state.mensajes.concat(action.payload),
             };
         case GET_CHATS:
             return{
@@ -48,6 +49,7 @@ export default function msg (state = initialState,action){
                 ...state,
                 mensajes:action.payload
             };
+            
         case EDIT_CHAT:
             return {
                 ...state,
@@ -75,6 +77,21 @@ export default function msg (state = initialState,action){
             return {
                 ...state,
                 validate:!state.validate
+            };
+        case ADD_CHATNOT:
+            return {
+                ...state,
+                chatsNotification:state.chatsNotification.concat(action.payload)
+            };
+        case ADD_CHATSOCKET:
+            return{
+                ...state,
+                chats:state.chats.concat(action.payload)
+            };
+        case REMOVE_CHATNOT:
+            return{
+                ...state,
+                chatsNotification:state.chatsNotification.filter(chat => chat.id !== action.payload.id)
             }
         default:
             return {

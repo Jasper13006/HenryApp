@@ -13,8 +13,8 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {useDispatch,useSelector} from 'react-redux'
-import {getChats,getMsg,editChat} from '../../redux/actions/msg'
+import {useDispatch} from 'react-redux'
+import {getChats,getMsg,editChat,addChatSocket,removeChatNot} from '../../redux/actions/msg'
 import { useHistory } from 'react-router-dom';
 import store from '../../redux/store/index'
 
@@ -73,7 +73,7 @@ export default function NavMsg(props) {
   const history = useHistory()
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [chats,setChats] = React.useState([])
+  const [chats,setChats] = React.useState(store.getState().msg.chats)
   const id = localStorage.getItem('idUser')
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
@@ -95,10 +95,11 @@ export default function NavMsg(props) {
       localStorage.setItem('toUser', JSON.stringify(chat.from));
     }
     localStorage.setItem('chat',JSON.stringify(chat));
-    dispatch(getMsg(chat.id,token))
+    dispatch(getMsg(chat.id,token));
+    dispatch(removeChatNot(chat));
     if(chat.from.id != id && !chat.check){
       dispatch(editChat(chat.id,token))  
-    }    
+    }       
     history.push('/panel/mensaje_directo')
   }
 
@@ -109,6 +110,19 @@ export default function NavMsg(props) {
     }) 
       
   },[])
+
+  React.useEffect(() => {
+    socket.on('notification', chat => {        
+      const filt = chats.filter(chatS => chatS.id == chat.id)         
+      if(!filt.length){
+        dispatch(addChatSocket(chat))
+        setChats([...chats,chat])
+        
+      }         
+    })
+    return () => {socket.off()}
+  })
+
 
 
   return (

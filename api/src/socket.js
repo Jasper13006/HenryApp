@@ -15,8 +15,7 @@ io.on('connection',socket => {
     });
     
     socket.on('sendChat',(chat)=>{
-        console.log(chat)
-        socket.broadcast.emit('notification',chat)
+        io.emit('notification',chat)
     })
 })
 
