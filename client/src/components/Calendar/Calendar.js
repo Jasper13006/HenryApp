@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
   export default function Calendar () {
-    const [weekendsVisible, setWeekendsVisible] = useState(true)
+    const [weekendsVisible, setWeekendsVisible] = useState(false)
     const [currentEvents, setCurrentEvents] = useState([])
     const [getEvents, setGetEvents] = useState()
     const dispatch = useDispatch()
