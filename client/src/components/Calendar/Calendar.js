@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
   export default function Calendar () {
-    const [weekendsVisible, setWeekendsVisible] = useState(true)
+    const [weekendsVisible, setWeekendsVisible] = useState(false)
     const [currentEvents, setCurrentEvents] = useState([])
     const [getEvents, setGetEvents] = useState()
     const dispatch = useDispatch()
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
 
       if(cohorteId){
         await Swal.mixin({
-          confirmButtonText: 'Sigueinte &rarr;',
+          confirmButtonText: 'Siguiente &rarr;',
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
           progressSteps: ['1', '2', '3', '4'],
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
             if (arrResult.value[1] === 'Horario'){
 
               await Swal.mixin({
-                confirmButtonText: 'Sigueinte &rarr;',
+                confirmButtonText: 'Siguiente &rarr;',
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
                 progressSteps: ['1', '2', '3', '4'],
@@ -201,7 +201,7 @@ const useStyles = makeStyles((theme) => ({
             } else {
               
               await Swal.mixin({
-                confirmButtonText: 'Sigueinte &rarr;',
+                confirmButtonText: 'Siguiente &rarr;',
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
                 progressSteps: ['1', '2', '3'],
@@ -321,7 +321,7 @@ const useStyles = makeStyles((theme) => ({
       let url = ''
 
       await Swal.mixin({
-        confirmButtonText: 'Sigueinte &rarr;',
+        confirmButtonText: 'Siguiente &rarr;',
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         progressSteps: ['1', '2']
@@ -473,7 +473,7 @@ const useStyles = makeStyles((theme) => ({
                 type='checkbox'
                 checked={weekendsVisible}
                 onChange={handleWeekendsToggle}
-              ></input> <label>Alternar dias de fin de semana</label>
+              ></input> <label>Mostrar fines de semana</label>
           </div>
           <div className='demo-app-sidebar-section'>
             <h2>Todos los eventos ({currentEvents.length})</h2>
