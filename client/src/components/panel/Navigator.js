@@ -15,7 +15,7 @@ import users from '../../redux/reducers/getUsers';
 import NavMsg from '../msg/NavMsg'
 
 
-const studentOptions= ["perfil","cohorte","PM","pair_programming","notas"]
+const studentOptions= ["perfil","cohorte","PMs","pair_programming","notas"]
 const modules=["Módulo 1","Módulo 2","Módulo 3","Módulo 4"]
 const adminOptions=["perfil","cohorte","PM", "pair_programming","calificar","invitacion"]
 

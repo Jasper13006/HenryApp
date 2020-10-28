@@ -56,16 +56,16 @@ export default function ComplexGrid({ id }) {
                                     {student.user && student.user.name + " " + student.user.lastName}
                                 </Typography>
                                 <Typography variant="body2" gutterBottom style={{ fontWeight: "bold" }}>
-                                    Henry
+                                    {student.user.email}
                   </Typography>
 
                             </Grid>
                             <Grid item>
                             </Grid>
                         </Grid>
-                        <Grid item>
+                        {/* <Grid item>
                             <Typography variant="subtitle1" style={{ display: "flex", marginTop: "25px" }} ><MessageIcon /></Typography>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Grid>
             </Paper>))}
