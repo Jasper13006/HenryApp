@@ -41,7 +41,8 @@ export default function ComplexGrid({ id }) {
     console.log(students)
     return (
         <div className={classes.root}>
-            {students && students.map((student) => (<Paper key={student.id} className={classes.paper}>
+            {students && students.map((student) => (
+                <Paper key={student.id} className={classes.paper}>
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={classes.image}>

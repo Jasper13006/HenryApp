@@ -15,6 +15,10 @@ import update from './update'
 import groupPm from './groupPm.js'
 import msg from './msg'
 import studentsByGroupPM from './studentsByGroupPM'
+import gruposPPByPmId from './pp'
+import styudentsByPpId from './studentsByPpId'
+import myGroupPp from './myGroupPp'
+import newStudent from './newStudentInGroupPp'
 
 
 
@@ -35,7 +39,11 @@ const rootReducer = combineReducers({
     students,
     update,
     msg,
-    studentsByGroupPM
+    studentsByGroupPM,
+    gruposPPByPmId,
+    styudentsByPpId,
+    myGroupPp,
+    newStudent,
 });
 
 export default rootReducer;

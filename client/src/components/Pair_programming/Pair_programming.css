@@ -1,0 +1,15 @@
+.menuButton{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(203,203,203,1) 0%, rgba(233,223,148,0.37718837535014005) 100%);
+
+}
+
+.accordionDetails{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

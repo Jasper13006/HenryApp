@@ -64,7 +64,7 @@ function Header(props) {
     "/panel/perfil":["Datos Personales","Cambiar contraseña","Configuración"],
     "/panel/cohorte":["Cohorte","Alumnos"],
     "/panel/PM":["Anuncios","Chat"],
-    "/panel/pair_programming":["Feedback","Evaluar"],
+    "/panel/pair_programming": "",
     "/panel/notas":["Resumen de Notas"],
     "/panel/invitacion":["Individual",'Hoja excel'],
     "/panel/calificar":["Individual",'Consultar','Múltiple'],

@@ -1,7 +1,7 @@
 const server = require("express").Router();
 const authenticate = require('../utils/auth');
 const isAdmin = require('../utils/isAdmin');
-const { getStudents, getStudentById, getStudentsByCohorteId, getStudentsByGrouppmId, getStudentByUserId, getGroupPmbyCohorte, modifyStudent } = require('../controllers/student')
+const { getStudents, getStudentById, getStudentsByCohorteId, getStudentsByGrouppmId, getStudentByUserId, getGroupPmbyCohorte, modifyStudent, getStudentsByGrouppId } = require('../controllers/student')
 
 //consultar por todos los alumnos
 server.get("/", authenticate, getStudents)
@@ -20,6 +20,8 @@ server.get("/info/:id", authenticate, getStudentByUserId)
 
 //modificar un perfil de estudiante.
 server.put("/modify/:studentId", authenticate, isAdmin, modifyStudent)
+
+server.get("/group-pp/:grouppId", authenticate, getStudentsByGrouppId)
 
 
 

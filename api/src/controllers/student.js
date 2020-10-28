@@ -1,4 +1,4 @@
-const { Student, Cohorte, User, Grouppm, } = require("../db.js");
+const { Student, Cohorte, User, Grouppm, Groupp} = require("../db.js");
 
 
 module.exports = {
@@ -206,5 +206,24 @@ module.exports = {
       return res.status(400).json({message: "verifica bien los datos y vuelve a intentarlo..."})
     }
   },
+
+  async getStudentsByGrouppId(req, res){
+    const { grouppId } = req.params
+    try{
+      students = await Student.findAll({
+        where: {
+          grouppId: grouppId,
+        },
+          include: [
+            {
+              model: User,
+            },
+          ]
+      })
+      res.status(200).json(students)
+    }catch(error){
+      return res.status(404).send(error.message)
+    }
+  }
 }
 
