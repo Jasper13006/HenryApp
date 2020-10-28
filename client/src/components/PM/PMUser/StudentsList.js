@@ -7,6 +7,8 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import MessageIcon from '@material-ui/icons/Message';
 import { traerGrupoPm } from '../../../redux/actions/pm';
 import { useDispatch, useSelector } from 'react-redux';
+import {getMsg,deleteMsgs} from '../../../redux/actions/msg'
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,14 +31,36 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ComplexGrid({ id }) {
+export default function ComplexGrid(props) {
     const classes = useStyles();
     const students = useSelector(state => state.groupPm.data && state.groupPm.data.students)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();      
+    const chats = useSelector(state => state.msg.chats)
+    const token = localStorage.getItem('token')
+    const history = useHistory();
+    const userId = localStorage.getItem("idUser")  
+   
 
     useEffect(() => {
-        dispatch(traerGrupoPm(id))
+        dispatch(traerGrupoPm(props.id))
     }, [])
+
+    const handleClick = user => { 
+        let validate = true;
+        chats.map((chat) => {
+            if(chat.from.id === user.id || chat.to.id === user.id){
+                dispatch(getMsg(chat.id,token))
+                validate = false
+            }
+
+        })
+        if(validate){
+            dispatch(deleteMsgs())
+            localStorage.removeItem('chat');
+        }
+        localStorage.setItem('toUser', JSON.stringify(user));       
+        history.push('/panel/mensaje_directo')
+    };
 
     console.log(students)
     return (
@@ -63,9 +87,11 @@ export default function ComplexGrid({ id }) {
                             <Grid item>
                             </Grid>
                         </Grid>
-                        {/* <Grid item>
-                            <Typography variant="subtitle1" style={{ display: "flex", marginTop: "25px" }} ><MessageIcon /></Typography>
-                        </Grid> */}
+                        <Grid item>                                                  
+                            {student.user.id != userId ? <Typography variant="subtitle1" style={{ display: "flex", marginTop: "25px", cursor: "pointer" }} >
+                                <MessageIcon onClick={()=>handleClick(student.user)}/>
+                            </Typography> : null}
+                        </Grid>
                     </Grid>
                 </Grid>
             </Paper>))}

@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import MessageIcon from '@material-ui/icons/Message';
+import {getMsg,deleteMsgs} from '../../redux/actions/msg'
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,11 +38,33 @@ export default function PairProgrammingStudent(){
     const compañeros = useSelector(state => state.myGroupPp.data)
     const miInfoStudent = useSelector(state => state.student.data)
     const [active, setActive] = useState(false)
+    const chats = useSelector(state => state.msg.chats)
+    const token = localStorage.getItem('token')
+    const history = useHistory();
+    const userId = localStorage.getItem("idUser")  
 
     useEffect(() => {
         dispatch(getStudent(user.id))
         
     }, [])
+
+    const handleClick = user => { 
+        let validate = true;
+        chats.map((chat) => {
+            if(chat.from.id === user.id || chat.to.id === user.id){
+                dispatch(getMsg(chat.id,token))
+                validate = false
+            }
+
+        })
+        if(validate){
+            dispatch(deleteMsgs())
+            localStorage.removeItem('chat');
+        }
+        localStorage.setItem('toUser', JSON.stringify(user));       
+        history.push('/panel/mensaje_directo')
+    };
+
     if(miInfoStudent && !active) {
         dispatch(getMyGroupPp(miInfoStudent[0].grouppId))
         setActive(true)
@@ -74,6 +98,11 @@ export default function PairProgrammingStudent(){
                                     </Grid>
                                     <Grid item>
                                     </Grid>
+                                </Grid>
+                                <Grid item>                                                 
+                                {alumno.user.id != userId ?<Typography variant="subtitle1" style={{ display: "flex", marginTop: "25px", cursor: "pointer" }} >
+                                     <MessageIcon onClick={()=>handleClick(alumno.user)}/>
+                                    </Typography>: null}
                                 </Grid>
                             </Grid>
                         </Grid>

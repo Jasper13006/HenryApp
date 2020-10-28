@@ -143,11 +143,11 @@ export default function Perfil() {
                                         </tr>
                                     </tbody>
                                 </table><br />
-                                <FormControlLabel
+                                {/* <FormControlLabel
                                     control={<Switch checked={check} onChange={handleSwitch} name="checked" />}
                                     label={check ? "En línea" : "Desconectado"}
                                     color="primary">
-                                </FormControlLabel>
+                                </FormControlLabel> */}
 
                             </div>
                             <div className={classes.paperProfilePhoto}>

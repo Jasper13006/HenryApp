@@ -80,9 +80,10 @@ export default function CustomizedMenus() {
           dispatch(addChatSocket(chat))
           setChats([...chats,chat])
           
-        } */   
+        } */  
+        if (id == chat.from.id || id == chat.to.id){
         dispatch(addChatNot(chat)) 
-        setChatNotification([...chatsNotification,chat])     
+        setChatNotification([...chatsNotification,chat]) }    
       })
       return () => {socket.off()}
     })
