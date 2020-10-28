@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: "#000000",
         width: '100%',
-        height: '100%',
+        height: '800px',
         background: 'url(https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80)',
         display: 'flex',
         marginTop: 0,    
