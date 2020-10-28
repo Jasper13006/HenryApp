@@ -40,12 +40,8 @@ module.exports = {
   //// Trae a los estudiante de un grupo pm
   ///////////////////////////////////////////
   async getGroupPp(req, res) {
-    const { id } = req.params
-    const usuario = req.user
-    const user = await User.findByPk(usuario.id)
-    if (!user.pm && !user.admin) return res.status(403).send({ message: "Sin autorización", status: 400 })
+    const { id } = req.params    
     try {
-
       const gpp = await Groupp.findOne({
         where: {
           id: id
