@@ -31,11 +31,6 @@ module.exports = {
       return res.status(500).send(err)
     }
   },
-
-  
-
-  
-
   /////////////////////////////////////////////////
   //// Trae a los estudiante de un grupo pm
   ///////////////////////////////////////////
@@ -66,6 +61,43 @@ module.exports = {
       return res.status(500).send(err)
     }
   },
+  // un solo grupo
+  async groupPPbyPmId(req, res){
+    const { grouppmId, cohorteId } = req.params
+    try{
+      const groupPp = await Groupp.findOne({
+        where: {
+          cohorteId: cohorteId,
+          grouppmId: grouppmId
+        }
+      })
+      const students = await Student.findAll({
+        where: { 
+          grouppId: groupPp.id
+        }
+      })
+      return res.status(200).json({groupPp, students});
+    }catch(error){
+      console.log(error.message)
+      return res.status(500).send(error)
+    }
+  },
 
+
+  // todos los grupos de un PM
+  async groupsPPbyPmId(req, res){
+    const { grouppmId } = req.params
+    
+    try{
+      const groupPp = await Groupp.findAll({
+        where: {
+          grouppmId: grouppmId
+        }
+      })
+      return res.status(200).json(groupPp);
+    }catch(error){
+      return res.status(500).send(error)
+    }
+  },
 
 }

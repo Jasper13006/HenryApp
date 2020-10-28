@@ -80,3 +80,10 @@ export const ADD_CHATNOT = 'ADD_CHATNOT'
 export const ADD_CHATSOCKET = 'ADD_CHATSOCKET'
 export const REMOVE_CHATNOT = 'REMOVE_CHATNOT'
 
+/* ------------------------------------------------------------------------------- /
+/ PP/
+/ ------------------------------------------------------------------------------- */
+export const GET_GROUPS_PP = 'GET_GROUPS_PP';
+export const GET_STUDENT_BY_GROUPP_ID = 'GET_STUDENT_BY_GROUPP_ID';
+export const GET_MY_GROUP_PP = 'GET_MY_GROUP_PP';
+export const NEW_STUDENT_IN_GROUP_PP = 'NEW_STUDENT_IN_GROUP_PP';
