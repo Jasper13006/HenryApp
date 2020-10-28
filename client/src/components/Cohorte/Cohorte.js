@@ -16,6 +16,7 @@ import { TableCell, TableHead, TableRow } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 import TableBody from '@material-ui/core/TableBody';
 import { DialogTitle, MenuItem } from '@material-ui/core';
+import axios from 'axios';
 
 
 const imgTriste = require("./triste.png")
@@ -88,18 +89,31 @@ export default function Cohorte(){
     const option = useSelector(state=>state.panel.data)
     const cohorte = useSelector(state => state.getCohorteUser.data)
     const modulos = useSelector(state => state.modulos.data)
+    //const [modulos,setModulos] = useState('')
     const student = useSelector(state => state.student.data)
     const user = JSON.parse(localStorage.getItem("user"))
     const id = parseInt(localStorage.getItem("idUser"))
+    const token = localStorage.getItem("token")   
     useEffect(()=> {
         if(!user.admin){
-            dispatch(getStudent(id))
-            dispatch(getLinkVideos(id))
+            dispatch(getStudent(id))            
         }    
     }, [])
 
+    // useEffect(() => {        
+    //     axios({
+    //         method: 'GET',
+    //         url: 'http://localhost:3001/modulo',
+    //         credentials: "include",
+    //         headers: { "auth-token": token }            
+    //         })   
+    //         .then(res=> setModulos(res.data)) 
+    //         .catch(err=> console.log(err));                                  
+    // }, []) 
+
     //Me aseguro que se ejecute el dispatch despues de haber traido al estudiante, para poder usar su informacion, y ya desactivo esa opcion
     if(student && !dispatchActivo){
+        dispatch(getLinkVideos(student[0].cohorteId))
         dispatch(getCohorteUser(student[0].cohorteId))
         setDispatchActivo(true)
     }
@@ -118,7 +132,8 @@ export default function Cohorte(){
                 </Hidden>
                 <h3 className="subtitulo">Clases Grabadas </h3>
                 <Table size="medium">
-                    <TableBody>
+                    {console.log(modulos)}
+                    <TableBody>                        
                         {modulos && moduleType.map(name => (
                             filterModulos(modulos, name).length > 0?
                             <TableRow style={{display: "flex", alignItems: "center", flexDirection: "column", flexWrap: "wrap"}}>

@@ -69,7 +69,7 @@ export default function PairProgrammingStudent(){
                                             {alumno.user && alumno.user.name + " " + alumno.user.lastName}
                                         </Typography>
                                         <Typography variant="body2" gutterBottom style={{ fontWeight: "bold" }}>
-                                            Henry
+                                            {alumno.user.email}
                         </Typography>
                                     </Grid>
                                     <Grid item>
